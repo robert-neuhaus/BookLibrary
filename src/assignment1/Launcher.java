@@ -8,6 +8,7 @@ import javafx.scene.Scene;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 
+//CS 4743 Assignment 1 by Robert Neuhaus, Diego Gonzales
 public class Launcher extends Application {
 	
 	public static void main(String[] args) {
