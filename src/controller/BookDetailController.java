@@ -8,19 +8,19 @@ import org.apache.logging.log4j.Logger;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
-import javafx.scene.control.Label;
+import javafx.scene.control.TextArea;
+import javafx.scene.control.TextField;
 import model.Book;
 
 public class BookDetailController {
 
 	private static Logger logger = LogManager.getLogger();
 	
-	@FXML private Label lblTitle;
-	@FXML private Label lblAuthor;
-	@FXML private Label lblSummary;
-	@FXML private Label lblYearPublished;
-	@FXML private Label lblISBN;
-	@FXML private Label lblDateAdded;
+	@FXML private TextField txtFldTtl;
+	@FXML private TextArea txtAreaSmmry;
+	@FXML private TextField txtFldYrPblshd;
+	@FXML private TextField txtFldIsbn;
+	@FXML private TextField txtFldDtAdded;
 	@FXML private Button btnSave;
 	
 	private Book book;
@@ -37,23 +37,16 @@ public class BookDetailController {
 	}
 	
 	public void initialize() {
-		lblTitle.setText(book.getTitle());
-		lblTitle.setWrapText(true);
+		txtFldTtl.setText(book.getTitle());
 		
-		lblAuthor.setText(book.getAuthor());
-		lblAuthor.setWrapText(true);
+		txtAreaSmmry.setText(book.getSummary());
+		txtAreaSmmry.setWrapText(true);
 		
-		lblSummary.setText(book.getSummary());
-		lblSummary.setWrapText(true);
+		txtFldYrPblshd.setText(book.getYearPublished());
 		
-		lblYearPublished.setText(book.getYearPublished());
-		lblYearPublished.setWrapText(true);
+		txtFldDtAdded.setText(book.getDateAdded());
 		
-		lblDateAdded.setText(book.getDateAdded());
-		lblDateAdded.setWrapText(true);
-		
-		lblISBN.setText(book.getISBN());
-		lblISBN.setWrapText(true);
+		txtFldIsbn.setText(book.getISBN());
 	}
 
 }

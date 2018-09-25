@@ -1,26 +1,28 @@
 package model;
 
+import java.time.LocalDateTime;
+
 public class Book {
-	private String author;
+	private int id;
 	private String title;
 	private String summary;
-	private String yearPublished;
+	private int yearPublished;
 	private String ISBN;
-	private String dateAdded;
+	private LocalDateTime dateAdded;
 	
 	
 	public Book() {
-		author = "";
 		title = "";
 		summary = "";
-		yearPublished = "";
+		yearPublished = 0;
 		ISBN = "";
-		dateAdded = "";
+		dateAdded = null;
 	}
 
-	public Book(String title, String author, String summary, 
-			String yearPublished, String ISBN, String dateAdded) {
-		this.author = author;
+	public Book(int id, String title, String summary, 
+			int yearPublished, String ISBN, 
+			LocalDateTime dateAdded) {
+		this.id = id;
 		this.title = title;
 		this.summary = summary;
 		this.yearPublished = yearPublished;
@@ -28,12 +30,12 @@ public class Book {
 		this.dateAdded = dateAdded;
 	}
 	
-	public String getTitle() {
-		return this.title;
+	public int getId() {
+		return this.id;
 	}
 	
-	public String getAuthor() {
-		return this.author;
+	public String getTitle() {
+		return this.title;
 	}
 	
 	public String getSummary() {
@@ -41,7 +43,7 @@ public class Book {
 	}
 	
 	public String getYearPublished() {
-		return this.yearPublished;
+		return Integer.toString(this.yearPublished);
 	}
 	
 	public String getISBN() {
@@ -49,12 +51,12 @@ public class Book {
 	}
 	
 	public String getDateAdded() {
-		return this.dateAdded;
+		return this.dateAdded.toString();
 	}
 	
 
 	@Override
 	public String toString() {
-		return title + " by " + author;
+		return this.title;
 	}
 }
