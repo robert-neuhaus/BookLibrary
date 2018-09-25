@@ -1,4 +1,4 @@
-package assignment1;
+package Launcher;
 
 import java.net.URL;
 
@@ -11,7 +11,7 @@ import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 
 //CS 4743 Assignment 1 by Robert Neuhaus, Diego Gonzales
-public class Launcher extends Application {
+public class Main extends Application {
 	
 	public static void main(String[] args) {
 		launch(args);		
