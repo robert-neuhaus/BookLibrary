@@ -14,6 +14,7 @@ public class MenuController {
 	
 	@FXML private MenuItem menuQuit;
 	@FXML private MenuItem menuBookList;
+	@FXML private MenuItem menuAddBook;
 	
 	@FXML private void handleMenuAction(ActionEvent action) throws IOException {
 		Object source = action.getSource();
@@ -25,6 +26,15 @@ public class MenuController {
 			MasterController.getInstance().changeView("../view/view_bookList.fxml", 
 					new BookListController(books), null);
 			return;
+		}
+		if(source == menuAddBook) {
+			
+			Book newBook = new Book();
+			
+			MasterController.getInstance().changeView(
+					"../view/view_bookDetail.fxml", 
+					new BookDetailController(newBook), 
+					newBook);  
 		}
 	}
 	

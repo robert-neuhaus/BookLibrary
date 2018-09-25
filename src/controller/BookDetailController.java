@@ -46,7 +46,7 @@ public class BookDetailController {
 		
 		txtFldDtAdded.setText(book.getDateAdded());
 		
-		txtFldIsbn.setText(book.getISBN());
+		txtFldIsbn.setText(book.getIsbn());
 	}
 
 }

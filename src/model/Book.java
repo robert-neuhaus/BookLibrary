@@ -7,16 +7,17 @@ public class Book {
 	private String title;
 	private String summary;
 	private int yearPublished;
-	private String ISBN;
+	private String isbn;
 	private LocalDateTime dateAdded;
 	
 	
 	public Book() {
-		title = "";
-		summary = "";
-		yearPublished = 0;
-		ISBN = "";
-		dateAdded = null;
+		this.id = 0;
+		this.title = "";
+		this.summary = "";
+		this.yearPublished = 0;
+		this.isbn = "";
+		this.dateAdded = LocalDateTime.now();
 	}
 
 	public Book(int id, String title, String summary, 
@@ -26,7 +27,7 @@ public class Book {
 		this.title = title;
 		this.summary = summary;
 		this.yearPublished = yearPublished;
-		this.ISBN = ISBN;
+		this.isbn = ISBN;
 		this.dateAdded = dateAdded;
 	}
 	
@@ -46,15 +47,38 @@ public class Book {
 		return Integer.toString(this.yearPublished);
 	}
 	
-	public String getISBN() {
-		return this.ISBN;
+	public String getIsbn() {
+		return this.isbn;
 	}
 	
 	public String getDateAdded() {
 		return this.dateAdded.toString();
 	}
 	
-
+	public void setId(int id) {
+		this.id = id;
+	}
+	
+	public void setTitle(String title) {
+		this.title = title;
+	}
+	
+	public void setSummary(String summary) {
+		this.summary = summary;
+	}
+	
+	public void setYearPublished(int yearPublished) {
+		this.yearPublished = yearPublished;
+	}
+	
+	public void setIsbn(String isbn) {
+		this.isbn = isbn;
+	}
+	
+	public void setDateAdded(LocalDateTime dateAdded) {
+		this.dateAdded = dateAdded;
+	}
+	
 	@Override
 	public String toString() {
 		return this.title;
