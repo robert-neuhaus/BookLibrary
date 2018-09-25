@@ -2,6 +2,8 @@ package assignment1;
 
 import java.net.URL;
 
+import controller.MasterController;
+import controller.MenuController;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -22,7 +24,7 @@ public class Launcher extends Application {
 
 	@Override
 	public void start(Stage stage) throws Exception {
-		URL viewURL = this.getClass().getResource("view_master.fxml");
+		URL viewURL = this.getClass().getResource("../view/view_master.fxml");
 		FXMLLoader loader = new FXMLLoader(viewURL);
 		loader.setController(new MenuController());
 		BorderPane rootBorderPane = loader.load();

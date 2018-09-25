@@ -1,4 +1,4 @@
-package assignment1;
+package controller;
 
 import java.io.IOException;
 
@@ -9,6 +9,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import model.Book;
 
 public class BookDetailController {
 

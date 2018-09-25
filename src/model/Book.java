@@ -1,4 +1,4 @@
-package assignment1;
+package model;
 
 public class Book {
 	private String author;

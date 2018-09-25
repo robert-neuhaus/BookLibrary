@@ -1,4 +1,4 @@
-package assignment1;
+package controller;
 
 import java.io.IOException;
 import java.util.List;
@@ -7,6 +7,8 @@ import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.MenuItem;
+import model.Book;
+import model.BookList;
 
 public class MenuController {
 	
@@ -20,7 +22,7 @@ public class MenuController {
 		}
 		if(source == menuBookList) {
 			List<Book> books = BookList.getInstance().getBooks();
-			MasterController.getInstance().changeView("view_bookList.fxml", 
+			MasterController.getInstance().changeView("../view/view_bookList.fxml", 
 					new BookListController(books), null);
 			return;
 		}

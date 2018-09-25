@@ -1,4 +1,4 @@
-package assignment1;
+package controller;
 
 import java.net.URL;
 import java.util.List;
@@ -13,6 +13,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.ListView;
 import javafx.scene.input.MouseEvent;
+import model.Book;
 
 public class BookListController implements Initializable {
 
@@ -47,7 +48,7 @@ public class BookListController implements Initializable {
                 	logger.info("double-clicked " + selected);
                 	
         			MasterController.getInstance().changeView(
-        					"view_bookDetail.fxml", 
+        					"../view/view_bookDetail.fxml", 
         					new BookDetailController(selected), 
         					selected);       			              	
                 }

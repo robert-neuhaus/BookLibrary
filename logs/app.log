@@ -18,3 +18,15 @@
 22:13:04.859 INFO  assignment1.BookDetailController : Saved
 22:13:05.920 INFO  assignment1.BookDetailController : Saved
 22:13:43.507 INFO  assignment1.BookDetailController : Saved
+14:38:23.174 INFO  assignment1.BookListController$1 : double-clicked Pyrotechnic Life Hacks by Tyler Rasmussen
+14:38:41.799 INFO  assignment1.BookListController$1 : double-clicked Art of the Script Kiddy by Sabrina Mosher
+14:41:45.352 INFO  assignment1.BookListController$1 : double-clicked The Plunger by Diego Gonzales
+14:43:14.818 INFO  assignment1.BookListController$1 : double-clicked Rise of the Necromancer by James Goldsmith
+14:44:23.145 INFO  assignment1.BookListController$1 : double-clicked Art of the Script Kiddy by Sabrina Mosher
+14:44:36.242 INFO  assignment1.BookListController$1 : double-clicked Moby Dick by Herman Melville
+14:44:56.671 INFO  assignment1.BookDetailController : Saved
+18:53:12.229 INFO  assignment1.BookListController$1 : double-clicked The Plunger by Diego Gonzales
+10:29:32.497 INFO  controller.BookListController$1 : double-clicked The Plunger by Diego Gonzales
+10:29:33.894 INFO  controller.BookDetailController : Saved
+10:31:46.740 INFO  controller.BookListController$1 : double-clicked Art of the Script Kiddy by Sabrina Mosher
+10:31:48.507 INFO  controller.BookDetailController : Saved
