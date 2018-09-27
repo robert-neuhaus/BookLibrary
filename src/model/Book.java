@@ -88,11 +88,13 @@ public class Book {
 		
 		int yearPublishedInt = 0;
 		
-		try {
-			yearPublishedInt = Integer.parseInt(yearPublished);
-			validateYearPublished(yearPublishedInt);
-		} catch (NumberFormatException e) {
-			throw new Exception("Unable to read year published.");
+		if (!yearPublished.equals("")) {
+			try {
+				yearPublishedInt = Integer.parseInt(yearPublished);
+				validateYearPublished(yearPublishedInt);
+			} catch (NumberFormatException e) {
+				throw new Exception("Unable to read year published.");
+			}
 		}
 		
 		setTitle(title);
@@ -108,8 +110,8 @@ public class Book {
 			throw new Exception("Title of book must be 255 characters or fewer.");
 	}
 	
-	public void validateSummary(String title) throws Exception {
-		if (title.length() > 65535)
+	public void validateSummary(String summary) throws Exception {
+		if (summary.length() > 65535)
 			throw new Exception("Summary must be 65,535 characters or fewer.");
 	}
 	

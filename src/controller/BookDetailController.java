@@ -47,6 +47,7 @@ public class BookDetailController {
 				logger.info(e.getMessage());
 				lblStatus.setText(e.getMessage());
 				lblStatus.setStyle("-fx-text-fill: red;");
+				setFocus(e.getMessage());
 			}
 			
 			btnSave.setDisable(true);
@@ -80,6 +81,21 @@ public class BookDetailController {
 		txtInpt.textProperty().addListener((observable, oldValue, newValue) -> {
 		    btnSave.setDisable(false);
 		});
+	}
+	
+	public void setFocus(String source) {
+		if (source.equals("Unable to read year published.") 
+				|| source.equals("Year published cannot be later than current year."))
+			txtFldYrPblshd.requestFocus();
+		else if (source.equals("Title of book must be provided.")
+				|| source.equals("Title of book must be 255 characters or fewer."))
+			txtFldTtl.requestFocus();
+		else if (source.equals("Summary must be 65,535 characters or fewer."))
+			txtAreaSmmry.requestFocus();
+		else if (source.equals("Year published cannot be later than current year."))
+			txtFldYrPblshd.requestFocus();
+		else if (source.equals("ISBN must be 13 characters of fewer."))
+			txtFldIsbn.requestFocus();
 	}
 
 }

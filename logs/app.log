@@ -206,3 +206,65 @@
 18:09:49.497 INFO  controller.BookDetailController : Save Clicked
 18:09:49.498 INFO  controller.BookDetailController : Title of book must be provided.
 18:09:55.360 INFO  controller.BookDetailController : Save Clicked
+18:12:31.514 INFO  controller.BookListController$1 : double-clicked Art of the Script Kiddy
+18:12:43.648 INFO  controller.BookDetailController : Save Clicked
+18:12:43.670 INFO  controller.BookDetailController : Title of book must be provided.
+18:12:50.653 INFO  controller.BookListController$1 : double-clicked Art of the Script Kiddy
+18:12:56.757 INFO  controller.BookDetailController : Save Clicked
+18:12:56.759 INFO  controller.BookDetailController : Unable to read year published.
+18:13:04.163 INFO  controller.BookListController$1 : double-clicked Art of the Script Kiddy
+18:13:17.472 INFO  controller.BookDetailController : Save Clicked
+18:13:17.472 INFO  controller.BookDetailController : Unable to read year published.
+18:13:29.380 INFO  controller.BookDetailController : Save Clicked
+18:13:34.039 INFO  controller.BookListController$1 : double-clicked null
+18:13:36.138 INFO  controller.BookListController$1 : double-clicked null
+18:13:37.137 INFO  controller.BookListController$1 : double-clicked null
+18:13:38.153 INFO  controller.BookListController$1 : double-clicked null
+18:13:39.845 INFO  controller.BookListController$1 : double-clicked null
+18:13:42.600 INFO  controller.BookListController$1 : double-clicked null
+18:13:43.873 INFO  controller.BookListController$1 : double-clicked Art of the Script Kiddy
+18:13:47.597 INFO  controller.BookListController$1 : double-clicked null
+18:17:19.798 INFO  controller.BookListController$1 : double-clicked Rise of the Necromancer
+18:17:22.618 INFO  controller.BookDetailController : Save Clicked
+18:17:22.633 INFO  controller.BookDetailController : Unable to read year published.
+18:17:31.018 INFO  controller.BookDetailController : Save Clicked
+18:18:17.844 INFO  controller.BookListController$1 : double-clicked Pyrotechnic Life Hacks
+18:18:20.736 INFO  controller.BookDetailController : Save Clicked
+18:18:20.759 INFO  controller.BookDetailController : Unable to read year published.
+18:18:25.436 INFO  controller.BookListController$1 : double-clicked Pyrotechnic Life Hacks
+18:18:29.077 INFO  controller.BookDetailController : Save Clicked
+18:18:29.078 INFO  controller.BookDetailController : Unable to read year published.
+18:19:10.448 INFO  controller.BookDetailController : Save Clicked
+18:19:10.458 INFO  controller.BookDetailController : Unable to read year published.
+18:19:22.034 INFO  controller.BookListController$1 : double-clicked The Plunger
+18:19:26.331 INFO  controller.BookDetailController : Save Clicked
+18:19:26.353 INFO  controller.BookDetailController : Unable to read year published.
+18:21:27.818 INFO  controller.BookListController$1 : double-clicked Moby Dick
+18:21:31.126 INFO  controller.BookDetailController : Save Clicked
+18:21:35.935 INFO  controller.BookDetailController : Save Clicked
+18:21:35.936 INFO  controller.BookDetailController : Year published cannot be later than current year.
+18:21:39.570 INFO  controller.BookDetailController : Save Clicked
+18:21:39.571 INFO  controller.BookDetailController : Unable to read year published.
+18:26:58.306 INFO  controller.BookListController$1 : double-clicked Rise of the Necromancer
+18:27:03.204 INFO  controller.BookDetailController : Save Clicked
+18:27:03.214 INFO  controller.BookDetailController : Unable to read year published.
+18:28:24.001 INFO  controller.BookDetailController : Save Clicked
+18:28:24.010 INFO  controller.BookDetailController : Unable to read year published.
+18:30:01.449 INFO  controller.BookListController$1 : double-clicked Pyrotechnic Life Hacks
+18:30:04.984 INFO  controller.BookDetailController : Save Clicked
+18:30:04.994 INFO  controller.BookDetailController : Unable to read year published.
+18:30:10.570 INFO  controller.BookDetailController : Save Clicked
+18:30:10.572 INFO  controller.BookDetailController : Unable to read year published.
+18:34:23.527 INFO  controller.BookListController$1 : double-clicked Pyrotechnic Life Hacks
+18:34:29.596 INFO  controller.BookDetailController : Save Clicked
+18:34:29.609 INFO  controller.BookDetailController : ISBN must be 13 characters of fewer.
+18:34:35.227 INFO  controller.BookDetailController : Save Clicked
+18:34:35.229 INFO  controller.BookDetailController : Title of book must be provided.
+18:34:42.388 INFO  controller.BookDetailController : Save Clicked
+18:34:42.389 INFO  controller.BookDetailController : Title of book must be provided.
+18:34:44.473 INFO  controller.BookDetailController : Save Clicked
+18:34:44.474 INFO  controller.BookDetailController : ISBN must be 13 characters of fewer.
+18:34:47.145 INFO  controller.BookDetailController : Save Clicked
+18:34:47.146 INFO  controller.BookDetailController : Unable to read year published.
+18:34:49.782 INFO  controller.BookDetailController : Save Clicked
+18:35:13.700 INFO  controller.BookDetailController : Save Clicked
