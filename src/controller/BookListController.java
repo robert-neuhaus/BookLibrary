@@ -27,7 +27,6 @@ public class BookListController implements Initializable {
 		this.books = books;
 	}
 
-
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 		ObservableList<Book> items = LstVwBookList.getItems();

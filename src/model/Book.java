@@ -1,5 +1,6 @@
 package model;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 public class Book {
@@ -12,10 +13,10 @@ public class Book {
 	
 	
 	public Book() {
-		this.id = 0;
+		this.id = -1;
 		this.title = "";
 		this.summary = "";
-		this.yearPublished = 0;
+		this.yearPublished = -1;
 		this.isbn = "";
 		this.dateAdded = LocalDateTime.now();
 	}
@@ -77,6 +78,49 @@ public class Book {
 	
 	public void setDateAdded(LocalDateTime dateAdded) {
 		this.dateAdded = dateAdded;
+	}
+	
+	public void save(String title, String summary, String yearPublished, 
+			String isbn, LocalDateTime dateAdded) throws Exception {
+		validateTitle(title);
+		validateSummary(summary);
+		validateIsbn(isbn);
+		
+		int yearPublishedInt = 0;
+		
+		try {
+			yearPublishedInt = Integer.parseInt(yearPublished);
+			validateYearPublished(yearPublishedInt);
+		} catch (NumberFormatException e) {
+			throw new Exception("Unable to read year published.");
+		}
+		
+		setTitle(title);
+		setSummary(summary);
+		setYearPublished(yearPublishedInt);
+		setIsbn(isbn);
+	}
+	
+	public void validateTitle(String title) throws Exception {
+		if (title.length() <= 0)
+			throw new Exception("Title of book must be provided.");
+		if (title.length() > 255)
+			throw new Exception("Title of book must be 255 characters or fewer.");
+	}
+	
+	public void validateSummary(String title) throws Exception {
+		if (title.length() > 65535)
+			throw new Exception("Summary must be 65,535 characters or fewer.");
+	}
+	
+	public void validateYearPublished(int yearPublished) throws Exception {	
+		if (yearPublished > LocalDate.now().getYear())
+			throw new Exception("Year published cannot be later than current year.");
+	}
+	
+	public void validateIsbn(String isbn) throws Exception {
+		if (isbn.length() > 13)
+			throw new Exception("ISBN must be 13 characters of fewer.");
 	}
 	
 	@Override
