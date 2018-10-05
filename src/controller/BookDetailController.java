@@ -94,7 +94,7 @@ public class BookDetailController {
 			txtAreaSmmry.requestFocus();
 		else if (source.equals("Year published cannot be later than current year."))
 			txtFldYrPblshd.requestFocus();
-		else if (source.equals("ISBN must be 13 characters of fewer."))
+		else if (source.equals("ISBN must be 13 characters or fewer."))
 			txtFldIsbn.requestFocus();
 	}
 

@@ -268,3 +268,61 @@
 18:34:47.146 INFO  controller.BookDetailController : Unable to read year published.
 18:34:49.782 INFO  controller.BookDetailController : Save Clicked
 18:35:13.700 INFO  controller.BookDetailController : Save Clicked
+18:43:12.453 INFO  controller.BookDetailController : Save Clicked
+18:52:54.698 INFO  controller.BookListController$1 : double-clicked Rise of the Necromancer
+18:56:16.332 INFO  controller.BookDetailController : Save Clicked
+18:56:16.359 INFO  controller.BookDetailController : Unable to read year published.
+18:56:20.981 INFO  controller.BookDetailController : Save Clicked
+18:56:20.983 INFO  controller.BookDetailController : Unable to read year published.
+18:56:28.155 INFO  controller.BookDetailController : Save Clicked
+18:56:28.158 INFO  controller.BookDetailController : Year published cannot be later than current year.
+18:56:38.396 INFO  controller.BookDetailController : Save Clicked
+18:56:38.397 INFO  controller.BookDetailController : ISBN must be 13 characters or fewer.
+18:56:48.953 INFO  controller.BookDetailController : Save Clicked
+18:56:48.954 INFO  controller.BookDetailController : ISBN must be 13 characters or fewer.
+18:56:55.969 INFO  controller.BookDetailController : Save Clicked
+18:56:55.971 INFO  controller.BookDetailController : Unable to read year published.
+18:57:08.129 INFO  controller.BookDetailController : Save Clicked
+18:57:08.131 INFO  controller.BookDetailController : Unable to read year published.
+18:57:13.240 INFO  controller.BookListController$1 : double-clicked Rise of the Necromancer
+18:57:22.167 INFO  controller.BookDetailController : Save Clicked
+18:57:26.713 INFO  controller.BookListController$1 : double-clicked Rise of the Necromancer
+18:57:38.033 INFO  controller.BookDetailController : Save Clicked
+18:57:38.034 INFO  controller.BookDetailController : Unable to read year published.
+18:57:41.916 INFO  controller.BookDetailController : Save Clicked
+18:57:41.918 INFO  controller.BookDetailController : Year published cannot be later than current year.
+18:57:46.790 INFO  controller.BookListController$1 : double-clicked Rise of the Necromancer
+18:57:54.936 INFO  controller.BookDetailController : Save Clicked
+18:57:58.697 INFO  controller.BookListController$1 : double-clicked Rise of the Necromancer
+18:58:38.831 INFO  controller.BookListController$1 : double-clicked null
+18:58:41.246 INFO  controller.BookListController$1 : double-clicked null
+18:58:43.448 INFO  controller.BookListController$1 : double-clicked null
+18:58:49.052 INFO  controller.BookListController$1 : double-clicked null
+18:58:50.725 INFO  controller.BookListController$1 : double-clicked Pyrotechnic Life Hacks
+18:58:56.407 INFO  controller.BookDetailController : Save Clicked
+18:59:03.666 INFO  controller.BookListController$1 : double-clicked Rise of the Necromancer
+18:59:08.008 INFO  controller.BookDetailController : Save Clicked
+18:59:13.768 INFO  controller.BookListController$1 : double-clicked Ris
+18:59:21.396 INFO  controller.BookDetailController : Save Clicked
+18:59:26.252 INFO  controller.BookListController$1 : double-clicked Ris
+18:59:32.667 INFO  controller.BookDetailController : Save Clicked
+18:59:36.559 INFO  controller.BookListController$1 : double-clicked Ris
+16:34:26.171 INFO  controller.BookDetailController : Save Clicked
+16:34:26.196 INFO  controller.BookDetailController : Title of book must be provided.
+16:35:40.251 INFO  controller.BookDetailController : Save Clicked
+16:35:40.283 INFO  controller.BookDetailController : Unable to read year published.
+16:36:17.999 INFO  controller.BookDetailController : Save Clicked
+16:36:18.030 INFO  controller.BookDetailController : Title of book must be provided.
+16:36:27.044 INFO  controller.BookDetailController : Save Clicked
+16:36:27.046 INFO  controller.BookDetailController : Title of book must be provided.
+16:37:01.493 INFO  controller.BookDetailController : Save Clicked
+16:37:01.495 INFO  controller.BookDetailController : ISBN must be 13 characters or fewer.
+13:14:34.305 INFO  controller.BookListController$1 : double-clicked Rise of the Necromancer
+13:15:06.883 INFO  controller.BookDetailController : Save Clicked
+13:15:06.909 INFO  controller.BookDetailController : Unable to read year published.
+13:15:16.697 INFO  controller.BookDetailController : Save Clicked
+13:15:16.700 INFO  controller.BookDetailController : Year published cannot be later than current year.
+13:15:24.792 INFO  controller.BookDetailController : Save Clicked
+13:15:24.794 INFO  controller.BookDetailController : ISBN must be 13 characters or fewer.
+13:15:30.490 INFO  controller.BookDetailController : Save Clicked
+13:15:39.977 INFO  controller.BookListController$1 : double-clicked Rise of the Necromancer
