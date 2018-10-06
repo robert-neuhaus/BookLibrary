@@ -47,7 +47,7 @@ public class BookTableGateway {
 		}
 	}
 	
-	public static BookTableGateway getInstance() {
+	public static BookTableGateway getInstance() throws Exception{
 		if(instance == null) {
 			instance = new BookTableGateway();
 		}
