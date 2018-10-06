@@ -1,7 +1,5 @@
 package controller;
 
-import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.logging.log4j.LogManager;
@@ -86,7 +84,7 @@ public class BookDetailController {
 			txtFldYrPblshd.setText(Integer.toString(book.getYearPublished()));		
 		setOnChangeListener(txtFldYrPblshd);
 		
-		lblDtAdded.setText(book.getDateAdded());
+		lblDtAdded.setText(book.getDateAdded().toString());
 		
 		txtFldIsbn.setText(book.getIsbn());
 		setOnChangeListener(txtFldIsbn);

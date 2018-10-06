@@ -15,6 +15,7 @@ public class Book {
 	private int yearPublished;
 	private String isbn;
 	private Timestamp dateAdded;
+	private int publisher;
 	
 	
 	public Book() {
@@ -24,6 +25,7 @@ public class Book {
 		this.yearPublished = 0;
 		this.isbn = "";
 		this.dateAdded = Timestamp.valueOf(LocalDateTime.now());
+		this.publisher = 0;
 	}
 
 	public Book(int id, String title, String summary, 
@@ -55,8 +57,13 @@ public class Book {
 		return this.isbn;
 	}
 	
-	public String getDateAdded() {
-		return this.dateAdded.toString();
+	public Timestamp getDateAdded() {
+		return this.dateAdded;
+	}
+	
+	//TODO remove
+	public int getPublisherId() {
+		return this.publisher;
 	}
 	
 	public void setId(int id) {
@@ -81,6 +88,10 @@ public class Book {
 	
 	public void setDateAdded(Timestamp dateAdded) {
 		this.dateAdded = dateAdded;
+	}
+	
+	public void setPublisherId(int publisher) {
+		this.publisher = publisher;
 	}
 	
 	public void save(String title, String summary, String yearPublished, 
