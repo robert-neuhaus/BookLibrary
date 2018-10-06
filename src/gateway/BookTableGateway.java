@@ -17,6 +17,8 @@ import java.time.*;
 public class BookTableGateway {
 
 	private Connection conn;
+	private static BookTableGateway instance = null;
+	
 	
 	public BookTableGateway() throws Exception{
 		
@@ -43,6 +45,13 @@ public class BookTableGateway {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
+	}
+	
+	public static BookTableGateway getInstance() {
+		if(instance == null) {
+			instance = new BookTableGateway();
+		}
+		return instance;
 	}
 	
 	public void createBook(Book book) throws Exception{
