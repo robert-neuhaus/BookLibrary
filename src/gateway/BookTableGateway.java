@@ -59,7 +59,7 @@ public class BookTableGateway {
 		try {
 			conn.setAutoCommit(false);
 			
-			st = conn.prepareStatement("update BOOK "
+			st = conn.prepareStatement("insert BOOK "
 					+ "set title = ?"
 					+ ", summary = ?"
 					+ ", year_published = ?"
@@ -68,12 +68,11 @@ public class BookTableGateway {
 					+ " where id = ?");
 			st.setString(1, book.getTitle());
 			st.setString(2, book.getSummary());
-			// TODO: Change yearpublished to an INT.
 			st.setInt(3, book.getYearPublished());
-			// TODO: Add getPublisher method.
 			st.setInt(4, book.getPublisherId());
 			st.setString(5,  book.getIsbn());
 			st.executeQuery();
+			
 			
 			conn.commit();
 		} catch(SQLException e) {
