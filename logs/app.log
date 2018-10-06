@@ -1,0 +1,15 @@
+14:55:31.904 INFO  controller.BookDetailController : Save Clicked
+14:55:31.916 INFO  controller.BookDetailController : java.lang.Throwable: *Title of book must be provided and must be 255 characters or fewer.
+14:55:31.920 INFO  controller.BookDetailController : java.lang.Throwable: *Unable to read year published.
+16:28:00.743 INFO  controller.BookDetailController : Save Clicked
+16:28:00.746 INFO  controller.BookDetailController : java.lang.Throwable: *Title of book must be provided and must be 255 characters or fewer.
+16:28:00.747 INFO  controller.BookDetailController : java.lang.Throwable: *Unable to read year published.
+16:28:00.748 INFO  controller.BookDetailController : java.lang.Throwable: *ISBN must be 13 characters or fewer.
+16:45:18.221 INFO  controller.BookDetailController : Save Clicked
+16:45:18.233 INFO  controller.BookDetailController : java.lang.Throwable: *Title of book must be provided and must be 255 characters or fewer.
+16:45:18.236 INFO  controller.BookDetailController : java.lang.Throwable: *Unable to read year published.
+16:45:18.240 INFO  controller.BookDetailController : java.lang.Throwable: *ISBN must be 13 characters or fewer.
+17:02:27.868 INFO  controller.BookDetailController : Save Clicked
+17:02:27.879 INFO  controller.BookDetailController : java.lang.Throwable: *Unable to read year published.
+17:02:32.093 INFO  controller.BookDetailController : Save Clicked
+17:02:32.099 INFO  controller.BookDetailController : Book saved.
