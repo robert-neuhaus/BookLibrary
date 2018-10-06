@@ -105,7 +105,7 @@ public class BookDetailController {
 		if (errMsg.equals("*Unable to read year published.") 
 				|| errMsg.equals("*Year published cannot be later than current year."))
 			return this.txtFldYrPblshd;
-		else if (errMsg.equals("*Title of book must be provided and must be 255 characters or shorter."))
+		else if (errMsg.equals("*Title of book must be provided and must be 255 characters or fewer."))
 			return this.txtFldTtl;
 		else if (errMsg.equals("*Summary must be 65,535 characters or fewer."))
 			return this.txtAreaSmmry;
@@ -119,7 +119,7 @@ public class BookDetailController {
 			if (errMsg.equals("*Unable to read year published.") 
 					|| errMsg.equals("*Year published cannot be later than current year."))
 				return this.lblYrPblshd;
-			else if (errMsg.equals("*Title of book must be provided and must be 255 characters or shorter."))
+			else if (errMsg.equals("*Title of book must be provided and must be 255 characters or fewer."))
 				return this.lblTtl;
 			else if (errMsg.equals("*Summary must be 65,535 characters or fewer."))
 				return this.lblSmmry;

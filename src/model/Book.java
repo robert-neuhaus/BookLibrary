@@ -88,7 +88,7 @@ public class Book {
 		List<Throwable> exceptions = new ArrayList<Throwable>();
 		
 		if (!validateTitle(title))
-			exceptions.add(new Throwable("*Title of book must be provided and must be 255 characters or shorter."));
+			exceptions.add(new Throwable("*Title of book must be provided and must be 255 characters or fewer."));
 		
 		try {
 			if (!validateYearPublished(Integer.parseInt(yearPublished)))
