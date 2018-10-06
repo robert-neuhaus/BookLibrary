@@ -1,0 +1,5 @@
+.invalid {
+	-fx-focus-color: red;
+	-fx-highlight-fill: red;
+	-fx-text-box-border: red;
+}
