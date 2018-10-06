@@ -1,11 +1,13 @@
 package controller;
 
 import java.io.IOException;
-import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import exception.validationException;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -25,6 +27,10 @@ public class BookDetailController {
 	@FXML private TextField txtFldIsbn;
 	@FXML private Label lblDtAdded;
 	@FXML private Label lblStatus;
+	@FXML private Label lblTtl;
+	@FXML private Label lblSmmry;
+	@FXML private Label lblIsbn;
+	@FXML private Label lblYrPblshd;
 	@FXML private Button btnSave;
 	
 	private Book book;
@@ -33,26 +39,35 @@ public class BookDetailController {
 		this.book = book;
 	}
 	
-	@FXML public void handleButtonAction(ActionEvent action) throws IOException {
+	@FXML public void handleButtonAction(ActionEvent action) throws Exception {
 		Object source = action.getSource();
 		if(source == btnSave) {
 			logger.info("Save Clicked");
+			lblStatus.setText("");
 			markValidAll();
+			
 			try {
 				this.book.save(txtFldTtl.getText(), txtAreaSmmry.getText(),
-						txtFldYrPblshd.getText(), txtFldIsbn.getText(), 
-						LocalDateTime.parse(lblDtAdded.getText()));
+						txtFldYrPblshd.getText(), txtFldIsbn.getText());
 				lblStatus.setText("Book saved.");
 				lblStatus.setStyle("-fx-text-fill: blue;");
 				logger.info("Book saved.");
-			} catch (Exception e) {
-				logger.info(e.getMessage());
-				lblStatus.setText(e.getMessage());
+			} catch (validationException v) {			
+				List<Throwable> causes = v.getCauses();
+				Label lblSource;
+				TextInputControl txtInptSource = getTxtInptSource(causes.get(0).getMessage());
+				txtInptSource.requestFocus();
 				lblStatus.setStyle("-fx-text-fill: red;");
-				TextInputControl txtInptInvalidSource = getInvalidSource(e.getMessage());
-				markInvalid(txtInptInvalidSource);
-			}
-			
+				
+				for (Throwable cause : causes) {
+					logger.info(cause);
+					lblStatus.setText(lblStatus.getText() + "\n" + cause.getMessage());
+					lblSource = getLblSource(cause.getMessage());
+					lblSource.getStyleClass().add("invalid");
+					txtInptSource = getTxtInptSource(cause.getMessage());
+					txtInptSource.getStyleClass().add("invalid");
+				}
+			}			
 			btnSave.setDisable(true);
 		}
 	}
@@ -65,11 +80,10 @@ public class BookDetailController {
 		txtAreaSmmry.setWrapText(true);
 		setOnChangeListener(txtAreaSmmry);
 		
-		if (Integer.parseInt(book.getYearPublished()) < 0)
+		if (Integer.parseInt(book.getYearPublished()) < 1)
 			txtFldYrPblshd.setText("");
 		else 
-			txtFldYrPblshd.setText(book.getYearPublished());
-		
+			txtFldYrPblshd.setText(book.getYearPublished());		
 		setOnChangeListener(txtFldYrPblshd);
 		
 		lblDtAdded.setText(book.getDateAdded());
@@ -87,25 +101,36 @@ public class BookDetailController {
 		});
 	}
 	
-	public TextInputControl getInvalidSource(String invalidSource) {
-		if (invalidSource.equals("Unable to read year published.") 
-				|| invalidSource.equals("Year published cannot be later than current year."))
+	public TextInputControl getTxtInptSource(String errMsg) {
+		if (errMsg.equals("Unable to read year published.") 
+				|| errMsg.equals("Year published cannot be later than current year."))
 			return this.txtFldYrPblshd;
-		else if (invalidSource.equals("Title of book must be provided.")
-				|| invalidSource.equals("Title of book must be 255 characters or fewer."))
+		else if (errMsg.equals("Title of book must be provided.")
+				|| errMsg.equals("Title of book must be provided and must be 255 characters or shorter."))
 			return this.txtFldTtl;
-		else if (invalidSource.equals("Summary must be 65,535 characters or fewer."))
+		else if (errMsg.equals("Summary must be 65,535 characters or fewer."))
 			return this.txtAreaSmmry;
-		else if (invalidSource.equals("Year published cannot be later than current year."))
+		else if (errMsg.equals("Year published cannot be later than current year."))
 			return this.txtFldYrPblshd;
 		else
 			return this.txtFldIsbn;		
 	}
 	
-	public void markInvalid(TextInputControl txtInptInvalidSource) {
-			txtInptInvalidSource.requestFocus();
-			txtInptInvalidSource.getStyleClass().add("invalid");
-	}
+	 public Label getLblSource(String errMsg) {
+			if (errMsg.equals("Unable to read year published.") 
+					|| errMsg.equals("Year published cannot be later than current year."))
+				return this.lblYrPblshd;
+			else if (errMsg.equals("Title of book must be provided.")
+					|| errMsg.equals("Title of book must be provided and must be 255 characters or shorter."))
+				return this.lblTtl;
+			else if (errMsg.equals("Summary must be 65,535 characters or fewer."))
+				return this.lblSmmry;
+			else if (errMsg.equals("Year published cannot be later than current year."))
+				return this.lblYrPblshd;
+			else
+				return this.lblIsbn;		
+		}
+	
 	
 	public void markValidAll() {
 		txtFldTtl.getStyleClass().remove("invalid");
@@ -114,22 +139,10 @@ public class BookDetailController {
 		txtFldIsbn.getStyleClass().remove("invalid");
 		lblDtAdded.getStyleClass().remove("invalid");
 		lblStatus.getStyleClass().remove("invalid");
-		btnSave.getStyleClass().remove("invalid");		
-	}
-	
-	public void setFocus(String source) {
-		if (source.equals("Unable to read year published.") 
-				|| source.equals("Year published cannot be later than current year."))
-			txtFldYrPblshd.requestFocus();
-		else if (source.equals("Title of book must be provided.")
-				|| source.equals("Title of book must be 255 characters or fewer."))
-			txtFldTtl.requestFocus();
-		else if (source.equals("Summary must be 65,535 characters or fewer."))
-			txtAreaSmmry.requestFocus();
-		else if (source.equals("Year published cannot be later than current year."))
-			txtFldYrPblshd.requestFocus();
-		else if (source.equals("ISBN must be 13 characters or fewer."))
-			txtFldIsbn.requestFocus();
+		lblTtl.getStyleClass().remove("invalid");
+		lblSmmry.getStyleClass().remove("invalid");
+		lblYrPblshd.getStyleClass().remove("invalid");
+		lblIsbn.getStyleClass().remove("invalid");		
 	}
 
 }
