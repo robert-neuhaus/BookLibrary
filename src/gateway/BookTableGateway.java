@@ -104,14 +104,15 @@ public class BookTableGateway {
 				
 				// TODO: LocalDateTime object artifact from previous build
 				//		 to be updated.
-				Date date = new Date(rs.getTimestamp("date_added").getTime());
-				LocalDateTime ldt = LocalDateTime.ofInstant(date.toInstant(), ZoneId.systemDefault());
+//				Date date = new Date(rs.getTimestamp("date_added").getTime());
+//				LocalDateTime ldt = LocalDateTime.ofInstant(date.toInstant(), ZoneId.systemDefault());
 				Book book = new Book( rs.getInt("id")
 								 	, rs.getString("title")
 								 	, rs.getString("summary")
 								 	, rs.getInt("year_published")
 								 	, rs.getString("ISBN"));
 				
+				book.setDateAdded(rs.getTimestamp("date_added"));
 				books.add(book);
 			}
 		} catch (SQLException e) {
@@ -146,10 +147,8 @@ public class BookTableGateway {
 					+ " where id = ?");
 			st.setString(1, book.getTitle());
 			st.setString(2, book.getSummary());
-			// TODO: Change yearpublished to an INT.
 			st.setInt(3, book.getYearPublished());
-			// TODO: Add getPublisher method.
-			st.setInt(4, book.getPublisher());
+			st.setInt(4, book.getPublisherId());
 			st.setString(5,  book.getIsbn());
 			st.executeUpdate();
 			
