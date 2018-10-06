@@ -102,30 +102,28 @@ public class BookDetailController {
 	}
 	
 	public TextInputControl getTxtInptSource(String errMsg) {
-		if (errMsg.equals("Unable to read year published.") 
-				|| errMsg.equals("Year published cannot be later than current year."))
+		if (errMsg.equals("*Unable to read year published.") 
+				|| errMsg.equals("*Year published cannot be later than current year."))
 			return this.txtFldYrPblshd;
-		else if (errMsg.equals("Title of book must be provided.")
-				|| errMsg.equals("Title of book must be provided and must be 255 characters or shorter."))
+		else if (errMsg.equals("*Title of book must be provided and must be 255 characters or shorter."))
 			return this.txtFldTtl;
-		else if (errMsg.equals("Summary must be 65,535 characters or fewer."))
+		else if (errMsg.equals("*Summary must be 65,535 characters or fewer."))
 			return this.txtAreaSmmry;
-		else if (errMsg.equals("Year published cannot be later than current year."))
+		else if (errMsg.equals("*Year published cannot be later than current year."))
 			return this.txtFldYrPblshd;
 		else
 			return this.txtFldIsbn;		
 	}
 	
 	 public Label getLblSource(String errMsg) {
-			if (errMsg.equals("Unable to read year published.") 
-					|| errMsg.equals("Year published cannot be later than current year."))
+			if (errMsg.equals("*Unable to read year published.") 
+					|| errMsg.equals("*Year published cannot be later than current year."))
 				return this.lblYrPblshd;
-			else if (errMsg.equals("Title of book must be provided.")
-					|| errMsg.equals("Title of book must be provided and must be 255 characters or shorter."))
+			else if (errMsg.equals("*Title of book must be provided and must be 255 characters or shorter."))
 				return this.lblTtl;
-			else if (errMsg.equals("Summary must be 65,535 characters or fewer."))
+			else if (errMsg.equals("*Summary must be 65,535 characters or fewer."))
 				return this.lblSmmry;
-			else if (errMsg.equals("Year published cannot be later than current year."))
+			else if (errMsg.equals("*Year published cannot be later than current year."))
 				return this.lblYrPblshd;
 			else
 				return this.lblIsbn;		

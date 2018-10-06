@@ -88,20 +88,20 @@ public class Book {
 		List<Throwable> exceptions = new ArrayList<Throwable>();
 		
 		if (!validateTitle(title))
-			exceptions.add(new Throwable("Title of book must be provided and must be 255 characters or shorter."));
+			exceptions.add(new Throwable("*Title of book must be provided and must be 255 characters or shorter."));
 		
 		try {
 			if (!validateYearPublished(Integer.parseInt(yearPublished)))
-				exceptions.add(new Throwable("Year published cannot be later than current year."));
+				exceptions.add(new Throwable("*Year published cannot be later than current year."));
 		} catch (NumberFormatException e) {
-				exceptions.add(new Throwable("Unable to read year published."));
+				exceptions.add(new Throwable("*Unable to read year published."));
 		}
 		
 		if (!validateIsbn(isbn))
-			exceptions.add(new Throwable("ISBN must be 13 characters or fewer."));
+			exceptions.add(new Throwable("*ISBN must be 13 characters or fewer."));
 		
 		if (!validateSummary(summary))
-			exceptions.add(new Throwable("Summary must be 65,535 characters or fewer."));
+			exceptions.add(new Throwable("*Summary must be 65,535 characters or fewer."));
 		
 		if (!exceptions.isEmpty())
 			throw new validationException(exceptions);
