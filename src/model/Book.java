@@ -47,8 +47,8 @@ public class Book {
 		return this.summary;
 	}
 	
-	public String getYearPublished() {
-		return Integer.toString(this.yearPublished);
+	public int getYearPublished() {
+		return this.yearPublished;
 	}
 	
 	public String getIsbn() {

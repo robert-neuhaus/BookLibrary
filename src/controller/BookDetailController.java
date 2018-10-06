@@ -80,10 +80,10 @@ public class BookDetailController {
 		txtAreaSmmry.setWrapText(true);
 		setOnChangeListener(txtAreaSmmry);
 		
-		if (Integer.parseInt(book.getYearPublished()) < 1)
+		if (book.getYearPublished() < 1)
 			txtFldYrPblshd.setText("");
 		else 
-			txtFldYrPblshd.setText(book.getYearPublished());		
+			txtFldYrPblshd.setText(Integer.toString(book.getYearPublished()));		
 		setOnChangeListener(txtFldYrPblshd);
 		
 		lblDtAdded.setText(book.getDateAdded());
