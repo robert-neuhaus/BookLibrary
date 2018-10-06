@@ -64,15 +64,13 @@ public class BookTableGateway {
 					+ ", summary = ?"
 					+ ", year_published = ?"
 					+ ", publisher_id = ?"
-					+ ", isbn = ?"
-					+ " where id = ?");
+					+ ", isbn = ?");
 			st.setString(1, book.getTitle());
 			st.setString(2, book.getSummary());
 			st.setInt(3, book.getYearPublished());
 			st.setInt(4, book.getPublisherId());
 			st.setString(5,  book.getIsbn());
 			st.executeQuery();
-			
 			
 			conn.commit();
 		} catch(SQLException e) {
