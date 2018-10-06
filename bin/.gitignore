@@ -1,1 +1,8 @@
+/controller/
+/exception/
 /gateway/
+/launcher/
+/log4j2.xml
+/model/
+/styles/
+/view/

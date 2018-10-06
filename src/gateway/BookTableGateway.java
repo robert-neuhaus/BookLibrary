@@ -10,9 +10,9 @@ import java.util.Properties;
 
 import com.mysql.cj.jdbc.MysqlDataSource;
 
-import java.time.*;
-
 import model.Book;
+
+import java.time.*;
 
 public class BookTableGateway {
 
@@ -62,7 +62,7 @@ public class BookTableGateway {
 			// TODO: Change yearpublished to an INT.
 			st.setInt(3, book.getYearPublished());
 			// TODO: Add getPublisher method.
-			st.setInt(4, book.getPublisher());
+			st.setInt(4, book.getPublisherId());
 			st.setString(5,  book.getIsbn());
 			st.executeQuery();
 			

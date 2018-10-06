@@ -13,3 +13,7 @@
 17:02:27.879 INFO  controller.BookDetailController : java.lang.Throwable: *Unable to read year published.
 17:02:32.093 INFO  controller.BookDetailController : Save Clicked
 17:02:32.099 INFO  controller.BookDetailController : Book saved.
+17:30:31.361 INFO  controller.BookDetailController : Save Clicked
+17:30:31.374 INFO  controller.BookDetailController : java.lang.Throwable: *Title of book must be provided and must be 255 characters or fewer.
+17:30:31.377 INFO  controller.BookDetailController : java.lang.Throwable: *Unable to read year published.
+17:30:49.560 INFO  controller.BookListController$1 : double-clicked Rise of the Necromancer
