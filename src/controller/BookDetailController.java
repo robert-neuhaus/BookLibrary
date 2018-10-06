@@ -36,18 +36,21 @@ public class BookDetailController {
 	@FXML public void handleButtonAction(ActionEvent action) throws IOException {
 		Object source = action.getSource();
 		if(source == btnSave) {
-			logger.info("Save Clicked");	
+			logger.info("Save Clicked");
+			markValidAll();
 			try {
 				this.book.save(txtFldTtl.getText(), txtAreaSmmry.getText(),
 						txtFldYrPblshd.getText(), txtFldIsbn.getText(), 
 						LocalDateTime.parse(lblDtAdded.getText()));
 				lblStatus.setText("Book saved.");
 				lblStatus.setStyle("-fx-text-fill: blue;");
+				logger.info("Book saved.");
 			} catch (Exception e) {
 				logger.info(e.getMessage());
 				lblStatus.setText(e.getMessage());
 				lblStatus.setStyle("-fx-text-fill: red;");
-				setFocus(e.getMessage());
+				TextInputControl txtInptInvalidSource = getInvalidSource(e.getMessage());
+				markInvalid(txtInptInvalidSource);
 			}
 			
 			btnSave.setDisable(true);
@@ -75,6 +78,7 @@ public class BookDetailController {
 		setOnChangeListener(txtFldIsbn);
 		
 		btnSave.setDisable(true);
+		
 	}
 	
 	public void setOnChangeListener(TextInputControl txtInpt) {
@@ -83,19 +87,34 @@ public class BookDetailController {
 		});
 	}
 	
-	public void setFocus(String source) {
-		if (source.equals("Unable to read year published.") 
-				|| source.equals("Year published cannot be later than current year."))
-			txtFldYrPblshd.requestFocus();
-		else if (source.equals("Title of book must be provided.")
-				|| source.equals("Title of book must be 255 characters or fewer."))
-			txtFldTtl.requestFocus();
-		else if (source.equals("Summary must be 65,535 characters or fewer."))
-			txtAreaSmmry.requestFocus();
-		else if (source.equals("Year published cannot be later than current year."))
-			txtFldYrPblshd.requestFocus();
-		else if (source.equals("ISBN must be 13 characters of fewer."))
-			txtFldIsbn.requestFocus();
+	public TextInputControl getInvalidSource(String invalidSource) {
+		if (invalidSource.equals("Unable to read year published.") 
+				|| invalidSource.equals("Year published cannot be later than current year."))
+			return this.txtFldYrPblshd;
+		else if (invalidSource.equals("Title of book must be provided.")
+				|| invalidSource.equals("Title of book must be 255 characters or fewer."))
+			return this.txtFldTtl;
+		else if (invalidSource.equals("Summary must be 65,535 characters or fewer."))
+			return this.txtAreaSmmry;
+		else if (invalidSource.equals("Year published cannot be later than current year."))
+			return this.txtFldYrPblshd;
+		else
+			return this.txtFldIsbn;		
+	}
+	
+	public void markInvalid(TextInputControl txtInptInvalidSource) {
+			txtInptInvalidSource.requestFocus();
+			txtInptInvalidSource.getStyleClass().add("invalid");
+	}
+	
+	public void markValidAll() {
+		txtFldTtl.getStyleClass().remove("invalid");
+		txtAreaSmmry.getStyleClass().remove("invalid");
+		txtFldYrPblshd.getStyleClass().remove("invalid");
+		txtFldIsbn.getStyleClass().remove("invalid");
+		lblDtAdded.getStyleClass().remove("invalid");
+		lblStatus.getStyleClass().remove("invalid");
+		btnSave.getStyleClass().remove("invalid");
 	}
 
 }

@@ -30,6 +30,7 @@ public class Main extends Application {
 		BorderPane rootBorderPane = loader.load();
 		MasterController.getInstance().setRootBorderPane((BorderPane) rootBorderPane);
 		Scene scene = new Scene(rootBorderPane);
+		scene.getStylesheets().add("/styles/stylesheet.css");
 		stage.setScene(scene);
 		stage.show();	
 	}

@@ -268,3 +268,158 @@
 18:34:47.146 INFO  controller.BookDetailController : Unable to read year published.
 18:34:49.782 INFO  controller.BookDetailController : Save Clicked
 18:35:13.700 INFO  controller.BookDetailController : Save Clicked
+14:41:49.139 INFO  controller.BookDetailController : Save Clicked
+14:41:49.153 INFO  controller.BookDetailController : Title of book must be provided.
+14:44:23.580 INFO  controller.BookDetailController : Save Clicked
+14:44:23.587 INFO  controller.BookDetailController : Title of book must be provided.
+14:44:26.104 INFO  controller.BookDetailController : Save Clicked
+14:44:26.104 INFO  controller.BookDetailController : Unable to read year published.
+14:44:30.838 INFO  controller.BookDetailController : Save Clicked
+14:44:30.838 INFO  controller.BookDetailController : Year published cannot be later than current year.
+14:44:53.030 INFO  controller.BookDetailController : Save Clicked
+14:44:53.038 INFO  controller.BookDetailController : Title of book must be provided.
+14:44:55.111 INFO  controller.BookDetailController : Save Clicked
+14:44:55.111 INFO  controller.BookDetailController : Year published cannot be later than current year.
+14:45:21.111 INFO  controller.BookDetailController : Save Clicked
+14:45:21.119 INFO  controller.BookDetailController : Year published cannot be later than current year.
+14:54:23.562 INFO  controller.BookDetailController : Save Clicked
+14:54:23.570 INFO  controller.BookDetailController : Year published cannot be later than current year.
+14:55:32.635 INFO  controller.BookDetailController : Save Clicked
+14:55:32.642 INFO  controller.BookDetailController : Year published cannot be later than current year.
+14:55:44.705 INFO  controller.BookDetailController : Save Clicked
+14:55:44.713 INFO  controller.BookDetailController : Year published cannot be later than current year.
+14:57:38.984 INFO  controller.BookDetailController : Save Clicked
+14:57:38.991 INFO  controller.BookDetailController : Year published cannot be later than current year.
+14:59:47.411 INFO  controller.BookDetailController : Save Clicked
+14:59:47.419 INFO  controller.BookDetailController : Title of book must be provided.
+14:59:58.536 INFO  controller.BookDetailController : Save Clicked
+15:00:02.439 INFO  controller.BookDetailController : Save Clicked
+15:00:02.439 INFO  controller.BookDetailController : ISBN must be 13 characters of fewer.
+15:00:34.685 INFO  controller.BookDetailController : Save Clicked
+15:00:34.692 INFO  controller.BookDetailController : Title of book must be provided.
+15:00:38.353 INFO  controller.BookDetailController : Save Clicked
+15:00:38.353 INFO  controller.BookDetailController : Title of book must be provided.
+15:00:40.894 INFO  controller.BookDetailController : Save Clicked
+15:00:40.894 INFO  controller.BookDetailController : ISBN must be 13 characters of fewer.
+15:01:17.167 INFO  controller.BookDetailController : Save Clicked
+15:01:17.175 INFO  controller.BookDetailController : Year published cannot be later than current year.
+15:02:40.610 INFO  controller.BookDetailController : Save Clicked
+15:02:40.618 INFO  controller.BookDetailController : Year published cannot be later than current year.
+15:03:34.198 INFO  controller.BookDetailController : Save Clicked
+15:03:34.205 INFO  controller.BookDetailController : Unable to read year published.
+15:04:51.986 INFO  controller.BookDetailController : Save Clicked
+15:04:51.994 INFO  controller.BookDetailController : Title of book must be provided.
+15:04:58.399 INFO  controller.BookDetailController : Save Clicked
+15:04:58.399 INFO  controller.BookDetailController : ISBN must be 13 characters of fewer.
+15:05:39.841 INFO  controller.BookDetailController : Save Clicked
+15:05:39.848 INFO  controller.BookDetailController : Title of book must be provided.
+15:05:44.886 INFO  controller.BookDetailController : Save Clicked
+15:05:44.887 INFO  controller.BookDetailController : Unable to read year published.
+15:06:05.720 INFO  controller.BookDetailController : Save Clicked
+15:06:05.727 INFO  controller.BookDetailController : Year published cannot be later than current year.
+15:08:37.406 INFO  controller.BookDetailController : Save Clicked
+15:08:37.413 INFO  controller.BookDetailController : Unable to read year published.
+15:09:47.315 INFO  controller.BookDetailController : Save Clicked
+15:09:47.322 INFO  controller.BookDetailController : Year published cannot be later than current year.
+15:10:03.404 INFO  controller.BookDetailController : Save Clicked
+15:10:03.405 INFO  controller.BookDetailController : Year published cannot be later than current year.
+15:10:09.144 INFO  controller.BookDetailController : Save Clicked
+15:10:15.076 INFO  controller.BookDetailController : Save Clicked
+15:10:15.078 INFO  controller.BookDetailController : Summary must be 65,535 characters or fewer.
+15:10:28.299 INFO  controller.BookDetailController : Save Clicked
+15:10:28.300 INFO  controller.BookDetailController : Summary must be 65,535 characters or fewer.
+15:12:15.169 INFO  controller.BookDetailController : Save Clicked
+15:12:15.177 INFO  controller.BookDetailController : Title of book must be provided.
+15:12:18.562 INFO  controller.BookDetailController : Save Clicked
+15:12:18.563 INFO  controller.BookDetailController : Unable to read year published.
+15:12:32.361 INFO  controller.BookDetailController : Save Clicked
+15:12:32.368 INFO  controller.BookDetailController : Year published cannot be later than current year.
+15:12:48.023 INFO  controller.BookDetailController : Save Clicked
+15:12:48.030 INFO  controller.BookDetailController : Year published cannot be later than current year.
+15:13:01.644 INFO  controller.BookDetailController : Save Clicked
+15:13:01.644 INFO  controller.BookDetailController : ISBN must be 13 characters of fewer.
+15:13:29.453 INFO  controller.BookDetailController : Save Clicked
+15:13:29.461 INFO  controller.BookDetailController : Year published cannot be later than current year.
+15:13:55.611 INFO  controller.BookDetailController : Save Clicked
+15:13:55.619 INFO  controller.BookDetailController : Year published cannot be later than current year.
+15:14:20.631 INFO  controller.BookDetailController : Save Clicked
+15:14:20.638 INFO  controller.BookDetailController : Year published cannot be later than current year.
+15:14:48.842 INFO  controller.BookDetailController : Save Clicked
+15:14:48.850 INFO  controller.BookDetailController : Year published cannot be later than current year.
+15:16:03.947 INFO  controller.BookDetailController : Save Clicked
+15:16:03.954 INFO  controller.BookDetailController : Year published cannot be later than current year.
+15:16:08.804 INFO  controller.BookDetailController : Save Clicked
+15:16:08.804 INFO  controller.BookDetailController : Year published cannot be later than current year.
+15:16:27.838 INFO  controller.BookDetailController : Save Clicked
+15:16:29.972 INFO  controller.BookDetailController : Save Clicked
+15:16:29.972 INFO  controller.BookDetailController : ISBN must be 13 characters of fewer.
+15:16:36.305 INFO  controller.BookDetailController : Save Clicked
+15:16:36.305 INFO  controller.BookDetailController : Title of book must be provided.
+15:17:36.619 INFO  controller.BookDetailController : Save Clicked
+15:17:36.627 INFO  controller.BookDetailController : Year published cannot be later than current year.
+15:17:41.876 INFO  controller.BookDetailController : Save Clicked
+15:17:41.876 INFO  controller.BookDetailController : ISBN must be 13 characters of fewer.
+15:17:53.245 INFO  controller.BookDetailController : Save Clicked
+15:17:53.253 INFO  controller.BookDetailController : Unable to read year published.
+15:18:21.587 INFO  controller.BookDetailController : Save Clicked
+15:18:21.595 INFO  controller.BookDetailController : Unable to read year published.
+15:18:28.380 INFO  controller.BookDetailController : Save Clicked
+16:23:07.509 INFO  controller.BookDetailController : Save Clicked
+16:23:07.516 INFO  controller.BookDetailController : Title of book must be provided.
+16:23:09.247 INFO  controller.BookDetailController : Save Clicked
+16:23:09.248 INFO  controller.BookDetailController : Unable to read year published.
+16:23:38.164 INFO  controller.BookDetailController : Save Clicked
+16:23:38.171 INFO  controller.BookDetailController : Unable to read year published.
+16:23:50.383 INFO  controller.BookDetailController : Save Clicked
+16:23:50.392 INFO  controller.BookDetailController : Year published cannot be later than current year.
+16:26:30.282 INFO  controller.BookDetailController : Save Clicked
+16:26:30.289 INFO  controller.BookDetailController : Unable to read year published.
+16:26:49.950 INFO  controller.BookDetailController : Save Clicked
+16:26:49.957 INFO  controller.BookDetailController : Unable to read year published.
+16:26:54.797 INFO  controller.BookDetailController : Save Clicked
+16:28:01.197 INFO  controller.BookDetailController : Save Clicked
+16:28:01.204 INFO  controller.BookDetailController : Unable to read year published.
+16:28:03.155 INFO  controller.BookDetailController : Save Clicked
+16:28:07.431 INFO  controller.BookDetailController : Save Clicked
+16:28:07.432 INFO  controller.BookDetailController : Title of book must be provided.
+16:28:09.607 INFO  controller.BookDetailController : Save Clicked
+16:28:09.607 INFO  controller.BookDetailController : Year published cannot be later than current year.
+16:28:14.012 INFO  controller.BookDetailController : Save Clicked
+16:28:14.012 INFO  controller.BookDetailController : ISBN must be 13 characters of fewer.
+16:28:18.528 INFO  controller.BookDetailController : Save Clicked
+16:28:18.528 INFO  controller.BookDetailController : Year published cannot be later than current year.
+16:28:21.000 INFO  controller.BookDetailController : Save Clicked
+16:28:45.979 INFO  controller.BookDetailController : Save Clicked
+16:28:45.984 INFO  controller.BookDetailController : Summary must be 65,535 characters or fewer.
+16:28:54.692 INFO  controller.BookDetailController : Save Clicked
+16:28:54.696 INFO  controller.BookDetailController : Summary must be 65,535 characters or fewer.
+16:28:59.512 INFO  controller.BookDetailController : Save Clicked
+16:28:59.516 INFO  controller.BookDetailController : Summary must be 65,535 characters or fewer.
+16:29:02.733 INFO  controller.BookDetailController : Save Clicked
+16:29:02.734 INFO  controller.BookDetailController : Unable to read year published.
+16:29:06.789 INFO  controller.BookDetailController : Save Clicked
+16:29:06.789 INFO  controller.BookDetailController : Unable to read year published.
+16:29:09.955 INFO  controller.BookDetailController : Save Clicked
+16:29:09.955 INFO  controller.BookDetailController : Year published cannot be later than current year.
+16:29:11.058 INFO  controller.BookDetailController : Save Clicked
+18:12:17.124 INFO  controller.BookDetailController : Save Clicked
+18:12:17.131 INFO  controller.BookDetailController : Title of book must be provided.
+18:12:22.377 INFO  controller.BookDetailController : Save Clicked
+18:12:22.377 INFO  controller.BookDetailController : ISBN must be 13 characters of fewer.
+18:12:25.156 INFO  controller.BookDetailController : Save Clicked
+18:12:25.156 INFO  controller.BookDetailController : Unable to read year published.
+18:12:28.237 INFO  controller.BookDetailController : Save Clicked
+21:29:03.951 INFO  controller.BookDetailController : Save Clicked
+21:29:03.958 INFO  controller.BookDetailController : Title of book must be provided.
+21:29:16.792 INFO  controller.BookDetailController : Save Clicked
+21:29:16.793 INFO  controller.BookDetailController : Unable to read year published.
+21:29:41.042 INFO  controller.BookDetailController : Save Clicked
+21:29:41.043 INFO  controller.BookDetailController : Year published cannot be later than current year.
+21:29:46.023 INFO  controller.BookDetailController : Save Clicked
+21:29:46.025 INFO  controller.BookDetailController : Book saved.
+21:29:51.416 INFO  controller.BookDetailController : Save Clicked
+21:29:51.416 INFO  controller.BookDetailController : ISBN must be 13 characters of fewer.
+21:30:04.658 INFO  controller.BookDetailController : Save Clicked
+21:30:04.659 INFO  controller.BookDetailController : Book saved.
+21:30:19.454 INFO  controller.BookDetailController : Save Clicked
+21:30:19.454 INFO  controller.BookDetailController : Year published cannot be later than current year.
