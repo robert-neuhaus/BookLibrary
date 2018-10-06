@@ -114,7 +114,22 @@ public class BookDetailController {
 		txtFldIsbn.getStyleClass().remove("invalid");
 		lblDtAdded.getStyleClass().remove("invalid");
 		lblStatus.getStyleClass().remove("invalid");
-		btnSave.getStyleClass().remove("invalid");
+		btnSave.getStyleClass().remove("invalid");		
+	}
+	
+	public void setFocus(String source) {
+		if (source.equals("Unable to read year published.") 
+				|| source.equals("Year published cannot be later than current year."))
+			txtFldYrPblshd.requestFocus();
+		else if (source.equals("Title of book must be provided.")
+				|| source.equals("Title of book must be 255 characters or fewer."))
+			txtFldTtl.requestFocus();
+		else if (source.equals("Summary must be 65,535 characters or fewer."))
+			txtAreaSmmry.requestFocus();
+		else if (source.equals("Year published cannot be later than current year."))
+			txtFldYrPblshd.requestFocus();
+		else if (source.equals("ISBN must be 13 characters or fewer."))
+			txtFldIsbn.requestFocus();
 	}
 
 }

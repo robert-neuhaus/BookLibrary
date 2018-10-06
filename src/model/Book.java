@@ -101,6 +101,7 @@ public class Book {
 		setSummary(summary);
 		setYearPublished(yearPublishedInt);
 		setIsbn(isbn);
+		
 	}
 	
 	public void validateTitle(String title) throws Exception {
@@ -122,7 +123,7 @@ public class Book {
 	
 	public void validateIsbn(String isbn) throws Exception {
 		if (isbn.length() > 13)
-			throw new Exception("ISBN must be 13 characters of fewer.");
+			throw new Exception("ISBN must be 13 characters or fewer.");
 	}
 	
 	@Override
