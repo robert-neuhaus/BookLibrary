@@ -153,6 +153,7 @@ public class BookTableGateway {
 			st.setInt(3, Book.getYearPublished());
 			st.setInt(4, Book.getPublisherId());
 			st.setString(5,  Book.getIsbn());
+			st.setInt(6, Book.getId());
 			st.executeUpdate();
 			
 			conn.commit();
