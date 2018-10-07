@@ -23,8 +23,8 @@ public class BookTableGateway {
 	
 	public BookTableGateway() throws Exception{
 		
-		TimeZone timeZone = TimeZone.getTimeZone("CDT");
-		TimeZone.setDefault(timeZone);
+//		TimeZone timeZone = TimeZone.getTimeZone("CDT");
+//		TimeZone.setDefault(timeZone);
 		
 		conn = null;
 		
