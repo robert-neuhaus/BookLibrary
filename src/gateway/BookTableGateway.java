@@ -47,9 +47,9 @@ public class BookTableGateway {
         } catch (IOException e) {
 			e.printStackTrace();
 		} 
-//        catch (SQLException e) {
-//			e.printStackTrace();
-//		}
+        catch (SQLException e) {
+			e.printStackTrace();
+		}
 	}
 	
 	public static BookTableGateway getInstance() throws Exception{
