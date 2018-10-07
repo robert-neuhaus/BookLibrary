@@ -41,6 +41,8 @@ public class BookDetailController {
 	
 	@FXML public void handleButtonAction(ActionEvent action) throws Exception {
 		Object source = action.getSource();
+		int isNewBook = 1;
+		
 		if(source == btnSave) {
 			logger.info("Save Clicked");
 			lblStatus.setText("");
@@ -49,9 +51,24 @@ public class BookDetailController {
 			try {
 				this.book.save(txtFldTtl.getText(), txtAreaSmmry.getText(),
 						txtFldYrPblshd.getText(), txtFldIsbn.getText());
+				
+					if (this.book.getId() > 0)
+						isNewBook = 0;
+					
 					BookTableGateway.getInstance().updateBook(book);
-			}catch (validationException v) {			
-				List<Throwable> causes = v.getCauses();
+										
+					if (isNewBook == 1) {
+						lblStatus.setText("Book added.");				
+						logger.info("Book added.");
+					} else {
+						lblStatus.setText("Book updated.");				
+						logger.info("Book updated.");
+					}
+					lblStatus.setStyle("-fx-text-fill: blue;");
+					
+					
+			}catch (validationException ve) {			
+				List<Throwable> causes = ve.getCauses();
 				Label lblSource;
 				TextInputControl txtInptSource = getTxtInptSource(causes.get(0).getMessage());
 				txtInptSource.requestFocus();
@@ -70,10 +87,6 @@ public class BookDetailController {
 				lblStatus.setStyle("-fx-text-fill: red;");
 				}			
 			}			
-			
-			lblStatus.setText("Book saved.");
-			lblStatus.setStyle("-fx-text-fill: blue;");
-			logger.info("Book saved.");
 			btnSave.setDisable(true);
 	}
 	
@@ -85,7 +98,7 @@ public class BookDetailController {
 		txtAreaSmmry.setWrapText(true);
 		setOnChangeListener(txtAreaSmmry);
 		
-		if (book.getYearPublished() < 1)
+		if (book.getYearPublished() < 0)
 			txtFldYrPblshd.setText("");
 		else 
 			txtFldYrPblshd.setText(Integer.toString(book.getYearPublished()));		

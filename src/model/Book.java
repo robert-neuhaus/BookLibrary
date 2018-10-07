@@ -22,7 +22,7 @@ public class Book {
 		this.id = 0;
 		this.title = "";
 		this.summary = "";
-		this.yearPublished = 0;
+		this.yearPublished = -1;
 		this.isbn = "";
 		this.dateAdded = null;
 		this.publisher = 0;
@@ -99,10 +99,10 @@ public class Book {
 		List<Throwable> exceptions = new ArrayList<Throwable>();
 		
 		if (!validateTitle(title))
-			exceptions.add(new Throwable("*Title of book must be provided and must be 255 characters or fewer."));
+			exceptions.add(new Throwable("*Title of book must be provided and must be 255 characters or fewer."));		
 		
 		try {
-			if (!validateYearPublished(Integer.parseInt(yearPublished)))
+			if (!yearPublished.equals("") && !validateYearPublished(Integer.parseInt(yearPublished)))
 				exceptions.add(new Throwable("*Year published cannot be later than current year."));
 		} catch (NumberFormatException e) {
 				exceptions.add(new Throwable("*Unable to read year published."));
@@ -119,9 +119,12 @@ public class Book {
 		
 		setTitle(title);
 		setSummary(summary);
-		setYearPublished(Integer.parseInt(yearPublished));
 		setIsbn(isbn);
 		
+		if (yearPublished.equals(""))
+			setYearPublished(-1);
+		else
+			Integer.parseInt(yearPublished);		
 	}
 	
 	public boolean validateTitle(String title) {
