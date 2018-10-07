@@ -137,6 +137,11 @@ public class BookTableGateway {
 	}
 	
 	public void updateBook (Book Book) throws Exception {
+		
+		if(Book.getId() == 0) {
+			this.createBook(Book);
+		}
+		
 		PreparedStatement st = null;
 		try {
 			conn.setAutoCommit(false);
