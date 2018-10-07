@@ -46,9 +46,10 @@ public class BookTableGateway {
 
         } catch (IOException e) {
 			e.printStackTrace();
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
+		} 
+//        catch (SQLException e) {
+//			e.printStackTrace();
+//		}
 	}
 	
 	public static BookTableGateway getInstance() throws Exception{
@@ -63,7 +64,7 @@ public class BookTableGateway {
 		try {
 			conn.setAutoCommit(false);
 			
-			st = conn.prepareStatement("insert BOOK "
+			st = conn.prepareStatement("insert into BOOK "
 					+ "set title = ?"
 					+ ", summary = ?"
 					+ ", year_published = ?"
