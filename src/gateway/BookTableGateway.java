@@ -103,11 +103,7 @@ public class BookTableGateway {
 		PreparedStatement st = null;
 		ResultSet rs = null;
 		try {
-			st = conn.prepareStatement("select a.id as book_id "
-					+ ", a.title, a.summary, a.summary, "
-					+ "ifnull(b.summary, '') as summary, a.year_published"
-					+ " a.publisher_id, a.isbn, a.date_added from "
-					+ "BOOK a left join make b on a.published_id = b.id");
+			st = conn.prepareStatement("select * FROM BOOK");
 		
 			rs = st.executeQuery();
 			
