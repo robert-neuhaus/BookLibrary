@@ -61,6 +61,7 @@ public class BookTableGateway {
 	
 	public void createBook(Book Book) throws Exception{
 		PreparedStatement st = null;
+		ResultSet rs = null;
 		try {
 			conn.setAutoCommit(false);
 			
@@ -74,6 +75,7 @@ public class BookTableGateway {
 			st.executeUpdate();
 			
 			conn.commit();
+			
 		} catch(SQLException e) {
 			try {
 				conn.rollback();
@@ -90,6 +92,21 @@ public class BookTableGateway {
 				
 			} catch (SQLException e) {
 				throw new SQLException("SQL Error: " + e.getMessage());
+			}
+		}
+		
+		// Retrieve index of newly obtained
+		try {
+			st = conn.prepareStatement("SELECT id FROM Book ORDER BY id DESC");
+			rs = st.executeQuery();
+			rs.next();
+			Book.setId(rs.getInt("id"));
+			
+		}catch(SQLException e) {
+			throw e;
+		}finally {
+			if(st != null) {
+				st.close();
 			}
 		}
 		
