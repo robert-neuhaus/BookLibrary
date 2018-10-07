@@ -1,5 +1,6 @@
 package controller;
 
+import java.sql.SQLException;
 import java.util.List;
 
 import org.apache.logging.log4j.LogManager;
@@ -48,11 +49,8 @@ public class BookDetailController {
 			try {
 				this.book.save(txtFldTtl.getText(), txtAreaSmmry.getText(),
 						txtFldYrPblshd.getText(), txtFldIsbn.getText());
-				if (book.getId() == -1)
-					BookTableGateway.getInstance().createBook(book);
-				if (book.getId() != -1)
 					BookTableGateway.getInstance().updateBook(book);
-			} catch (validationException v) {			
+			}catch (validationException v) {			
 				List<Throwable> causes = v.getCauses();
 				Label lblSource;
 				TextInputControl txtInptSource = getTxtInptSource(causes.get(0).getMessage());
@@ -67,13 +65,16 @@ public class BookDetailController {
 					txtInptSource = getTxtInptSource(cause.getMessage());
 					txtInptSource.getStyleClass().add("invalid");
 				}
+			}catch (SQLException se) {
+				lblStatus.setText("Failed to save changes to database.");
+				lblStatus.setStyle("-fx-text-fill: red;");
+				}			
 			}			
 			
 			lblStatus.setText("Book saved.");
 			lblStatus.setStyle("-fx-text-fill: blue;");
 			logger.info("Book saved.");
 			btnSave.setDisable(true);
-		}
 	}
 	
 	public void initialize() {

@@ -19,7 +19,7 @@ public class Book {
 	
 	
 	public Book() {
-		this.id = -1;
+		this.id = 0;
 		this.title = "";
 		this.summary = "";
 		this.yearPublished = 0;
