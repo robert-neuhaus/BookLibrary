@@ -8,6 +8,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import gateway.BookTableGateway;
+import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -32,16 +33,14 @@ public class BookListController implements Initializable {
 	public void initialize(URL location, ResourceBundle resources) {
 		ObservableList<Book> items = null;
 		try {
-			items = (ObservableList<Book>) BookTableGateway.getInstance().getBooks();
+			items = FXCollections.observableArrayList(BookTableGateway.getInstance().getBooks());
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 			
-		if (books != null) {
-			for(Book book : books) {
-				items.add(book);
-			}
+		if (items != null) {
+			LstVwBookList.setItems(items);
 		}
 
 		LstVwBookList.setOnMouseClicked(new EventHandler<MouseEvent>() {
