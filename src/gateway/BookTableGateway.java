@@ -116,7 +116,7 @@ public class BookTableGateway {
 		PreparedStatement st = null;
 		ResultSet rs = null;
 		try {
-			st = conn.prepareStatement("select * FROM Book");
+			st = conn.prepareStatement("select * FROM Book ORDER BY title ASC");
 		
 			rs = st.executeQuery();
 			
