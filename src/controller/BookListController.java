@@ -7,6 +7,7 @@ import java.util.ResourceBundle;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import gateway.BookTableGateway;
 import javafx.collections.ObservableList;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -29,7 +30,13 @@ public class BookListController implements Initializable {
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
-		ObservableList<Book> items = LstVwBookList.getItems();
+		ObservableList<Book> items = null;
+		try {
+			items = (ObservableList<Book>) BookTableGateway.getInstance().getBooks();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 			
 		if (books != null) {
 			for(Book book : books) {

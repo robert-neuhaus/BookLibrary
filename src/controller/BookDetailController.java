@@ -6,6 +6,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import exception.validationException;
+import gateway.BookTableGateway;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -47,9 +48,10 @@ public class BookDetailController {
 			try {
 				this.book.save(txtFldTtl.getText(), txtAreaSmmry.getText(),
 						txtFldYrPblshd.getText(), txtFldIsbn.getText());
-				lblStatus.setText("Book saved.");
-				lblStatus.setStyle("-fx-text-fill: blue;");
-				logger.info("Book saved.");
+				if (book.getId() == -1)
+					BookTableGateway.getInstance().createBook(book);
+				if (book.getId() != -1)
+					BookTableGateway.getInstance().updateBook(book);
 			} catch (validationException v) {			
 				List<Throwable> causes = v.getCauses();
 				Label lblSource;
@@ -66,6 +68,10 @@ public class BookDetailController {
 					txtInptSource.getStyleClass().add("invalid");
 				}
 			}			
+			
+			lblStatus.setText("Book saved.");
+			lblStatus.setStyle("-fx-text-fill: blue;");
+			logger.info("Book saved.");
 			btnSave.setDisable(true);
 		}
 	}
@@ -84,7 +90,8 @@ public class BookDetailController {
 			txtFldYrPblshd.setText(Integer.toString(book.getYearPublished()));		
 		setOnChangeListener(txtFldYrPblshd);
 		
-		lblDtAdded.setText(book.getDateAdded().toString());
+		if (book.getDateAdded() != null)
+			lblDtAdded.setText(book.getDateAdded().toString());
 		
 		txtFldIsbn.setText(book.getIsbn());
 		setOnChangeListener(txtFldIsbn);

@@ -24,7 +24,7 @@ public class Book {
 		this.summary = "";
 		this.yearPublished = 0;
 		this.isbn = "";
-		this.dateAdded = Timestamp.valueOf(LocalDateTime.now());
+		this.dateAdded = null;
 		this.publisher = 0;
 	}
 
