@@ -59,22 +59,22 @@ public class BookTableGateway {
 		return instance;
 	}
 	
-	public void createBook(Book book) throws Exception{
+	public void createBook(Book Book) throws Exception{
 		PreparedStatement st = null;
 		try {
 			conn.setAutoCommit(false);
 			
-			st = conn.prepareStatement("insert into BOOK "
+			st = conn.prepareStatement("insert into Book "
 					+ "set title = ?"
 					+ ", summary = ?"
 					+ ", year_published = ?"
 					+ ", publisher_id = ?"
 					+ ", isbn = ?");
-			st.setString(1, book.getTitle());
-			st.setString(2, book.getSummary());
-			st.setInt(3, book.getYearPublished());
-			st.setInt(4, book.getPublisherId());
-			st.setString(5,  book.getIsbn());
+			st.setString(1, Book.getTitle());
+			st.setString(2, Book.getSummary());
+			st.setInt(3, Book.getYearPublished());
+			st.setInt(4, Book.getPublisherId());
+			st.setString(5,  Book.getIsbn());
 			st.executeQuery();
 			
 			conn.commit();
@@ -99,11 +99,11 @@ public class BookTableGateway {
 		
 	}
 	public List<Book> getBooks(){
-		List<Book> books = new ArrayList<>();
+		List<Book> Books = new ArrayList<>();
 		PreparedStatement st = null;
 		ResultSet rs = null;
 		try {
-			st = conn.prepareStatement("select * FROM BOOK");
+			st = conn.prepareStatement("select * FROM Book");
 		
 			rs = st.executeQuery();
 			
@@ -113,14 +113,14 @@ public class BookTableGateway {
 				//		 to be updated.
 //				Date date = new Date(rs.getTimestamp("date_added").getTime());
 //				LocalDateTime ldt = LocalDateTime.ofInstant(date.toInstant(), ZoneId.systemDefault());
-				Book book = new Book( rs.getInt("id")
+				Book Book = new Book( rs.getInt("id")
 								 	, rs.getString("title")
 								 	, rs.getString("summary")
 								 	, rs.getInt("year_published")
 								 	, rs.getString("ISBN"));
 				
-				book.setDateAdded(rs.getTimestamp("date_added"));
-				books.add(book);
+				Book.setDateAdded(rs.getTimestamp("date_added"));
+				Books.add(Book);
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -137,26 +137,26 @@ public class BookTableGateway {
 			}
 		}
 		
-		return books;
+		return Books;
 	}
 	
-	public void updateBook (Book book) throws Exception {
+	public void updateBook (Book Book) throws Exception {
 		PreparedStatement st = null;
 		try {
 			conn.setAutoCommit(false);
 			
-			st = conn.prepareStatement("update BOOK "
+			st = conn.prepareStatement("update Book "
 					+ "set title = ?"
 					+ ", summary = ?"
 					+ ", year_published = ?"
 					+ ", publisher_id = ?"
 					+ ", isbn = ?"
 					+ " where id = ?");
-			st.setString(1, book.getTitle());
-			st.setString(2, book.getSummary());
-			st.setInt(3, book.getYearPublished());
-			st.setInt(4, book.getPublisherId());
-			st.setString(5,  book.getIsbn());
+			st.setString(1, Book.getTitle());
+			st.setString(2, Book.getSummary());
+			st.setInt(3, Book.getYearPublished());
+			st.setInt(4, Book.getPublisherId());
+			st.setString(5,  Book.getIsbn());
 			st.executeUpdate();
 			
 			conn.commit();
@@ -181,13 +181,13 @@ public class BookTableGateway {
 		
 	}
 	
-	public void deleteBook(Book book) throws Exception{
+	public void deleteBook(Book Book) throws Exception{
 		PreparedStatement st = null;
 		try {
 			conn.setAutoCommit(false);
-			st = conn.prepareStatement("DELETE from BOOK"
+			st = conn.prepareStatement("DELETE from Book"
 					  +"WHERE id = ?");
-			st.setInt(1, book.getId());
+			st.setInt(1, Book.getId());
 			st.executeUpdate();
 			
 			conn.commit();
