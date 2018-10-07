@@ -70,7 +70,7 @@ public class BookTableGateway {
 			st.setInt(3, Book.getYearPublished());
 			st.setInt(4, Book.getPublisherId());
 			st.setString(5,  Book.getIsbn());
-			st.executeQuery();
+			st.executeUpdate();
 			
 			conn.commit();
 		} catch(SQLException e) {
