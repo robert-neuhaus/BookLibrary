@@ -181,7 +181,7 @@ public class BookTableGateway {
 		PreparedStatement st = null;
 		try {
 			conn.setAutoCommit(false);
-			st = conn.prepareStatement("DELETE from Book"
+			st = conn.prepareStatement("DELETE from Book "
 					  +"WHERE id = ?");
 			st.setInt(1, Book.getId());
 			st.executeUpdate();
