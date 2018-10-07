@@ -64,7 +64,7 @@ public class BookTableGateway {
 		try {
 			conn.setAutoCommit(false);
 			
-			st = conn.prepareStatement("insert into Book ('title', summary, year_published, publisher_id, 'isbn') values ( ?, ?, ?, ?, ?)");
+			st = conn.prepareStatement("insert into Book (title, summary, year_published, publisher_id, isbn) values ( ?, ?, ?, ?, ?)");
 			st.setString(1, Book.getTitle());
 			st.setString(2, Book.getSummary());
 			st.setInt(3, Book.getYearPublished());
