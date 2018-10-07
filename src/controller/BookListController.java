@@ -39,11 +39,12 @@ public class BookListController implements Initializable {
             public void handle(MouseEvent click) {
                 if(click.getClickCount() == 2) {
                 	Book selected = LstVwBookList.getSelectionModel().getSelectedItem();                   
-                	logger.info("double-clicked " + selected);               	
-        			MasterController.getInstance().changeView(
-        					"../view/view_bookDetail.fxml", 
-        					new BookDetailController(selected), 
-        					selected);       			              	
+                	logger.info("double-clicked " + selected);
+                	if (selected != null)
+	        			MasterController.getInstance().changeView(
+	        					"../view/view_bookDetail.fxml", 
+	        					new BookDetailController(selected), 
+	        					selected);       			              	
                 }
             }
         });
