@@ -124,7 +124,7 @@ public class Book {
 		if (yearPublished.equals(""))
 			setYearPublished(-1);
 		else
-			Integer.parseInt(yearPublished);		
+			setYearPublished(Integer.parseInt(yearPublished));		
 	}
 	
 	public boolean validateTitle(String title) {
