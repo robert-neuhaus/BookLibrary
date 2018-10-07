@@ -163,6 +163,8 @@ public class BookTableGateway {
 			}catch(SQLException e1) {
 				e1.printStackTrace();
 			}
+			throw e;
+			
 		} finally {
 			try {
 				if(st != null) {
