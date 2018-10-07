@@ -7,6 +7,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
+import java.util.TimeZone;
 
 import com.mysql.cj.jdbc.MysqlDataSource;
 
@@ -21,6 +22,9 @@ public class BookTableGateway {
 	
 	
 	public BookTableGateway() throws Exception{
+		
+		TimeZone timeZone = TimeZone.getTimeZone("CDT");
+		TimeZone.setDefault(timeZone);
 		
 		conn = null;
 		
