@@ -117,12 +117,22 @@ public class BookTableGateway {
 		
 	}
 	
+	public List<Audit> getAudits(){
+		List<Audit> Audits = new ArrayList<>();
+		
+		// TODO: Add query
+		// TODO: Create Audit object
+		
+	}
+	
 	public List<Book> getBooks(){	// TimeStamp : O/O
 		List<Book> Books = new ArrayList<>();
 		PreparedStatement st = null;
 		ResultSet rs = null;
 		try {
-			st = conn.prepareStatement("select b.*, p.* FROM Book b, Publisher p WHERE b.publisher_id = p.publisher_id ORDER BY title ASC");
+			st = conn.prepareStatement( "select b.*, p.* FROM Book b, Publisher p "
+									  + "WHERE b.publisher_id = p.publisher_id "
+									  + "ORDER BY title ASC");
 		
 			rs = st.executeQuery();
 			
@@ -137,8 +147,7 @@ public class BookTableGateway {
 				// Retrieve TimeStamp separately to be converted.
 				Date date = new Date(rs.getTimestamp("date_added").getTime());
 				LocalDateTime ldt = LocalDateTime.ofInstant(date.toInstant(), ZoneId.systemDefault());
-				
-				// TODO: Make sure Robbie changes local field to LDT type.
+			
 				Book.setDateAdded(ldt);
 				
 				Books.add(Book);
