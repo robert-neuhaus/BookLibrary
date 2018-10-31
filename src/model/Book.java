@@ -14,7 +14,7 @@ public class Book {
 	private String summary;
 	private int yearPublished;
 	private String isbn;
-	private Timestamp dateAdded;
+	private LocalDateTime dateAdded;
 	private int publisher;
 	
 	
@@ -57,7 +57,7 @@ public class Book {
 		return this.isbn;
 	}
 	
-	public Timestamp getDateAdded() {
+	public LocalDateTime getDateAdded() {
 		return this.dateAdded;
 	}
 	
@@ -86,7 +86,7 @@ public class Book {
 		this.isbn = isbn;
 	}
 	
-	public void setDateAdded(Timestamp dateAdded) {
+	public void setDateAdded(LocalDateTime dateAdded) {
 		this.dateAdded = dateAdded;
 	}
 	
