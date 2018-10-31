@@ -28,8 +28,8 @@ public class BookTableGateway {
 		
 		conn = null;
 		
-		Properties props = new Properties();
-		FileInputStream fis = null;
+		Properties 	   props = new Properties();
+		FileInputStream  fis = null;
         try {
 			fis = new FileInputStream("db.properties");
 	        props.load(fis);
@@ -37,9 +37,9 @@ public class BookTableGateway {
 
 	        //create the data source
 	        MysqlDataSource ds = new MysqlDataSource();
-	        ds.setURL(props.getProperty("MYSQL_DB_URL"));
-	        ds.setUser(props.getProperty("MYSQL_DB_USERNAME"));
-	        ds.setPassword(props.getProperty("MYSQL_DB_PASSWORD"));
+	        ds.setURL		(props.getProperty("MYSQL_DB_URL"));
+	        ds.setUser		(props.getProperty("MYSQL_DB_USERNAME"));
+	        ds.setPassword	(props.getProperty("MYSQL_DB_PASSWORD"));
 
 			//create the connection
 			conn = ds.getConnection();
@@ -61,17 +61,23 @@ public class BookTableGateway {
 	
 	public void createBook(Book Book) throws Exception{
 		PreparedStatement st = null;
-		ResultSet rs = null;
+		ResultSet 		  rs = null;
 		try {
 			conn.setAutoCommit(false);
 			
 			// new comment.
-			st = conn.prepareStatement("insert into Book (title, summary, year_published, publisher_id, isbn) values ( ?, ?, ?, ?, ?)");
-			st.setString(1, Book.getTitle());
-			st.setString(2, Book.getSummary());
-			st.setInt(3, Book.getYearPublished());
-			st.setInt(4, Book.getPublisherId());
-			st.setString(5,  Book.getIsbn());
+			st = conn.prepareStatement( "insert into Book ("
+									  + "title, "
+									  + "summary, "
+									  + "year_published, "
+									  + "publisher_id, "
+									  + "isbn"
+									  + ") values ( ?, ?, ?, ?, ?)");
+			st.setString	(1, Book.getTitle());
+			st.setString	(2, Book.getSummary());
+			st.setInt		(3, Book.getYearPublished());
+			st.setInt		(4, Book.getPublisherId());
+			st.setString	(5, Book.getIsbn());
 			st.executeUpdate();
 			
 			conn.commit();
@@ -122,17 +128,19 @@ public class BookTableGateway {
 			
 			while(rs.next()) {
 				
-				// TODO: LocalDateTime object artifact from previous build
-				//		 to be updated.
-//				Date date = new Date(rs.getTimestamp("date_added").getTime());
-//				LocalDateTime ldt = LocalDateTime.ofInstant(date.toInstant(), ZoneId.systemDefault());
 				Book Book = new Book( rs.getInt("id")
 								 	, rs.getString("title")
 								 	, rs.getString("summary")
 								 	, rs.getInt("year_published")
 								 	, rs.getString("ISBN"));
 				
-				Book.setDateAdded(rs.getTimestamp("date_added"));
+				// Retrieve TimeStamp separately to be converted.
+				Date date = new Date(rs.getTimestamp("date_added").getTime());
+				LocalDateTime ldt = LocalDateTime.ofInstant(date.toInstant(), ZoneId.systemDefault());
+				
+				// TODO: Make sure Robbie changes local field to LDT type.
+				Book.setDateAdded(ldt);
+				
 				Books.add(Book);
 			}
 		} catch (SQLException e) {
