@@ -21,7 +21,7 @@ public class BookTableGateway {
 	private static BookTableGateway instance = null;
 	
 	
-	public BookTableGateway() throws Exception{
+	public BookTableGateway() throws Exception{	// TimeStamp : X/X
 		
 //		TimeZone timeZone = TimeZone.getTimeZone("CDT");
 //		TimeZone.setDefault(timeZone);
@@ -52,20 +52,19 @@ public class BookTableGateway {
 		}
 	}
 	
-	public static BookTableGateway getInstance() throws Exception{
+	public static BookTableGateway getInstance() throws Exception{// TimeStamp : X/X
 		if(instance == null) {
 			instance = new BookTableGateway();
 		}
 		return instance;
 	}
 	
-	public void createBook(Book Book) throws Exception{
+	public void createBook(Book Book) throws Exception{// TimeStamp : X/O
 		PreparedStatement st = null;
 		ResultSet 		  rs = null;
 		try {
 			conn.setAutoCommit(false);
 			
-			// new comment.
 			st = conn.prepareStatement( "insert into Book ("
 									  + "title, "
 									  + "summary, "
@@ -117,7 +116,8 @@ public class BookTableGateway {
 		}
 		
 	}
-	public List<Book> getBooks(){
+	
+	public List<Book> getBooks(){	// TimeStamp : O/O
 		List<Book> Books = new ArrayList<>();
 		PreparedStatement st = null;
 		ResultSet rs = null;
@@ -161,7 +161,7 @@ public class BookTableGateway {
 		return Books;
 	}
 	
-	public void updateBook (Book Book) throws Exception {
+	public void updateBook(Book Book) throws Exception {// TimeStamp : X/O
 		
 		if(Book.getId() == 0) {
 			this.createBook(Book);
@@ -210,12 +210,13 @@ public class BookTableGateway {
 		
 	}
 	
-	public void deleteBook(Book Book) throws Exception{
+	public void deleteBook(Book Book) throws Exception{// TimeStamp : X/X
+		
 		PreparedStatement st = null;
+		
 		try {
 			conn.setAutoCommit(false);
-			st = conn.prepareStatement("DELETE from Book "
-					  +"WHERE id = ?");
+			st = conn.prepareStatement("DELETE FROM Book WHERE id = ?");
 			st.setInt(1, Book.getId());
 			st.executeUpdate();
 			
@@ -237,7 +238,40 @@ public class BookTableGateway {
 		}
 	}
 	
-	public void close() {
+	public LocalDateTime getLastModified(int key){// TimeStamp : O/O
+		
+		PreparedStatement st = null;
+		ResultSet 		  rs = null;
+		LocalDateTime    ldt = null;
+		Date 			date = null;
+		
+		try {
+			st   = conn.prepareStatement("SELECT * FROM Book WHERE id = ?");
+			st.setInt(1,  key);
+			rs   = st.executeQuery();
+			
+			date = new Date(rs.getTimestamp("last_modified").getTime());
+			ldt  = LocalDateTime.ofInstant(date.toInstant(), ZoneId.systemDefault());
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if(rs != null) {
+					rs.close();
+				}
+				if(st != null) {
+					st.close();
+				}
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		
+		return ldt;
+	}
+	
+	public void close() {// TimeStamp : X/X
 		if(conn!=null) {
 			try {
 				conn.close();
