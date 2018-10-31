@@ -122,7 +122,7 @@ public class BookTableGateway {
 		PreparedStatement st = null;
 		ResultSet rs = null;
 		try {
-			st = conn.prepareStatement("select * FROM Book ORDER BY title ASC");
+			st = conn.prepareStatement("select b.*, p.* FROM Book b, Publisher p WHERE b.publisher_id = p.publisher_id ORDER BY title ASC");
 		
 			rs = st.executeQuery();
 			
@@ -159,6 +159,40 @@ public class BookTableGateway {
 		}
 		
 		return Books;
+	}
+	
+	public List<String> getPublishers(){
+		
+		List<String> publishers = new ArrayList<>();
+		PreparedStatement st = null;
+		ResultSet rs = null;
+		
+		try {
+			st = conn.prepareStatement("select * FROM Publisher ORDER BY title ASC");
+		
+			rs = st.executeQuery();
+			
+			while(rs.next()) {
+				publishers.add(rs.getString("name"));
+			}
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if(rs != null) {
+					rs.close();
+				}
+				if(st != null) {
+					st.close();
+				}
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		
+		
+		return publishers;
 	}
 	
 	public void updateBook(Book Book) throws Exception {// TimeStamp : X/O
