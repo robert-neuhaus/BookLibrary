@@ -23,8 +23,8 @@ public class BookTableGateway {
 	
 	public BookTableGateway() throws Exception{	// TimeStamp : X/X
 		
-//		TimeZone timeZone = TimeZone.getTimeZone("CDT");
-//		TimeZone.setDefault(timeZone);
+		//TimeZone timeZone = TimeZone.getTimeZone("CDT");
+		//TimeZone.setDefault(timeZone);
 		
 		conn = null;
 		
@@ -116,7 +116,7 @@ public class BookTableGateway {
 		}
 		
 	}
-	
+	/*
 	public List<Audit> getAudits(){
 		List<Audit> Audits = new ArrayList<>();
 		
@@ -124,7 +124,7 @@ public class BookTableGateway {
 		// TODO: Create Audit object
 		
 	}
-	
+	*/
 	public List<Book> getBooks(){	// TimeStamp : O/O
 		List<Book> Books = new ArrayList<>();
 		PreparedStatement st = null;
@@ -145,10 +145,10 @@ public class BookTableGateway {
 								 	, rs.getString("ISBN"));
 				
 				// Retrieve TimeStamp separately to be converted.
-				Date date = new Date(rs.getTimestamp("date_added").getTime());
-				LocalDateTime ldt = LocalDateTime.ofInstant(date.toInstant(), ZoneId.systemDefault());
+				//Date date = new Date(rs.getTimestamp("date_added").getTime());
+				//LocalDateTime ldt = LocalDateTime.ofInstant(date.toInstant(), ZoneId.systemDefault());
 			
-				Book.setDateAdded(ldt);
+				Book.setLastModified(rs.getTimestamp("last_modified").toLocalDateTime());
 				
 				Books.add(Book);
 			}
