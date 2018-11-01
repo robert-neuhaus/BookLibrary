@@ -125,7 +125,7 @@ public class BookTableGateway {
 		
 	}
 	*/
-	public List<Book> getBooks(){	// TimeStamp : O/O
+	public List<Book> getBooks() throws Exception{	// TimeStamp : O/O
 		List<Book> Books = new ArrayList<>();
 		PreparedStatement st = null;
 		ResultSet rs = null;
@@ -138,6 +138,8 @@ public class BookTableGateway {
 			
 			while(rs.next()) {
 				
+				LocalDateTime ldt = null;
+				
 				Book Book = new Book( rs.getInt("id")
 								 	, rs.getString("title")
 								 	, rs.getString("summary")
@@ -146,11 +148,11 @@ public class BookTableGateway {
 				
 				Book.setDateAdded(rs.getTimestamp("date_added").toLocalDateTime());
 				
-				Book.setLastModified(rs.getTimestamp("last_modified").toLocalDateTime());
+				ldt = rs.getTimestamp("last_modified").toLocalDateTime();
 				
 				Books.add(Book);
 			}
-		} catch (SQLException e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
 			try {
