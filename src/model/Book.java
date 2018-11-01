@@ -14,6 +14,7 @@ public class Book {
 	private int yearPublished;
 	private String isbn;
 	private LocalDateTime dateAdded;
+	private LocalDateTime lastModified;
 	private int publisher;
 	
 	
@@ -60,6 +61,10 @@ public class Book {
 		return this.dateAdded;
 	}
 	
+	public LocalDateTime getLastModified() {
+		return this.getLastModified();
+	}
+	
 	//TODO remove
 	public int getPublisherId() {
 		return this.publisher;
@@ -91,6 +96,10 @@ public class Book {
 	
 	public void setPublisherId(int publisher) {
 		this.publisher = publisher;
+	}
+	
+	public void setLastModified(LocalDateTime lastModified) {
+		this.lastModified = lastModified;
 	}
 	
 	public void save(String title, String summary, String yearPublished, 
