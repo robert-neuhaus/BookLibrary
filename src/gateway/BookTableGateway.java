@@ -144,10 +144,8 @@ public class BookTableGateway {
 								 	, rs.getInt("year_published")
 								 	, rs.getString("ISBN"));
 				
-				// Retrieve TimeStamp separately to be converted.
-				//Date date = new Date(rs.getTimestamp("date_added").getTime());
-				//LocalDateTime ldt = LocalDateTime.ofInstant(date.toInstant(), ZoneId.systemDefault());
-			
+				Book.setDateAdded(rs.getTimestamp("date_added").toLocalDateTime());
+				
 				Book.setLastModified(rs.getTimestamp("last_modified").toLocalDateTime());
 				
 				Books.add(Book);
@@ -269,6 +267,7 @@ public class BookTableGateway {
 			e.printStackTrace();
 		} finally {
 			try {
+				
 				if(st != null) {
 					st.close();
 				}
@@ -286,26 +285,27 @@ public class BookTableGateway {
 		PreparedStatement st = null;
 		ResultSet 		  rs = null;
 		LocalDateTime    ldt = null;
-		Date 			date = null;
 		
 		try {
 			st   = conn.prepareStatement("SELECT * FROM Book WHERE id = ?");
 			st.setInt(1,  key);
 			rs   = st.executeQuery();
 			
-			date = new Date(rs.getTimestamp("last_modified").getTime());
-			ldt  = LocalDateTime.ofInstant(date.toInstant(), ZoneId.systemDefault());
+			ldt  = rs.getTimestamp("date_added").toLocalDateTime();
 			
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} finally {
+			
 			try {
+				
 				if(rs != null) {
 					rs.close();
 				}
 				if(st != null) {
 					st.close();
 				}
+				
 			} catch (SQLException e) {
 				e.printStackTrace();
 			}
