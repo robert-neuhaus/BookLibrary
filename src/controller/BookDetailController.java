@@ -1,6 +1,5 @@
 package controller;
 
-import java.sql.SQLException;
 import java.util.List;
 
 import org.apache.logging.log4j.LogManager;
@@ -35,38 +34,45 @@ public class BookDetailController {
 	
 	private Book book;
 	
-	public BookDetailController(Book book) {
-		this.book = book;
+	private static BookDetailController instance = null;
+	
+	public BookDetailController() {
+		//this.book = book;
+		//MasterController.getInstance().setBook(book);
 	}
 	
-	@FXML public void handleButtonAction(ActionEvent action) throws Exception {
+	public static BookDetailController getInstance() {
+		if (instance == null) {
+			instance = new BookDetailController();
+		}
+		return instance;
+	}
+	
+	@FXML public void handleButtonAction(ActionEvent action) {
 		Object source = action.getSource();
-		int isNewBook = 1;
-		
 		if(source == btnSave) {
+			int isNewBook = 1;
+			
 			logger.info("Save Clicked");
 			lblStatus.setText("");
 			markValidAll();
 			
 			try {
-				this.book.save(txtFldTtl.getText(), txtAreaSmmry.getText(),
-						txtFldYrPblshd.getText(), txtFldIsbn.getText());
+				saveBook();
+				if (this.book.getId() > 0)
+					isNewBook = 0;
 				
-					if (this.book.getId() > 0)
-						isNewBook = 0;
-					
-					BookTableGateway.getInstance().updateBook(book);
-										
-					if (isNewBook == 1) {
-						lblStatus.setText("Book added.");				
-						logger.info("Book added.");
-					} else {
-						lblStatus.setText("Book updated.");				
-						logger.info("Book updated.");
-					}
-					lblStatus.setStyle("-fx-text-fill: blue;");
-					
-					
+				BookTableGateway.getInstance().updateBook(book);
+									
+				if (isNewBook == 1) {
+					lblStatus.setText("Book added.");				
+					logger.info("Book added.");
+				} else {
+					lblStatus.setText("Book updated.");				
+					logger.info("Book updated.");
+				}
+				lblStatus.setStyle("-fx-text-fill: blue;");
+									
 			}catch (validationException ve) {			
 				List<Throwable> causes = ve.getCauses();
 				Label lblSource;
@@ -82,12 +88,18 @@ public class BookDetailController {
 					txtInptSource = getTxtInptSource(cause.getMessage());
 					txtInptSource.getStyleClass().add("invalid");
 				}
-			}catch (SQLException se) {
+			}catch (Exception se) {
 				lblStatus.setText("Failed to save changes to database.");
 				lblStatus.setStyle("-fx-text-fill: red;");
-				}			
-			}			
+			}						
 			btnSave.setDisable(true);
+			MasterController.getInstance().setIsChange(false);
+		}
+	}
+	
+	public void saveBook() throws validationException {
+		this.book.save(txtFldTtl.getText(), txtAreaSmmry.getText(),
+				txtFldYrPblshd.getText(), txtFldIsbn.getText());
 	}
 	
 	public void initialize() {
@@ -117,6 +129,7 @@ public class BookDetailController {
 	public void setOnChangeListener(TextInputControl txtInpt) {
 		txtInpt.textProperty().addListener((observable, oldValue, newValue) -> {
 		    btnSave.setDisable(false);
+		    MasterController.getInstance().setIsChange(true);
 		});
 	}
 	
@@ -160,6 +173,14 @@ public class BookDetailController {
 		lblSmmry.getStyleClass().remove("invalid");
 		lblYrPblshd.getStyleClass().remove("invalid");
 		lblIsbn.getStyleClass().remove("invalid");		
+	}
+	
+	public void setBook(Book book) {
+		this.book = book;
+	}
+	
+	public Book getBook() {
+		return this.book;
 	}
 
 }
