@@ -37,13 +37,14 @@ public class BookListController implements Initializable {
 		LstVwBookList.setOnMouseClicked(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent click) {
-                if(click.getClickCount() == 2) {
+                if (click.getClickCount() == 2) {
                 	Book selected = LstVwBookList.getSelectionModel().getSelectedItem();                   
                 	logger.info("double-clicked " + selected);
                 	if (selected != null)
+                		BookDetailController.getInstance().setBook(selected);
 	        			MasterController.getInstance().changeView(
 	        					"../view/view_bookDetail.fxml", 
-	        					new BookDetailController(selected), 
+	        					BookDetailController.getInstance(), 
 	        					selected);       			              	
                 }
             }
@@ -73,7 +74,7 @@ public class BookListController implements Initializable {
 			books = FXCollections.observableArrayList(BookTableGateway.getInstance().getBooks());
 		} catch (Exception e) {
 			lblStatus.setStyle("-fx-text-fill: red;");
-			lblStatus.setText("Failed to detch books from database. ");	
+			lblStatus.setText("Failed to fetch books from database. ");	
 			btnDelete.setDisable(true);
 		}
 			
