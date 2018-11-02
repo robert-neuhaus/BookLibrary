@@ -1,6 +1,5 @@
 package model;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -148,7 +147,7 @@ public class Book {
 	}
 	
 	public boolean validateYearPublished(int yearPublished) {	
-		if (yearPublished > LocalDate.now().getYear())
+		if (yearPublished > LocalDateTime.now().getYear())
 			return false;
 		return true;
 	}

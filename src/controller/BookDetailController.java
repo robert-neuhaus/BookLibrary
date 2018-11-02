@@ -159,7 +159,7 @@ public class BookDetailController {
 				return this.lblYrPblshd;
 			else
 				return this.lblIsbn;		
-		}
+	}
 	
 	
 	public void markValidAll() {

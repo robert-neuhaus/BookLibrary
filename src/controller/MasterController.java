@@ -13,7 +13,6 @@ import javafx.scene.control.ButtonBar;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.ButtonType;
 import javafx.scene.layout.BorderPane;
-import model.Book;
 
 public class MasterController {
 
