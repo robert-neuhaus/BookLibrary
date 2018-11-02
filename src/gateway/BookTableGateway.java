@@ -155,7 +155,7 @@ public class BookTableGateway {
 		}
 	}
 
-	public Book getBook(int book_id) {
+	public Book getBook(int book_id) throws Exception {
 		
 		Book 			   book = null;
 		PreparedStatement 	 st	= null;
@@ -169,7 +169,7 @@ public class BookTableGateway {
 			st = conn.prepareStatement( "SELECT b.* "
 	                  				  + "FROM Book b "
 	                  				  + "LEFT JOIN Publisher p "							                  
-	                  				  + "ON b.publisher_id = p.publiser_id "
+	                  				  + "ON b.publisher_id = p.publisher_id "
 	                  				  + "WHERE b.id = ?");
 
 			st.setInt(1, book_id);
@@ -317,7 +317,7 @@ public class BookTableGateway {
 		
 		try {
 			st = conn.prepareStatement("select * FROM Publisher ORDER BY name ASC");
-		
+			
 			rs = st.executeQuery();
 			
 			while(rs.next()) {
@@ -338,7 +338,6 @@ public class BookTableGateway {
 				e.printStackTrace();
 			}
 		}
-		
 		
 		return publishers;
 	}
