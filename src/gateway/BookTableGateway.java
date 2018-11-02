@@ -175,8 +175,7 @@ public class BookTableGateway {
 				
 				ldt = rs.getTimestamp("date_added").toLocalDateTime();
 				
-				Audit Audit = new Audit( rs.getInt("id")
-								 	   , rs.getInt("book_id")
+				Audit Audit = new Audit( rs.getInt("book_id")
 								 	   , ldt
 								 	   , rs.getString("entry_msg"));
 				

@@ -16,3 +16,14 @@
 12:04:10.100 INFO  controller.BookListController$1 : double-clicked null
 12:05:23.519 INFO  controller.BookListController$1 : double-clicked null
 12:05:25.565 INFO  controller.BookListController$1 : double-clicked null
+18:35:36.094 INFO  controller.BookListController$1 : double-clicked Guile's Revenge
+18:35:45.590 INFO  controller.BookListController$1 : double-clicked Guile's Revenge
+18:36:08.293 INFO  controller.BookListController$1 : double-clicked Guile's Revenge
+19:00:50.642 INFO  controller.BookDetailController : Save Clicked
+19:00:50.953 INFO  controller.BookDetailController : Book added.
+19:02:46.264 INFO  controller.BookDetailController : Save Clicked
+19:02:46.349 INFO  controller.BookDetailController : Book added.
+19:02:50.795 INFO  controller.BookDetailController : Save Clicked
+19:02:50.875 INFO  controller.BookDetailController : Book updated.
+19:03:16.462 INFO  controller.BookDetailController : Save Clicked
+19:03:16.520 INFO  controller.BookDetailController : Book added.
