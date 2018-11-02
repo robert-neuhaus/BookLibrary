@@ -65,20 +65,21 @@ public class BookDetailController {
 			markValidAll();
 			
 			try {
-				saveBook();
-				if (this.book.getId() > 0)
-					isNewBook = 0;
-				
-				BookTableGateway.getInstance().updateBook(book);
-									
-				if (isNewBook == 1) {
-					lblStatus.setText("Book added.");				
-					logger.info("Book added.");
-				} else {
-					lblStatus.setText("Book updated.");				
-					logger.info("Book updated.");
+				if (saveBook() == true) {
+					if (this.book.getId() > 0)
+						isNewBook = 0;
+					
+					BookTableGateway.getInstance().updateBook(book);
+										
+					if (isNewBook == 1) {
+						lblStatus.setText("Book added.");				
+						logger.info("Book added.");
+					} else {
+						lblStatus.setText("Book updated.");				
+						logger.info("Book updated.");
+					}
+					lblStatus.setStyle("-fx-text-fill: blue;");
 				}
-				lblStatus.setStyle("-fx-text-fill: blue;");
 									
 			}catch (validationException ve) {			
 				List<Throwable> causes = ve.getCauses();
@@ -104,9 +105,23 @@ public class BookDetailController {
 		}
 	}
 	
-	public void saveBook() throws validationException {
-		this.book.save(txtFldTtl.getText(), txtAreaSmmry.getText(),
-				txtFldYrPblshd.getText(), txtFldIsbn.getText(), cmboBxPublisher.getSelectionModel().getSelectedItem());
+	public Boolean saveBook() throws validationException {
+		try {
+			if (this.getBook().getId() == 0 
+					|| this.getBook().getLastModified().equals(
+					BookTableGateway.getInstance().getLastModified(this.getBook().getId()))) {
+				this.book.save(txtFldTtl.getText(), txtAreaSmmry.getText(),
+					txtFldYrPblshd.getText(), txtFldIsbn.getText(), cmboBxPublisher.getSelectionModel().getSelectedItem());
+				return true;
+			} else {
+				MasterController.getInstance().alertLock();
+				return false;
+			}
+		} catch (Exception e) {
+			lblStatus.setText("Failed to fetch last modified timestamp from server.");
+			lblStatus.setStyle("-fx-text-fill: red;");
+			return false;
+		}
 	}
 	
 	public void initialize() {
@@ -134,7 +149,8 @@ public class BookDetailController {
 		
 		ObservableList<Publisher> publishers;
 		try {
-			publishers = FXCollections.observableArrayList(BookTableGateway.getInstance().getPublishers());
+			publishers = FXCollections.observableArrayList(
+					BookTableGateway.getInstance().getPublishers());
 			cmboBxPublisher.setItems(publishers);
 			cmboBxPublisher.getSelectionModel().select(book.getPublisher());
 			setOnChangeListener(cmboBxPublisher);

@@ -372,8 +372,8 @@ public class BookTableGateway {
 			st   = conn.prepareStatement("SELECT * FROM Book WHERE id = ?");
 			st.setInt(1,  key);
 			rs   = st.executeQuery();
-			
-			ldt  = rs.getTimestamp("date_added").toLocalDateTime();
+			rs.next();
+			ldt  = rs.getTimestamp("last_modified").toLocalDateTime();
 			
 		} catch (SQLException e) {
 			e.printStackTrace();

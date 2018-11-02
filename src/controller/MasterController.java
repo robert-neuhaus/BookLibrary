@@ -15,7 +15,6 @@ import javafx.scene.control.ButtonType;
 import javafx.scene.layout.BorderPane;
 
 public class MasterController {
-
 	private static MasterController instance = null;
 	private BorderPane borderPane;
 	private boolean isChange = false;
@@ -32,7 +31,6 @@ public class MasterController {
 	}
 	
 	public void changeView(String fxml, Object controller, Object data) {
-
 		if (getIsChange() == true) {
 			alertSave();
 		}
@@ -59,8 +57,7 @@ public class MasterController {
 		}
 	}
 	
-	public void alertSave() {
-		
+	public void alertSave() {	
 		Alert alert = new Alert(AlertType.CONFIRMATION);
 		alert.setTitle("Unsaved Changes");
 		alert.setHeaderText("Unsaved changes have been made to: "
@@ -85,8 +82,7 @@ public class MasterController {
 		}
 	}
 	
-	public void alertFail() {
-		
+	public void alertFail() {		
 		Alert alert = new Alert(AlertType.WARNING);
 		alert.setTitle("Save Unsuccessful");
 		//TODO: change to detect if update or add
@@ -95,8 +91,7 @@ public class MasterController {
 		alert.showAndWait();
 	}
 	
-	public void alertSuccess() {
-		
+	public void alertSuccess() {	
 		Alert alert = new Alert(AlertType.INFORMATION);
 		alert.setTitle("Save Successful");
 		//TODO: change to detect if update or add
@@ -105,11 +100,20 @@ public class MasterController {
 		alert.showAndWait();
 	}
 	
+	public void alertLock() {
+		Alert alert = new Alert(AlertType.WARNING);
+		alert.setTitle("Save Unsuccessful");
+		//TODO: change to detect if update or add
+		alert.setHeaderText("Book Record has Changed Since Opened.");
+		alert.setContentText("Please Return to Book List to Fetch Most Recent Record.");
+		alert.showAndWait();
+	}
+	
 	public void saveBook() throws Exception {
 		BookDetailController.getInstance().saveBook();
 		BookTableGateway.getInstance().updateBook(
 				BookDetailController.getInstance().getBook());
-	}
+	} 
 	
 	public void setRootBorderPane(BorderPane menuBorderPane) {
 		this.borderPane = menuBorderPane;
