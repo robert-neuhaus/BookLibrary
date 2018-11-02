@@ -154,16 +154,75 @@ public class BookTableGateway {
 			}
 		}
 	}
+
+	public Book getBook(int book_id) {
+		
+		Book 			   book = null;
+		PreparedStatement 	 st	= null;
+		ResultSet 			 rs	= null;
+		LocalDateTime 	   last	= null;
+		LocalDateTime	  first = null;
+		Publisher	  publisher = null;
+		
+		try {
+			
+			st = conn.prepareStatement( "SELECT b.* "
+	                  				  + "FROM Book b "
+	                  				  + "LEFT JOIN Publisher p "							                  
+	                  				  + "ON b.publisher_id = p.publiser_id "
+	                  				  + "WHERE b.id = ?");
+
+			st.setInt(1, book_id);
+
+			rs = st.executeQuery();
+			
+			rs.next();
+			
+			publisher = new Publisher(rs.getInt("publisher_id")
+									 ,rs.getString("name"));
+			
+			last = rs.getTimestamp("last_modified").toLocalDateTime();
+			first = rs.getTimestamp("date_added").toLocalDateTime();
+			
+			book = new Book( rs.getInt("id")
+				 	, rs.getString("title")
+				 	, rs.getString("summary")
+				 	, rs.getInt("year_published")
+				 	, rs.getString("ISBN")
+				 	, publisher);
+			
+			book.setLastModified(last);
+			book.setDateAdded(first);
+			
+		}catch(Exception e) {
+			e.printStackTrace();
+		}finally {
+			try {
+			if(rs != null) {
+				rs.close();
+			}
+			if(st != null) {
+				st.close();
+			}
+			}catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		
+		
+		return book;
+	}
 	
 	public List<Audit> getAudits(int book_id){
 		
-		List<Audit> Audits   = new ArrayList<>();
-		PreparedStatement st = null;
-		ResultSet rs		 = null;
+		List<Audit> 		Audits  = new ArrayList<>();
+		PreparedStatement 	st 		= null;
+		ResultSet 			rs		= null;
 		
 		try {
-			st = conn.prepareStatement( "select * FROM book_audit_trail "
-									  + "WHERE id ? ");
+			st = conn.prepareStatement( "SELECT b.*, p.* FROM Book b, Publisher p "
+					  + "WHERE b.publisher_id = p.publisher_id "
+					  + "ORDER BY title ASC");
 		
 			st.setInt(1, book_id);
 			
