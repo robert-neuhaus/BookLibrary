@@ -14,7 +14,7 @@ public class Book {
 	private String isbn;
 	private LocalDateTime dateAdded;
 	private LocalDateTime lastModified;
-	private int publisher;
+	private Publisher publisher;
 	
 	
 	public Book() {
@@ -24,16 +24,17 @@ public class Book {
 		this.yearPublished = -1;
 		this.isbn = "";
 		this.dateAdded = null;
-		this.publisher = 0;
+		this.publisher = new Publisher(0, "Unknown");
 	}
 
 	public Book(int id, String title, String summary, 
-			int yearPublished, String ISBN) {
+			int yearPublished, String ISBN, Publisher publisher) {
 		this.id = id;
 		this.title = title;
 		this.summary = summary;
 		this.yearPublished = yearPublished;
 		this.isbn = ISBN;
+		this.publisher = publisher;
 	}
 	
 	public int getId() {
@@ -61,11 +62,10 @@ public class Book {
 	}
 	
 	public LocalDateTime getLastModified() {
-		return this.getLastModified();
+		return this.lastModified;
 	}
 	
-	//TODO remove
-	public int getPublisherId() {
+	public Publisher getPublisher() {
 		return this.publisher;
 	}
 	
@@ -93,7 +93,7 @@ public class Book {
 		this.dateAdded = dateAdded;
 	}
 	
-	public void setPublisherId(int publisher) {
+	public void setPublisher(Publisher publisher) {
 		this.publisher = publisher;
 	}
 	
@@ -102,7 +102,7 @@ public class Book {
 	}
 	
 	public void save(String title, String summary, String yearPublished, 
-			String isbn) throws validationException {
+			String isbn, Publisher publisher) throws validationException {
 		List<Throwable> exceptions = new ArrayList<Throwable>();
 		
 		if (!validateTitle(title))
@@ -127,6 +127,7 @@ public class Book {
 		setTitle(title);
 		setSummary(summary);
 		setIsbn(isbn);
+		setPublisher(publisher);
 		
 		if (yearPublished.equals(""))
 			setYearPublished(-1);

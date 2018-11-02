@@ -7,14 +7,19 @@ import org.apache.logging.log4j.Logger;
 
 import exception.validationException;
 import gateway.BookTableGateway;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
+import javafx.scene.control.Control;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TextInputControl;
 import model.Book;
+import model.Publisher;
 
 public class BookDetailController {
 
@@ -30,6 +35,8 @@ public class BookDetailController {
 	@FXML private Label lblSmmry;
 	@FXML private Label lblIsbn;
 	@FXML private Label lblYrPblshd;
+	@FXML private Label	lblLastModified;
+	@FXML private ComboBox<Publisher> cmboBxPublisher;
 	@FXML private Button btnSave;
 	
 	private Book book;
@@ -99,7 +106,7 @@ public class BookDetailController {
 	
 	public void saveBook() throws validationException {
 		this.book.save(txtFldTtl.getText(), txtAreaSmmry.getText(),
-				txtFldYrPblshd.getText(), txtFldIsbn.getText());
+				txtFldYrPblshd.getText(), txtFldIsbn.getText(), cmboBxPublisher.getSelectionModel().getSelectedItem());
 	}
 	
 	public void initialize() {
@@ -122,15 +129,35 @@ public class BookDetailController {
 		txtFldIsbn.setText(book.getIsbn());
 		setOnChangeListener(txtFldIsbn);
 		
+		if (book.getLastModified() != null)
+			lblLastModified.setText(book.getLastModified().toString());
+		
+		ObservableList<Publisher> publishers;
+		try {
+			publishers = FXCollections.observableArrayList(BookTableGateway.getInstance().getPublishers());
+			cmboBxPublisher.setItems(publishers);
+			cmboBxPublisher.getSelectionModel().select(book.getPublisher());
+			setOnChangeListener(cmboBxPublisher);
+		} catch (Exception e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		
 		btnSave.setDisable(true);
 		
 	}
 	
-	public void setOnChangeListener(TextInputControl txtInpt) {
-		txtInpt.textProperty().addListener((observable, oldValue, newValue) -> {
-		    btnSave.setDisable(false);
-		    MasterController.getInstance().setIsChange(true);
-		});
+	public void setOnChangeListener(Control control) {
+		if (control instanceof ComboBox<?>)
+			((ComboBox<?>)control).valueProperty().addListener((observable, oldValue, newValue) -> {
+				    btnSave.setDisable(false);
+				    MasterController.getInstance().setIsChange(true);
+				});
+		if (control instanceof TextInputControl)
+			((TextInputControl)control).textProperty().addListener((observable, oldValue, newValue) -> {
+				    btnSave.setDisable(false);
+				    MasterController.getInstance().setIsChange(true);
+				});
 	}
 	
 	public TextInputControl getTxtInptSource(String errMsg) {

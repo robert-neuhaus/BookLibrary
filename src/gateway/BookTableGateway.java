@@ -12,6 +12,7 @@ import java.util.TimeZone;
 import com.mysql.jdbc.jdbc2.optional.MysqlDataSource;
 
 import model.Book;
+import model.Publisher;
 import model.Audit;
 
 import java.time.*;
@@ -76,7 +77,7 @@ public class BookTableGateway {
 			st.setString	(1, Book.getTitle());
 			st.setString	(2, Book.getSummary());
 			st.setInt		(3, Book.getYearPublished());
-			st.setInt		(4, Book.getPublisherId());
+			st.setInt		(4, Book.getPublisher().getPublisherId());
 			st.setString	(5, Book.getIsbn());
 			st.executeUpdate();
 			
@@ -215,15 +216,20 @@ public class BookTableGateway {
 				
 				LocalDateTime ldt = null;
 				
+				Publisher publisher = new Publisher(rs.getInt("publisher_id"), rs.getString("name"));
+				
 				Book Book = new Book( rs.getInt("id")
 								 	, rs.getString("title")
 								 	, rs.getString("summary")
 								 	, rs.getInt("year_published")
-								 	, rs.getString("ISBN"));
+								 	, rs.getString("ISBN")
+								 	, publisher);
 				
 				Book.setDateAdded(rs.getTimestamp("date_added").toLocalDateTime());
 				
 				ldt = rs.getTimestamp("last_modified").toLocalDateTime();
+				
+				Book.setLastModified(ldt);
 				
 				Books.add(Book);
 			}
@@ -245,19 +251,19 @@ public class BookTableGateway {
 		return Books;
 	}
 	
-	public List<String> getPublishers(){
+	public List<Publisher> getPublishers(){
 		
-		List<String> publishers = new ArrayList<>();
+		List<Publisher> publishers = new ArrayList<>();
 		PreparedStatement st = null;
 		ResultSet rs = null;
 		
 		try {
-			st = conn.prepareStatement("select * FROM Publisher ORDER BY title ASC");
+			st = conn.prepareStatement("select * FROM Publisher ORDER BY name ASC");
 		
 			rs = st.executeQuery();
 			
 			while(rs.next()) {
-				publishers.add(rs.getString("name"));
+				publishers.add(new Publisher(rs.getInt("publisher_id"), rs.getString("name")));
 			}
 			
 		} catch (SQLException e) {
@@ -299,7 +305,7 @@ public class BookTableGateway {
 			st.setString(1, Book.getTitle());
 			st.setString(2, Book.getSummary());
 			st.setInt(3, Book.getYearPublished());
-			st.setInt(4, Book.getPublisherId());
+			st.setInt(4, Book.getPublisher().getPublisherId());
 			st.setString(5,  Book.getIsbn());
 			st.setInt(6, Book.getId());
 			st.executeUpdate();
