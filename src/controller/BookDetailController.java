@@ -121,6 +121,7 @@ public class BookDetailController {
 					txtFldYrPblshd.getText(), txtFldIsbn.getText(), cmboBxPublisher.getSelectionModel().getSelectedItem());
 				return true;
 			} else {
+				MasterController.getInstance().setIsChange(false);
 				MasterController.getInstance().alertLock();
 				return false;
 			}

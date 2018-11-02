@@ -71,9 +71,10 @@ public class MasterController {
 		Optional<ButtonType> result = alert.showAndWait();
 		if (result.get() == bttnYes){
 			try {
-				saveBook();
-				alertSuccess();
-				this.setIsChange(false);
+				if (saveBook()) {
+					alertSuccess();
+					this.setIsChange(false);
+				}
 			} catch (Exception e) {
 				alertFail();
 			}
@@ -109,10 +110,13 @@ public class MasterController {
 		alert.showAndWait();
 	}
 	
-	public void saveBook() throws Exception {
-		BookDetailController.getInstance().saveBook();
-		BookTableGateway.getInstance().updateBook(
-				BookDetailController.getInstance().getBook());
+	public Boolean saveBook() throws Exception {
+		if (BookDetailController.getInstance().saveBook()) {
+			BookTableGateway.getInstance().updateBook(
+					BookDetailController.getInstance().getBook());
+			return true;
+		}
+		return false;
 	} 
 	
 	public void setRootBorderPane(BorderPane menuBorderPane) {
