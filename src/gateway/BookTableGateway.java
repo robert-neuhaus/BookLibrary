@@ -12,6 +12,7 @@ import java.util.TimeZone;
 import com.mysql.jdbc.jdbc2.optional.MysqlDataSource;
 
 import model.Book;
+import model.Audit;
 
 import java.time.*;
 
@@ -65,13 +66,13 @@ public class BookTableGateway {
 		try {
 			conn.setAutoCommit(false);
 			
-			st = conn.prepareStatement( "insert into Book ("
+			st = conn.prepareStatement( "INSERT INTO Book ("
 									  + "title, "
 									  + "summary, "
 									  + "year_published, "
 									  + "publisher_id, "
 									  + "isbn"
-									  + ") values ( ?, ?, ?, ?, ?)");
+									  + ") VALUES ( ?, ?, ?, ?, ?)");
 			st.setString	(1, Book.getTitle());
 			st.setString	(2, Book.getSummary());
 			st.setInt		(3, Book.getYearPublished());
@@ -116,15 +117,89 @@ public class BookTableGateway {
 		}
 		
 	}
-	/*
-	public List<Audit> getAudits(){
-		List<Audit> Audits = new ArrayList<>();
+
+	public void addAudits(List<Audit> audits) throws Exception{
 		
-		// TODO: Add query
-		// TODO: Create Audit object
+		PreparedStatement st = null;
+		conn.setAutoCommit(false);
+		
+		st = conn.prepareStatement("INSERT INSERT book_audit_trail ("
+								  + "book_id "
+								  + "entry_msg"
+								  + ") VALUES (?, ?)");
+		
+		for(Audit entry : audits) {
+			st.setInt(1, entry.getBookID());
+			st.setString(2, entry.getAuditMsg());
+			
+			st.addBatch();
+		}
+		
+		try {
+			st.executeBatch();
+			conn.commit();
+		}catch(Exception e) {
+			e.printStackTrace();
+		}finally {
+			try {
+				if(st != null) {
+					st.close();
+				}
+				
+				conn.setAutoCommit(true);
+				
+			} catch (SQLException e) {
+				throw new SQLException("SQL Error: " + e.getMessage());
+			}
+		}
+	}
+	
+	public List<Audit> getAudits(int book_id){
+		
+		List<Audit> Audits   = new ArrayList<>();
+		PreparedStatement st = null;
+		ResultSet rs		 = null;
+		
+		try {
+			st = conn.prepareStatement( "select * FROM book_audit_trail "
+									  + "WHERE id ? ");
+		
+			st.setInt(1, book_id);
+			
+			rs = st.executeQuery();
+			
+			while(rs.next()) {
+				
+				LocalDateTime ldt = null;
+				
+				ldt = rs.getTimestamp("date_added").toLocalDateTime();
+				
+				Audit Audit = new Audit( rs.getInt("id")
+								 	   , rs.getInt("book_id")
+								 	   , ldt
+								 	   , rs.getString("entry_msg"));
+				
+				Audits.add(Audit);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if(rs != null) {
+					rs.close();
+				}
+				if(st != null) {
+					st.close();
+				}
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		
+		return Audits;
 		
 	}
-	*/
+	
 	public List<Book> getBooks() throws Exception{	// TimeStamp : O/O
 		List<Book> Books = new ArrayList<>();
 		PreparedStatement st = null;
@@ -204,7 +279,7 @@ public class BookTableGateway {
 		return publishers;
 	}
 	
-	public void updateBook(Book Book) throws Exception {// TimeStamp : X/O
+	public void updateBook(Book Book) throws Exception {// TimeStamp : X/X
 		
 		if(Book.getId() == 0) {
 			this.createBook(Book);
