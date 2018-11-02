@@ -166,11 +166,10 @@ public class BookTableGateway {
 		
 		try {
 			
-			st = conn.prepareStatement( "SELECT b.* "
-	                  				  + "FROM Book b "
-	                  				  + "LEFT JOIN Publisher p "							                  
-	                  				  + "ON b.publisher_id = p.publisher_id "
-	                  				  + "WHERE b.id = ?");
+			st = conn.prepareStatement( "SELECT b.*, p.* "
+	                  				  + "FROM Book b, Publisher p "
+	                  				  + "WHERE b.publisher_id = p.publisher_id "
+	                  				  + "AND b.id = ?");
 
 			st.setInt(1, book_id);
 

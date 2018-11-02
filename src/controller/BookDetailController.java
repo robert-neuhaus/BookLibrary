@@ -79,6 +79,13 @@ public class BookDetailController {
 						logger.info("Book updated.");
 					}
 					lblStatus.setStyle("-fx-text-fill: blue;");
+					try {
+						this.setBook(BookTableGateway.getInstance().getBook(this.getBook().getId()));
+					} catch (Exception e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					} 
+					initialize();
 				}
 									
 			}catch (validationException ve) {			
@@ -96,18 +103,18 @@ public class BookDetailController {
 					txtInptSource = getTxtInptSource(cause.getMessage());
 					txtInptSource.getStyleClass().add("invalid");
 				}
+//				MasterController.getInstance().setIsChange(false);
 			}catch (Exception se) {
 				lblStatus.setText("Failed to save changes to database.");
 				lblStatus.setStyle("-fx-text-fill: red;");
+//				MasterController.getInstance().setIsChange(false);
 			}						
 			btnSave.setDisable(true);
-			MasterController.getInstance().setIsChange(false);
 		}
 	}
 	
-	public Boolean saveBook() throws validationException {
-		try {
-			if (this.getBook().getId() == 0 
+	public Boolean saveBook() throws Exception {
+		if (this.getBook().getId() == 0 
 					|| this.getBook().getLastModified().equals(
 					BookTableGateway.getInstance().getLastModified(this.getBook().getId()))) {
 				this.book.save(txtFldTtl.getText(), txtAreaSmmry.getText(),
@@ -117,11 +124,6 @@ public class BookDetailController {
 				MasterController.getInstance().alertLock();
 				return false;
 			}
-		} catch (Exception e) {
-			lblStatus.setText("Failed to fetch last modified timestamp from server.");
-			lblStatus.setStyle("-fx-text-fill: red;");
-			return false;
-		}
 	}
 	
 	public void initialize() {
