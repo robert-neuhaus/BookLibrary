@@ -13,6 +13,7 @@ import javafx.scene.control.ButtonBar;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.ButtonType;
 import javafx.scene.layout.BorderPane;
+import model.Book;
 
 public class MasterController {
 	private static MasterController instance = null;
@@ -111,9 +112,13 @@ public class MasterController {
 	}
 	
 	public Boolean saveBook() throws Exception {
+		Book oldBook = (Book) BookDetailController.getInstance().getBook().clone();
+		
 		if (BookDetailController.getInstance().saveBook()) {
 			BookTableGateway.getInstance().updateBook(
 					BookDetailController.getInstance().getBook());
+			
+			BookDetailController.getInstance().addChanges(oldBook, BookDetailController.getInstance().getBook());
 			return true;
 		}
 		return false;

@@ -6,7 +6,7 @@ import java.util.List;
 
 import exception.validationException;
 
-public class Book {
+public class Book implements Cloneable{
 	private int id;
 	private String title;
 	private String summary;
@@ -162,5 +162,14 @@ public class Book {
 	@Override
 	public String toString() {
 		return this.title;
+	}
+	
+	@Override
+	public Object clone(){  
+	    try{  
+	        return super.clone();  
+	    }catch(Exception e){ 
+	        return null; 
+	    }
 	}
 }

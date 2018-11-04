@@ -124,8 +124,8 @@ public class BookTableGateway {
 		PreparedStatement st = null;
 		conn.setAutoCommit(false);
 		
-		st = conn.prepareStatement("INSERT INSERT book_audit_trail ("
-								  + "book_id "
+		st = conn.prepareStatement("INSERT INTO book_audit_trail ("
+								  + "book_id, "
 								  + "entry_msg"
 								  + ") VALUES (?, ?)");
 		
@@ -219,9 +219,7 @@ public class BookTableGateway {
 		ResultSet 			rs		= null;
 		
 		try {
-			st = conn.prepareStatement( "SELECT b.*, p.* FROM Book b, Publisher p "
-					  + "WHERE b.publisher_id = p.publisher_id "
-					  + "ORDER BY title ASC");
+			st = conn.prepareStatement( "SELECT a.* from book_audit_trail a WHERE a.book_id = ?");
 		
 			st.setInt(1, book_id);
 			

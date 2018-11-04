@@ -2,22 +2,29 @@ package model;
 
 import java.time.LocalDateTime;
 
+import javafx.beans.property.SimpleStringProperty;
+
 public class Audit {
 
 	int bookId;
-	String message;
+	String auditMsg;
 	LocalDateTime dateAdded;
+	
+	SimpleStringProperty message = new SimpleStringProperty();
+	SimpleStringProperty timestamp = new SimpleStringProperty();
 	
 	public Audit(int bookId, String msg){
 		this.bookId = bookId;
-		this.message = msg;
+		this.auditMsg = msg;
 		this.dateAdded = null;
 	}
 	
 	public Audit(int bookId, LocalDateTime ldt, String msg){
 		this.bookId = bookId;
-		this.message = msg;
+		this.auditMsg = msg;
 		this.dateAdded = ldt;
+		setTimestamp(ldt.toString());
+		setMessage(msg);
 	}
 	
 	// Access methods.
@@ -27,10 +34,10 @@ public class Audit {
 	}
 	
 	public String getAuditMsg() {
-		return this.message;
+		return this.auditMsg;
 	}
 	
-	public LocalDateTime getTimestamp() {
+	public LocalDateTime getDateAdded() {
 		return this.dateAdded;
 	}
 	
@@ -39,11 +46,27 @@ public class Audit {
 	}
 	
 	public void setAuditMsg(String msg) {
-		this.message= msg;
+		this.auditMsg= msg;
 	}
 	
-	public void setTimestamp(LocalDateTime ldt) {
+	public void setDateAdded(LocalDateTime ldt) {
 		this.dateAdded = ldt;
+	}
+	
+	public void setTimestamp(String timestamp) {
+		this.timestamp.set(timestamp);
+	}
+	
+	public void setMessage(String message) {
+		this.message.set(message);
+	}
+	
+	public String getTimestamp() {
+		return this.timestamp.get();
+	}
+	
+	public String getMessage() {
+		return this.message.get();
 	}
 	
 }

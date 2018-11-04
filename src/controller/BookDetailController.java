@@ -1,5 +1,6 @@
 package controller;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.logging.log4j.LogManager;
@@ -18,6 +19,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TextInputControl;
+import model.Audit;
 import model.Book;
 import model.Publisher;
 
@@ -38,6 +40,7 @@ public class BookDetailController {
 	@FXML private Label	lblLastModified;
 	@FXML private ComboBox<Publisher> cmboBxPublisher;
 	@FXML private Button btnSave;
+	@FXML private Button btnAuditTrail;
 	
 	private Book book;
 	
@@ -57,9 +60,9 @@ public class BookDetailController {
 	
 	@FXML public void handleButtonAction(ActionEvent action) {
 		Object source = action.getSource();
-		if(source == btnSave) {
-			int isNewBook = 1;
-			
+		if(source == btnSave) {	
+			Boolean isNewBook = true;
+			Book oldBook = (Book) this.getBook().clone();
 			logger.info("Save Clicked");
 			lblStatus.setText("");
 			markValidAll();
@@ -67,11 +70,12 @@ public class BookDetailController {
 			try {
 				if (saveBook() == true) {
 					if (this.book.getId() > 0)
-						isNewBook = 0;
+						isNewBook = false;
 					
 					BookTableGateway.getInstance().updateBook(book);
-										
-					if (isNewBook == 1) {
+					addChanges(oldBook, this.getBook());
+														
+					if (isNewBook == true) {
 						lblStatus.setText("Book added.");				
 						logger.info("Book added.");
 					} else {
@@ -111,23 +115,38 @@ public class BookDetailController {
 			}						
 			btnSave.setDisable(true);
 		}
+		
+		else if (source == btnAuditTrail) {
+			try {
+				MasterController.getInstance().changeView("../view/view_auditTrail.fxml", new AuditTrailController(this.getBook()), null);
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
 	}
 	
 	public Boolean saveBook() throws Exception {
+		
 		if (this.getBook().getId() == 0 
 					|| this.getBook().getLastModified().equals(
 					BookTableGateway.getInstance().getLastModified(this.getBook().getId()))) {
-				this.book.save(txtFldTtl.getText(), txtAreaSmmry.getText(),
-					txtFldYrPblshd.getText(), txtFldIsbn.getText(), cmboBxPublisher.getSelectionModel().getSelectedItem());
-				return true;
-			} else {
-				MasterController.getInstance().setIsChange(false);
-				MasterController.getInstance().alertLock();
-				return false;
-			}
+//			Book oldBook = (Book) this.getBook().clone();
+			
+			this.book.save(txtFldTtl.getText(), txtAreaSmmry.getText(),
+				txtFldYrPblshd.getText(), txtFldIsbn.getText(), cmboBxPublisher.getSelectionModel().getSelectedItem());
+			
+//			BookTableGateway.getInstance().updateBook(book);
+//			addChanges(oldBook, this.getBook());
+			return true;
+		} else {
+			MasterController.getInstance().alertLock();
+			return false;
+		}
 	}
 	
 	public void initialize() {
+		
 		txtFldTtl.setText(book.getTitle());
 		setOnChangeListener(txtFldTtl);
 		
@@ -162,7 +181,13 @@ public class BookDetailController {
 			e1.printStackTrace();
 		}
 		
+		if (this.getBook().getId() == 0)
+			btnAuditTrail.setDisable(true);
+		else
+			btnAuditTrail.setDisable(false);
+		
 		btnSave.setDisable(true);
+		MasterController.getInstance().setIsChange(false);
 		
 	}
 	
@@ -172,7 +197,7 @@ public class BookDetailController {
 				    btnSave.setDisable(false);
 				    MasterController.getInstance().setIsChange(true);
 				});
-		if (control instanceof TextInputControl)
+		else if (control instanceof TextInputControl)
 			((TextInputControl)control).textProperty().addListener((observable, oldValue, newValue) -> {
 				    btnSave.setDisable(false);
 				    MasterController.getInstance().setIsChange(true);
@@ -229,4 +254,28 @@ public class BookDetailController {
 		return this.book;
 	}
 
+	public String getField(Control control) {
+		return control.getId();
+	}
+	
+	public void addChanges(Book oldBook, Book newBook) throws Exception {
+		List<Audit> changes = new ArrayList<Audit>();
+		
+		if (oldBook.getId() == 0) {
+			changes.add(new Audit(newBook.getId(), "Book Added."));
+		} else {		
+			if (!oldBook.getIsbn().equals(newBook.getIsbn()))
+				changes.add(new Audit(newBook.getId(), "ISBN changed from " + oldBook.getIsbn() + " to " + newBook.getIsbn() + "."));
+			if (!oldBook.getPublisher().equals(newBook.getPublisher()))
+				changes.add(new Audit(newBook.getId(), "Publisher changed from " + oldBook.getPublisher() + " to " + newBook.getPublisher() + "."));
+			if (!oldBook.getSummary().equals(newBook.getSummary()))
+				changes.add(new Audit(newBook.getId(), "Summary changed."));
+			if (!oldBook.getTitle().equals(newBook.getTitle()))
+				changes.add(new Audit(newBook.getId(), "Title changed from " + oldBook.getTitle() + " to " + newBook.getTitle() + "."));
+			if (oldBook.getYearPublished() != newBook.getYearPublished())
+				changes.add(new Audit(newBook.getId(), "Year Publisher changed from " + oldBook.getYearPublished() + " to " + newBook.getYearPublished() + "."));
+		}
+		
+		BookTableGateway.getInstance().addAudits(changes);
+	}
 }
