@@ -12,7 +12,7 @@
       <TableView fx:id="tblVwAuditTrail" layoutX="50.0" layoutY="50.0" prefHeight="280.0" prefWidth="500.0">
         <columns>
           <TableColumn fx:id="TimeStamp" prefWidth="154.0" sortType="DESCENDING" text="Timestamp" />
-          <TableColumn fx:id="Message" prefWidth="345.0" text="Message" />
+          <TableColumn fx:id="Message" prefWidth="345.0" sortType="DESCENDING" text="Message" />
         </columns>
       </TableView>
       <Label fx:id="lblBook" alignment="CENTER" layoutX="286.0" layoutY="52.0" text="Audit Trail For:" AnchorPane.leftAnchor="200.0" AnchorPane.rightAnchor="200.0" AnchorPane.topAnchor="25.0" />

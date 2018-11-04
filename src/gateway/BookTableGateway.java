@@ -219,7 +219,7 @@ public class BookTableGateway {
 		ResultSet 			rs		= null;
 		
 		try {
-			st = conn.prepareStatement( "SELECT a.* from book_audit_trail a WHERE a.book_id = ?");
+			st = conn.prepareStatement( "SELECT a.* from book_audit_trail a WHERE a.book_id = ? ORDER BY a.date_added DESC");
 		
 			st.setInt(1, book_id);
 			

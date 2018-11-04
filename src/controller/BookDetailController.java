@@ -1,12 +1,13 @@
 package controller;
 
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import exception.validationException;
+import exception.ValidationException;
 import gateway.BookTableGateway;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -21,6 +22,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.TextInputControl;
 import model.Audit;
 import model.Book;
+import model.InvalidField;
 import model.Publisher;
 
 public class BookDetailController {
@@ -43,6 +45,7 @@ public class BookDetailController {
 	@FXML private Button btnAuditTrail;
 	
 	private Book book;
+	DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 	
 	private static BookDetailController instance = null;
 	
@@ -92,33 +95,27 @@ public class BookDetailController {
 					initialize();
 				}
 									
-			}catch (validationException ve) {			
-				List<Throwable> causes = ve.getCauses();
-				Label lblSource;
-				TextInputControl txtInptSource = getTxtInptSource(causes.get(0).getMessage());
-				txtInptSource.requestFocus();
+			}catch (ValidationException ve) {			
+				List<InvalidField> exceptions = ve.getCauses();
 				lblStatus.setStyle("-fx-text-fill: red;");
-				
-				for (Throwable cause : causes) {
-					logger.info(cause);
-					lblStatus.setText(lblStatus.getText() + "\n" + cause.getMessage());
-					lblSource = getLblSource(cause.getMessage());
-					lblSource.getStyleClass().add("invalid");
-					txtInptSource = getTxtInptSource(cause.getMessage());
-					txtInptSource.getStyleClass().add("invalid");
+				exceptions.get(0).getControl().requestFocus();
+				for (InvalidField exception : exceptions) {
+					logger.info(exception.getMessage());
+					lblStatus.setText(lblStatus.getText() + "\n" + exception.getMessage());
+					exception.getLabel().getStyleClass().add("invalid");
+					exception.getControl().getStyleClass().add("invalid");
 				}
-//				MasterController.getInstance().setIsChange(false);
 			}catch (Exception se) {
 				lblStatus.setText("Failed to save changes to database.");
 				lblStatus.setStyle("-fx-text-fill: red;");
-//				MasterController.getInstance().setIsChange(false);
 			}						
 			btnSave.setDisable(true);
 		}
 		
 		else if (source == btnAuditTrail) {
 			try {
-				MasterController.getInstance().changeView("../view/view_auditTrail.fxml", new AuditTrailController(this.getBook()), null);
+				MasterController.getInstance().changeView("../view/view_auditTrail.fxml", 
+						new AuditTrailController(this.getBook()), null);
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -126,21 +123,60 @@ public class BookDetailController {
 		}
 	}
 	
+	public List<InvalidField> validateFields() {
+		List<InvalidField> exceptions = new ArrayList<InvalidField>();
+		
+		String validation = book.validateTitle(txtFldTtl.getText());
+		InvalidField exception;
+		if (validation != null){
+			exception = new InvalidField(txtFldTtl, lblTtl, validation);
+			exceptions.add(exception);
+		}
+		
+		validation = book.validateYearPublished(txtFldYrPblshd.getText());
+		if (validation != null) {
+			exception = new InvalidField(txtFldYrPblshd, lblYrPblshd, validation);
+			exceptions.add(exception);
+		}
+		
+		validation = book.validateIsbn(txtFldIsbn.getText());
+		if (validation != null) {
+			exception = new InvalidField(txtFldIsbn, lblIsbn, validation);
+			exceptions.add(exception);
+		}
+		
+		validation = book.validateSummary(txtAreaSmmry.getText());
+		if (validation != null) {
+			exception = new InvalidField(txtAreaSmmry, lblSmmry, validation);
+			exceptions.add(exception);
+		}
+		
+		return exceptions;
+	}
+	
 	public Boolean saveBook() throws Exception {
 		
-		if (this.getBook().getId() == 0 
-					|| this.getBook().getLastModified().equals(
-					BookTableGateway.getInstance().getLastModified(this.getBook().getId()))) {
-//			Book oldBook = (Book) this.getBook().clone();
+		if ( this.getBook().getId() == 0 
+				|| this.getBook().getLastModified().equals(
+					BookTableGateway.getInstance().getLastModified(
+							this.getBook().getId()))) {
 			
-			this.book.save(txtFldTtl.getText(), txtAreaSmmry.getText(),
-				txtFldYrPblshd.getText(), txtFldIsbn.getText(), cmboBxPublisher.getSelectionModel().getSelectedItem());
+			List<InvalidField> exceptions = validateFields();
 			
-//			BookTableGateway.getInstance().updateBook(book);
-//			addChanges(oldBook, this.getBook());
+			if (exceptions.isEmpty()) {
+				this.book.setTitle(txtFldTtl.getText());
+				this.book.setYearPublished(Integer.parseInt(txtFldYrPblshd.getText()));
+				this.book.setIsbn(txtFldIsbn.getText());
+				this.book.setSummary(txtAreaSmmry.getText());
+				this.book.setPublisher(cmboBxPublisher.getValue());
+			}
+			else 
+				throw new ValidationException(exceptions);
+			
 			return true;
 		} else {
 			MasterController.getInstance().alertLock();
+			MasterController.getInstance().setIsChange(false);
 			return false;
 		}
 	}
@@ -161,13 +197,13 @@ public class BookDetailController {
 		setOnChangeListener(txtFldYrPblshd);
 		
 		if (book.getDateAdded() != null)
-			lblDtAdded.setText(book.getDateAdded().toString());
+			lblDtAdded.setText(book.getDateAdded().format(formatter));
 		
 		txtFldIsbn.setText(book.getIsbn());
 		setOnChangeListener(txtFldIsbn);
 		
 		if (book.getLastModified() != null)
-			lblLastModified.setText(book.getLastModified().toString());
+			lblLastModified.setText(book.getLastModified().format(formatter));
 		
 		ObservableList<Publisher> publishers;
 		try {
@@ -204,35 +240,6 @@ public class BookDetailController {
 				});
 	}
 	
-	public TextInputControl getTxtInptSource(String errMsg) {
-		if (errMsg.equals("*Unable to read year published.") 
-				|| errMsg.equals("*Year published cannot be later than current year."))
-			return this.txtFldYrPblshd;
-		else if (errMsg.equals("*Title of book must be provided and must be 255 characters or fewer."))
-			return this.txtFldTtl;
-		else if (errMsg.equals("*Summary must be 65,535 characters or fewer."))
-			return this.txtAreaSmmry;
-		else if (errMsg.equals("*Year published cannot be later than current year."))
-			return this.txtFldYrPblshd;
-		else
-			return this.txtFldIsbn;		
-	}
-	
-	 public Label getLblSource(String errMsg) {
-			if (errMsg.equals("*Unable to read year published.") 
-					|| errMsg.equals("*Year published cannot be later than current year."))
-				return this.lblYrPblshd;
-			else if (errMsg.equals("*Title of book must be provided and must be 255 characters or fewer."))
-				return this.lblTtl;
-			else if (errMsg.equals("*Summary must be 65,535 characters or fewer."))
-				return this.lblSmmry;
-			else if (errMsg.equals("*Year published cannot be later than current year."))
-				return this.lblYrPblshd;
-			else
-				return this.lblIsbn;		
-	}
-	
-	
 	public void markValidAll() {
 		txtFldTtl.getStyleClass().remove("invalid");
 		txtAreaSmmry.getStyleClass().remove("invalid");
@@ -252,10 +259,6 @@ public class BookDetailController {
 	
 	public Book getBook() {
 		return this.book;
-	}
-
-	public String getField(Control control) {
-		return control.getId();
 	}
 	
 	public void addChanges(Book oldBook, Book newBook) throws Exception {
@@ -278,4 +281,5 @@ public class BookDetailController {
 		
 		BookTableGateway.getInstance().addAudits(changes);
 	}
+	
 }

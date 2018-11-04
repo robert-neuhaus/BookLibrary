@@ -1,6 +1,7 @@
 package model;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 import javafx.beans.property.SimpleStringProperty;
 
@@ -13,6 +14,8 @@ public class Audit {
 	SimpleStringProperty message = new SimpleStringProperty();
 	SimpleStringProperty timestamp = new SimpleStringProperty();
 	
+	DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+	
 	public Audit(int bookId, String msg){
 		this.bookId = bookId;
 		this.auditMsg = msg;
@@ -23,7 +26,7 @@ public class Audit {
 		this.bookId = bookId;
 		this.auditMsg = msg;
 		this.dateAdded = ldt;
-		setTimestamp(ldt.toString());
+		setTimestamp(ldt.format(formatter));
 		setMessage(msg);
 	}
 	

@@ -1,10 +1,6 @@
 package model;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-
-import exception.validationException;
 
 public class Book implements Cloneable{
 	private int id;
@@ -101,62 +97,43 @@ public class Book implements Cloneable{
 		this.lastModified = lastModified;
 	}
 	
-	public void save(String title, String summary, String yearPublished, 
-			String isbn, Publisher publisher) throws validationException {
-		List<Throwable> exceptions = new ArrayList<Throwable>();
+	public String validateTitle(String title) {
+		if (title.length() <= 0)
+			return "Title must be provided.";
+		else if (title.length() > 255)
+			return "Title must be 255 characters or fewer.";
+		return null;
+	}
+	
+	public String validateSummary(String summary) {
+		if (summary.length() < 1)
+			return "Summary must be provided.";
+		else if (summary.length() > 65535)
+			return "Summary must be 65535 characters or fewer";	
+		return null;
+	}
+	
+	public String validateYearPublished(String yearPublished) {	
+		int pubYear;
 		
-		if (!validateTitle(title))
-			exceptions.add(new Throwable("*Title of book must be provided and must be 255 characters or fewer."));		
+		if (yearPublished.length() < 1)
+			return "Publication year must be provided.";
 		
 		try {
-			if (!yearPublished.equals("") && !validateYearPublished(Integer.parseInt(yearPublished)))
-				exceptions.add(new Throwable("*Year published cannot be later than current year."));
-		} catch (NumberFormatException e) {
-				exceptions.add(new Throwable("*Unable to read year published."));
+			pubYear = Integer.parseInt(yearPublished);
+		} catch(NumberFormatException e) {
+			return "Unable to read publication year.";
 		}
 		
-		if (!validateIsbn(isbn))
-			exceptions.add(new Throwable("*ISBN must be 13 characters or fewer."));
-		
-		if (!validateSummary(summary))
-			exceptions.add(new Throwable("*Summary must be 65,535 characters or fewer."));
-		
-		if (!exceptions.isEmpty())
-			throw new validationException(exceptions);
-		
-		setTitle(title);
-		setSummary(summary);
-		setIsbn(isbn);
-		setPublisher(publisher);
-		
-		if (yearPublished.equals(""))
-			setYearPublished(-1);
-		else
-			setYearPublished(Integer.parseInt(yearPublished));		
+		if (pubYear > LocalDateTime.now().getYear())
+			return "Publication year must not be later than current year.";
+		return null;
 	}
 	
-	public boolean validateTitle(String title) {
-		if (title.length() <= 0 || title.length() > 255)
-			return false;
-		return true;
-	}
-	
-	public boolean validateSummary(String summary) {
-		if (summary.length() > 65535)
-			return false;
-		return true;
-	}
-	
-	public boolean validateYearPublished(int yearPublished) {	
-		if (yearPublished > LocalDateTime.now().getYear())
-			return false;
-		return true;
-	}
-	
-	public boolean validateIsbn(String isbn) {
-		if (isbn.length() > 13)
-			return false;
-		return true;
+	public String validateIsbn(String isbn) {
+		if (isbn.length() > 13 || isbn.length() < 13)
+			return "ISBN must be exactly 13 characters.";
+		return null;
 	}
 	
 	@Override
