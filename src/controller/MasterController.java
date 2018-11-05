@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.Optional;
 
+import exception.ValidationException;
 import gateway.BookTableGateway;
 import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
@@ -76,21 +77,15 @@ public class MasterController {
 					alertSuccess();
 					this.setIsChange(false);
 				}
+			} catch (ValidationException ve) {
+				if (ve != null)
+					BookDetailController.getInstance().showErrors(ve);
 			} catch (Exception e) {
-				alertFail();
+				e.printStackTrace();
 			}
 		} else if (result.get() == bttnNo) {
 			this.setIsChange(false);
 		}
-	}
-	
-	public void alertFail() {		
-		Alert alert = new Alert(AlertType.WARNING);
-		alert.setTitle("Save Unsuccessful");
-		//TODO: change to detect if update or add
-		alert.setHeaderText("Failed to Save: "
-				+ BookDetailController.getInstance().getBook());
-		alert.showAndWait();
 	}
 	
 	public void alertSuccess() {	
@@ -116,8 +111,7 @@ public class MasterController {
 		
 		if (BookDetailController.getInstance().saveBook()) {
 			BookTableGateway.getInstance().updateBook(
-					BookDetailController.getInstance().getBook());
-			
+					BookDetailController.getInstance().getBook());			
 			BookDetailController.getInstance().addChanges(oldBook, BookDetailController.getInstance().getBook());
 			return true;
 		}

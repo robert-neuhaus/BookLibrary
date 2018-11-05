@@ -96,15 +96,7 @@ public class BookDetailController {
 				}
 									
 			}catch (ValidationException ve) {			
-				List<InvalidField> exceptions = ve.getCauses();
-				lblStatus.setStyle("-fx-text-fill: red;");
-				exceptions.get(0).getControl().requestFocus();
-				for (InvalidField exception : exceptions) {
-					logger.info(exception.getMessage());
-					lblStatus.setText(lblStatus.getText() + "\n" + exception.getMessage());
-					exception.getLabel().getStyleClass().add("invalid");
-					exception.getControl().getStyleClass().add("invalid");
-				}
+				showErrors(ve);
 			}catch (Exception se) {
 				lblStatus.setText("Failed to save changes to database.");
 				lblStatus.setStyle("-fx-text-fill: red;");
@@ -156,7 +148,7 @@ public class BookDetailController {
 	
 	public Boolean saveBook() throws Exception {
 		
-		if ( this.getBook().getId() == 0 
+		if (this.getBook().getId() == 0 
 				|| this.getBook().getLastModified().equals(
 					BookTableGateway.getInstance().getLastModified(
 							this.getBook().getId()))) {
@@ -178,6 +170,18 @@ public class BookDetailController {
 			MasterController.getInstance().alertLock();
 			MasterController.getInstance().setIsChange(false);
 			return false;
+		}
+	}
+	
+	public void showErrors(ValidationException ve) {
+		List<InvalidField> exceptions = ve.getCauses();
+		lblStatus.setStyle("-fx-text-fill: red;");
+		exceptions.get(0).getControl().requestFocus();
+		for (InvalidField exception : exceptions) {
+			logger.info(exception.getMessage());
+			lblStatus.setText(lblStatus.getText() + "\n" + exception.getMessage());
+			exception.getLabel().getStyleClass().add("invalid");
+			exception.getControl().getStyleClass().add("invalid");
 		}
 	}
 	
@@ -268,15 +272,31 @@ public class BookDetailController {
 			changes.add(new Audit(newBook.getId(), "Book Added."));
 		} else {		
 			if (!oldBook.getIsbn().equals(newBook.getIsbn()))
-				changes.add(new Audit(newBook.getId(), "ISBN changed from " + oldBook.getIsbn() + " to " + newBook.getIsbn() + "."));
+				changes.add(new Audit(newBook.getId(), "ISBN changed from " 
+						+ oldBook.getIsbn() 
+						+ " to " 
+						+ newBook.getIsbn() 
+						+ "."));
 			if (!oldBook.getPublisher().equals(newBook.getPublisher()))
-				changes.add(new Audit(newBook.getId(), "Publisher changed from " + oldBook.getPublisher() + " to " + newBook.getPublisher() + "."));
+				changes.add(new Audit(newBook.getId(), "Publisher changed from " 
+						+ oldBook.getPublisher() 
+						+ " to " 
+						+ newBook.getPublisher() 
+						+ "."));
 			if (!oldBook.getSummary().equals(newBook.getSummary()))
 				changes.add(new Audit(newBook.getId(), "Summary changed."));
 			if (!oldBook.getTitle().equals(newBook.getTitle()))
-				changes.add(new Audit(newBook.getId(), "Title changed from " + oldBook.getTitle() + " to " + newBook.getTitle() + "."));
+				changes.add(new Audit(newBook.getId(), "Title changed from " 
+						+ oldBook.getTitle() 
+						+ " to " 
+						+ newBook.getTitle() 
+						+ "."));
 			if (oldBook.getYearPublished() != newBook.getYearPublished())
-				changes.add(new Audit(newBook.getId(), "Year Publisher changed from " + oldBook.getYearPublished() + " to " + newBook.getYearPublished() + "."));
+				changes.add(new Audit(newBook.getId(), "Year Publisher changed from " 
+						+ oldBook.getYearPublished() 
+						+ " to " 
+						+ newBook.getYearPublished() 
+						+ "."));
 		}
 		
 		BookTableGateway.getInstance().addAudits(changes);

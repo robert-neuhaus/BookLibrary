@@ -41,11 +41,17 @@ public class AuditTrailController {
 		Object source = action.getSource();
 		
 		if (source == btnBack) {
-    		BookDetailController.getInstance().setBook(this.getBook());
+    		try {
+				BookDetailController.getInstance().setBook(
+						BookTableGateway.getInstance().getBook(book.getId()));
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 			MasterController.getInstance().changeView(
 					"../view/view_bookDetail.fxml", 
 					BookDetailController.getInstance(), 
-					this.getBook()); 
+					null); 
 		}
 	}
 	

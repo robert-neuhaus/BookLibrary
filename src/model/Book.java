@@ -109,7 +109,7 @@ public class Book implements Cloneable{
 		if (summary.length() < 1)
 			return "Summary must be provided.";
 		else if (summary.length() > 65535)
-			return "Summary must be 65535 characters or fewer";	
+			return "Summary must be 65535 characters or fewer.";	
 		return null;
 	}
 	
@@ -131,8 +131,10 @@ public class Book implements Cloneable{
 	}
 	
 	public String validateIsbn(String isbn) {
-		if (isbn.length() > 13 || isbn.length() < 13)
-			return "ISBN must be exactly 13 characters.";
+		if (isbn.length() > 13)
+			return "ISBN must be 13 characters or fewer.";
+		if (isbn.length() < 1)
+			return "ISBN must be provided.";
 		return null;
 	}
 	
