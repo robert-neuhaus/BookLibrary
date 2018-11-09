@@ -4,8 +4,6 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.Optional;
 
-import exception.ValidationException;
-import gateway.BookTableGateway;
 import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
@@ -14,7 +12,6 @@ import javafx.scene.control.ButtonBar;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.ButtonType;
 import javafx.scene.layout.BorderPane;
-import model.Book;
 
 public class MasterController {
 	private static MasterController instance = null;
@@ -59,64 +56,55 @@ public class MasterController {
 		}
 	}
 	
-	public void alertSave() {	
+	public void alertSave() {
+		Boolean isNewBook = false;
+		BookDetailController bookDetailController = BookDetailController.getInstance();
 		Alert alert = new Alert(AlertType.CONFIRMATION);
+		
 		alert.setTitle("Unsaved Changes");
 		alert.setHeaderText("Unsaved changes have been made to: "
-				+ BookDetailController.getInstance().getBook().getTitle());
+				+ bookDetailController.getBook().getTitle());
 		alert.setContentText("Would you like to save changes?");
 		ButtonType bttnYes = new ButtonType("Yes", ButtonBar.ButtonData.OK_DONE);
 		ButtonType bttnNo = new ButtonType("No", ButtonBar.ButtonData.OK_DONE);
 		ButtonType bttnCancel = new ButtonType("Cancel", ButtonBar.ButtonData.CANCEL_CLOSE);
 		alert.getButtonTypes().setAll(bttnYes, bttnNo, bttnCancel);
+		
 
 		Optional<ButtonType> result = alert.showAndWait();
 		if (result.get() == bttnYes){
-			try {
-				if (saveBook()) {
-					alertSuccess();
-					this.setIsChange(false);
-				}
-			} catch (ValidationException ve) {
-				if (ve != null)
-					BookDetailController.getInstance().showErrors(ve);
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
+			if (bookDetailController.getBook().getId() == 0)
+				isNewBook = true;
+					
+			if (bookDetailController.saveBook())
+				alertSuccess(isNewBook);
 		} else if (result.get() == bttnNo) {
 			this.setIsChange(false);
 		}
 	}
 	
-	public void alertSuccess() {	
+	public void alertSuccess(Boolean isNewBook) {	
 		Alert alert = new Alert(AlertType.INFORMATION);
+		BookDetailController bookDetailController = BookDetailController.getInstance();
+		
 		alert.setTitle("Save Successful");
-		//TODO: change to detect if update or add
-		alert.setHeaderText("Successfully Saved: "
-				+ BookDetailController.getInstance().getBook());
+		
+		if (isNewBook == true) {
+			alert.setHeaderText("Successfully Saved: " + bookDetailController.getBook());
+		} else {
+			alert.setHeaderText("Successfully Updated: " + bookDetailController.getBook());
+		}
+		
 		alert.showAndWait();
 	}
 	
 	public void alertLock() {
 		Alert alert = new Alert(AlertType.WARNING);
 		alert.setTitle("Save Unsuccessful");
-		//TODO: change to detect if update or add
 		alert.setHeaderText("Book Record has Changed Since Opened.");
 		alert.setContentText("Please Return to Book List to Fetch Most Recent Record.");
 		alert.showAndWait();
 	}
-	
-	public Boolean saveBook() throws Exception {
-		Book oldBook = (Book) BookDetailController.getInstance().getBook().clone();
-		
-		if (BookDetailController.getInstance().saveBook()) {
-			BookTableGateway.getInstance().updateBook(
-					BookDetailController.getInstance().getBook());			
-			BookDetailController.getInstance().addChanges(oldBook, BookDetailController.getInstance().getBook());
-			return true;
-		}
-		return false;
-	} 
 	
 	public void setRootBorderPane(BorderPane menuBorderPane) {
 		this.borderPane = menuBorderPane;

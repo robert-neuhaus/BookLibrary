@@ -1,5 +1,6 @@
 package controller;
 
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
@@ -50,66 +51,27 @@ public class BookDetailController {
 	private static BookDetailController instance = null;
 	
 	public BookDetailController() {
-		//this.book = book;
-		//MasterController.getInstance().setBook(book);
+
 	}
 	
 	public static BookDetailController getInstance() {
 		if (instance == null) {
 			instance = new BookDetailController();
 		}
+		
 		return instance;
 	}
 	
 	@FXML public void handleButtonAction(ActionEvent action) {
 		Object source = action.getSource();
 		if(source == btnSave) {	
-			Boolean isNewBook = true;
-			Book oldBook = (Book) this.getBook().clone();
-			logger.info("Save Clicked");
-			lblStatus.setText("");
-			markValidAll();
-			
-			try {
-				if (saveBook() == true) {
-					if (this.book.getId() > 0)
-						isNewBook = false;
-					
-					BookTableGateway.getInstance().updateBook(book);
-					addChanges(oldBook, this.getBook());
-														
-					if (isNewBook == true) {
-						lblStatus.setText("Book added.");				
-						logger.info("Book added.");
-					} else {
-						lblStatus.setText("Book updated.");				
-						logger.info("Book updated.");
-					}
-					lblStatus.setStyle("-fx-text-fill: blue;");
-					try {
-						this.setBook(BookTableGateway.getInstance().getBook(this.getBook().getId()));
-					} catch (Exception e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					} 
-					initialize();
-				}
-									
-			}catch (ValidationException ve) {			
-				showErrors(ve);
-			}catch (Exception se) {
-				lblStatus.setText("Failed to save changes to database.");
-				lblStatus.setStyle("-fx-text-fill: red;");
-			}						
-			btnSave.setDisable(true);
-		}
-		
+			saveBook();
+		}		
 		else if (source == btnAuditTrail) {
 			try {
 				MasterController.getInstance().changeView("../view/view_auditTrail.fxml", 
 						new AuditTrailController(this.getBook()), null);
 			} catch (Exception e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}
@@ -146,13 +108,58 @@ public class BookDetailController {
 		return exceptions;
 	}
 	
-	public Boolean saveBook() throws Exception {
+	public Boolean saveBook() {
+		Boolean isNewBook = true;
+		Book oldBook = (Book) this.getBook().clone();
+		logger.info("Save Clicked");
+		lblStatus.setText("");
+		markValidAll();
 		
-		if (this.getBook().getId() == 0 
-				|| this.getBook().getLastModified().equals(
-					BookTableGateway.getInstance().getLastModified(
-							this.getBook().getId()))) {
+		try {
+			if (isSavable()) {
+				if (this.book.getId() > 0)
+					isNewBook = false;
+				
+				BookTableGateway.getInstance().updateBook(book);
+				addChanges(oldBook, this.getBook());
+													
+				if (isNewBook == true) {
+					lblStatus.setText("Book added.");				
+					logger.info("Book added.");
+				} else {
+					lblStatus.setText("Book updated.");				
+					logger.info("Book updated.");
+				}
+				lblStatus.setStyle("-fx-text-fill: blue;");
+				try {
+					this.setBook(BookTableGateway.getInstance().getBook(this.getBook().getId()));
+				} catch (Exception e) {
+					e.printStackTrace();
+				} 
+				initialize();
+			}								
+		}catch (ValidationException ve) {			
+			showErrors(ve);
 			
+			return false;
+		}catch (Exception se) {
+			lblStatus.setText("Failed to save changes to database.");
+			lblStatus.setStyle("-fx-text-fill: red;");
+			
+			return false;
+		}		
+		
+		btnSave.setDisable(true);
+		
+		return true;
+	}
+	
+	public Boolean isSavable() throws Exception {
+		int id = book.getId();
+		LocalDateTime lastModifiedOld = book.getLastModified();
+		
+		if (id == 0 || lastModifiedOld.equals(
+				BookTableGateway.getInstance().getLastModified(book.getId()))) {		
 			List<InvalidField> exceptions = validateFields();
 			
 			if (exceptions.isEmpty()) {
@@ -161,14 +168,16 @@ public class BookDetailController {
 				this.book.setIsbn(txtFldIsbn.getText());
 				this.book.setSummary(txtAreaSmmry.getText());
 				this.book.setPublisher(cmboBxPublisher.getValue());
-			}
-			else 
-				throw new ValidationException(exceptions);
+			} else 
+				throw new ValidationException(exceptions);			
 			
 			return true;
+		
 		} else {
-			MasterController.getInstance().alertLock();
-			MasterController.getInstance().setIsChange(false);
+			MasterController masterController = MasterController.getInstance();
+			masterController.alertLock();
+			masterController.setIsChange(false);
+
 			return false;
 		}
 	}
@@ -177,6 +186,7 @@ public class BookDetailController {
 		List<InvalidField> exceptions = ve.getCauses();
 		lblStatus.setStyle("-fx-text-fill: red;");
 		exceptions.get(0).getControl().requestFocus();
+		
 		for (InvalidField exception : exceptions) {
 			logger.info(exception.getMessage());
 			lblStatus.setText(lblStatus.getText() + "\n" + exception.getMessage());
@@ -217,7 +227,6 @@ public class BookDetailController {
 			cmboBxPublisher.getSelectionModel().select(book.getPublisher());
 			setOnChangeListener(cmboBxPublisher);
 		} catch (Exception e1) {
-			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
 		
@@ -277,22 +286,26 @@ public class BookDetailController {
 						+ " to " 
 						+ newBook.getIsbn() 
 						+ "."));
+			
 			if (!oldBook.getPublisher().equals(newBook.getPublisher()))
 				changes.add(new Audit(newBook.getId(), "Publisher changed from " 
 						+ oldBook.getPublisher() 
 						+ " to " 
 						+ newBook.getPublisher() 
 						+ "."));
+			
 			if (!oldBook.getSummary().equals(newBook.getSummary()))
 				changes.add(new Audit(newBook.getId(), "Summary changed."));
+			
 			if (!oldBook.getTitle().equals(newBook.getTitle()))
 				changes.add(new Audit(newBook.getId(), "Title changed from " 
 						+ oldBook.getTitle() 
 						+ " to " 
 						+ newBook.getTitle() 
 						+ "."));
+			
 			if (oldBook.getYearPublished() != newBook.getYearPublished())
-				changes.add(new Audit(newBook.getId(), "Year Publisher changed from " 
+				changes.add(new Audit(newBook.getId(), "Year Published changed from " 
 						+ oldBook.getYearPublished() 
 						+ " to " 
 						+ newBook.getYearPublished() 
