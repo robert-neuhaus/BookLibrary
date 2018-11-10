@@ -34,7 +34,6 @@ public class AuditTrailController {
 		tblVwAuditTrail.getColumns().get(0).setCellValueFactory(new PropertyValueFactory<>("timestamp"));
 		tblVwAuditTrail.getColumns().get(1).setCellValueFactory(new PropertyValueFactory<>("message"));
 		tblVwAuditTrail.setItems(this.getAuditTrail());
-
 	}
 	
 	@FXML public void handleButtonAction(ActionEvent action) {
@@ -45,7 +44,6 @@ public class AuditTrailController {
 				BookDetailController.getInstance().setBook(
 						BookTableGateway.getInstance().getBook(book.getId()));
 			} catch (Exception e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 			MasterController.getInstance().changeView(

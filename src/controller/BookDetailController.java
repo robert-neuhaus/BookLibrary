@@ -13,15 +13,28 @@ import gateway.BookTableGateway;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonBar;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Control;
 import javafx.scene.control.Label;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableColumn.CellEditEvent;
+import javafx.scene.control.TableView;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TextInputControl;
+import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.control.cell.TextFieldTableCell;
+import javafx.scene.input.MouseEvent;
 import model.Audit;
+import model.Author;
+import model.AuthorBook;
 import model.Book;
 import model.InvalidField;
 import model.Publisher;
@@ -44,8 +57,10 @@ public class BookDetailController {
 	@FXML private ComboBox<Publisher> cmboBxPublisher;
 	@FXML private Button btnSave;
 	@FXML private Button btnAuditTrail;
+	@FXML private TableView<AuthorBook> tblVwAuthors;
 	
 	private Book book;
+	private ObservableList<AuthorBook> authors;
 	DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 	
 	private static BookDetailController instance = null;
@@ -235,6 +250,41 @@ public class BookDetailController {
 		else
 			btnAuditTrail.setDisable(false);
 		
+		List<AuthorBook> authors = this.book.getAuthors();
+		this.authors = FXCollections.observableArrayList(authors);
+//		tblVwAuthors.getColumns().get(0).setCellValueFactory(new PropertyValueFactory<>("author"));
+//		tblVwAuthors.getColumns().get(1).setCellValueFactory(new PropertyValueFactory<>("royalty"));
+		TableColumn<AuthorBook, String> colName = new TableColumn<AuthorBook, String>("Name");
+		colName.setCellValueFactory(new PropertyValueFactory<AuthorBook, String>("authorSimpleString"));
+		colName.setCellFactory(TextFieldTableCell.forTableColumn());
+		
+		TableColumn<AuthorBook, String> colRoyalty = new TableColumn<AuthorBook, String>("Royalty");
+		colRoyalty.setCellValueFactory(new PropertyValueFactory<AuthorBook, String>("royaltySimpleString"));
+		colRoyalty.setCellFactory(TextFieldTableCell.forTableColumn());
+		
+		tblVwAuthors.getColumns().setAll(colName, colRoyalty);
+		tblVwAuthors.setEditable(true);
+		tblVwAuthors.setItems(this.authors);
+		
+//		tblVwAuthors.setOnMouseClicked(new EventHandler<MouseEvent>() {
+//            @Override
+//	        public void handle(MouseEvent click) {
+//	            	AuthorBook selected = tblVwAuthors.getSelectionModel().getSelectedItem();                   
+//	            	logger.info("double-clicked " + selected);
+//	            	
+//	            	
+//	            	
+//	                colName.setOnEditCommit(new EventHandler<CellEditEvent<AuthorBook, String>>() {
+//	                	@Override
+//	                	public void handle(CellEditEvent<AuthorBook, String> t) {
+//	                		((AuthorBook) t.getTableView().getItems().get(
+//	                				t.getTablePosition().getRow())).getAuthor().setLastName(t.getNewValue().toString());
+//	                	}
+//	                });        
+//	        }
+//	    });
+		
+
 		btnSave.setDisable(true);
 		MasterController.getInstance().setIsChange(false);
 		

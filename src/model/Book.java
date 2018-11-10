@@ -1,6 +1,9 @@
 package model;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Book implements Cloneable{
 	private int id;
@@ -95,6 +98,21 @@ public class Book implements Cloneable{
 	
 	public void setLastModified(LocalDateTime lastModified) {
 		this.lastModified = lastModified;
+	}
+	
+	public List<AuthorBook> getAuthors() {
+		//List<AuthorBook> authorBooks = 
+		//	BookTableGateway.getInstance().getAuthorsForBook();
+		//
+		//return authorBooks;
+		
+		//TODO: Change this when gateWay method ready
+		List<AuthorBook> authorBooks = new ArrayList<>();
+		AuthorBook bookAuthor = new AuthorBook(new Author(0, 
+				"Uncle", "Bob", LocalDate.now(), "uncle", "www.uncleBob.com"), 
+				this, 5);
+		authorBooks.add(bookAuthor);
+		return authorBooks;
 	}
 	
 	public String validateTitle(String title) {
