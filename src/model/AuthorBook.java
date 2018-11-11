@@ -12,7 +12,11 @@ public class AuthorBook {
 	SimpleStringProperty royaltySimpleString = new SimpleStringProperty();
 	
 	public AuthorBook() {
-		
+		this.author = new Author();
+		this.book = new Book();
+		this.royalty = 0;
+		this.setAuthorSimpleString(this.author.toString());
+		this.setRoyaltySimpleString(Integer.toString(royalty));
 	}
 
 	public AuthorBook(Author author, Book book, int royalty) {
@@ -69,6 +73,12 @@ public class AuthorBook {
 	
 	public String getRoyaltySimpleString() {
 		 return this.royaltySimpleString.get();
+	}
+	
+	public String toString() {
+		return this.author.getLastName()
+				+ ", "
+				+ author.getFirstName();
 	}
 
 }

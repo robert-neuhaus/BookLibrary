@@ -5,6 +5,8 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import gateway.AuthorTableGateway;
+
 public class Book implements Cloneable{
 	private int id;
 	private String title;
@@ -24,6 +26,7 @@ public class Book implements Cloneable{
 		this.isbn = "";
 		this.dateAdded = null;
 		this.publisher = new Publisher(0, "Unknown");
+		getAuthors();
 	}
 
 	public Book(int id, String title, String summary, 
@@ -34,6 +37,7 @@ public class Book implements Cloneable{
 		this.yearPublished = yearPublished;
 		this.isbn = ISBN;
 		this.publisher = publisher;
+		getAuthors();
 	}
 	
 	public int getId() {
@@ -101,18 +105,23 @@ public class Book implements Cloneable{
 	}
 	
 	public List<AuthorBook> getAuthors() {
-		//List<AuthorBook> authorBooks = 
-		//	BookTableGateway.getInstance().getAuthorsForBook();
-		//
-		//return authorBooks;
+		List<AuthorBook> authorBooks = null;
+		try {
+			authorBooks = AuthorTableGateway.getInstance().getAuthorsForBook(this);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		
-		//TODO: Change this when gateWay method ready
-		List<AuthorBook> authorBooks = new ArrayList<>();
-		AuthorBook bookAuthor = new AuthorBook(new Author(0, 
-				"Uncle", "Bob", LocalDate.now(), "uncle", "www.uncleBob.com"), 
-				this, 5);
-		authorBooks.add(bookAuthor);
 		return authorBooks;
+		
+//		//TODO: Change this when gateWay method ready
+//		List<AuthorBook> authorBooks = new ArrayList<>();
+//		AuthorBook bookAuthor = new AuthorBook(new Author(0, 
+//				"Uncle", "Bob", LocalDate.now(), "uncle", "www.uncleBob.com"), 
+//				this, 5);
+//		authorBooks.add(bookAuthor);
+//		return authorBooks;
 	}
 	
 	public String validateTitle(String title) {
