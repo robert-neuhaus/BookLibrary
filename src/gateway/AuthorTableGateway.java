@@ -117,7 +117,7 @@ public class AuthorTableGateway {
 			st = conn.prepareStatement( "SELECT ab.*, a.* FROM AuthorBook ab, Author a, Book b "
 					+ "WHERE b.id = ? "
 					+ "AND a.id = ab.author_id "
-					+ "AND b.id + ab.book_id "
+					+ "AND b.id = ab.book_id "
 					+ "ORDER BY a.last_name ASC");
 			
 			st.setInt(1, book.getId());
