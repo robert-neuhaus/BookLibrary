@@ -1,5 +1,6 @@
 package controller;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -144,7 +145,7 @@ public class BookDetailController {
 		TextField txtFldRoyalty = new TextField();
 		AuthorTableGateway authorTableGateway = null;
 		Boolean exists = false;
-		int royalty = 0;
+		BigDecimal royalty = new BigDecimal(0);
 		
 		try {
 			authorTableGateway = AuthorTableGateway.getInstance();
@@ -156,7 +157,7 @@ public class BookDetailController {
 		try {			
 			if (!authorBook.getNewRecord()) {
 				lblAuthor.setText(authorBook.toString());
-				txtFldRoyalty.setText(Integer.toString(authorBook.getRoyalty()));
+				txtFldRoyalty.setText(authorBook.getRoyalty().toString());
 				flowPane.getChildren().addAll(lblAuthor, txtFldRoyalty);
 			} else {
 				authors = FXCollections.observableArrayList(authorTableGateway.getAuthors());
@@ -177,7 +178,7 @@ public class BookDetailController {
 		if (result.get().equals(btnApply)) {
 			
 			try {
-				royalty = Integer.parseInt(txtFldRoyalty.getText());
+				royalty = new BigDecimal(txtFldRoyalty.getText());
 			} catch (NumberFormatException ne) {
 				
 			}

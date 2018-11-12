@@ -1,11 +1,14 @@
 package model;
 
+import java.math.BigDecimal;
+import java.text.DecimalFormat;
+
 import javafx.beans.property.SimpleStringProperty;
 
 public class AuthorBook {
 	Author author;
 	Book book;
-	int royalty;
+	BigDecimal royalty;
 	Boolean newRecord = true;
 	
 	SimpleStringProperty authorSimpleString = new SimpleStringProperty();
@@ -14,17 +17,17 @@ public class AuthorBook {
 	public AuthorBook() {
 		this.author = new Author();
 		this.book = new Book();
-		this.royalty = 0;
+		this.royalty = new BigDecimal(0);
 		this.setAuthorSimpleString(this.author.toString());
-		this.setRoyaltySimpleString(Integer.toString(royalty));
+		this.setRoyaltySimpleString(royalty.toString());
 	}
 
-	public AuthorBook(Author author, Book book, int royalty) {
+	public AuthorBook(Author author, Book book, BigDecimal royalty) {
 		this.author = author;
 		this.book = book;
 		this.royalty = royalty;
 		this.setAuthorSimpleString(this.author.toString());
-		this.setRoyaltySimpleString(Integer.toString(royalty));
+		this.setRoyaltySimpleString(royalty.toString());
 	}
 	
 	public Author getAuthor() {
@@ -43,11 +46,11 @@ public class AuthorBook {
 		this.book = book;
 	}
 
-	public int getRoyalty() {
+	public BigDecimal getRoyalty() {
 		return royalty;
 	}
 
-	public void setRoyalty(int royalty) {
+	public void setRoyalty(BigDecimal royalty) {
 		this.royalty = royalty;
 	}
 
