@@ -20,7 +20,7 @@
       <TextField fx:id="txtFldTtl" layoutX="121.0" layoutY="46.0" prefWidth="150.0" AnchorPane.rightAnchor="340.0" AnchorPane.topAnchor="30.0" />
       <TextField fx:id="txtFldYrPblshd" layoutX="414.0" layoutY="46.0" prefWidth="150.0" AnchorPane.rightAnchor="80.0" AnchorPane.topAnchor="30.0" />
       <TextField fx:id="txtFldIsbn" layoutX="111.0" layoutY="126.0" prefWidth="150.0" AnchorPane.rightAnchor="340.0" AnchorPane.topAnchor="70.0" />
-      <TextArea fx:id="txtAreaSmmry" layoutX="111.0" layoutY="179.0" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="130.0" prefWidth="150.0" AnchorPane.rightAnchor="340.0" AnchorPane.topAnchor="150.0" />
+      <TextArea fx:id="txtAreaSmmry" layoutX="111.0" layoutY="179.0" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="125.0" prefWidth="225.0" AnchorPane.rightAnchor="340.0" AnchorPane.topAnchor="170.0" />
       <Label fx:id="lblStatus" contentDisplay="CENTER" layoutX="472.0" layoutY="330.0" prefHeight="100.0" prefWidth="400.0" AnchorPane.bottomAnchor="30.0" AnchorPane.rightAnchor="90.0" AnchorPane.topAnchor="270.0" />
       <Label fx:id="lblDtAdded" layoutX="411.0" layoutY="70.0" AnchorPane.rightAnchor="340.0" AnchorPane.topAnchor="110.0" />
       <Label layoutX="122.0" layoutY="111.0" text="Last Modified:" AnchorPane.rightAnchor="240.0" AnchorPane.topAnchor="110.0" />
@@ -29,13 +29,13 @@
       <ComboBox fx:id="cmboBxPublisher" layoutX="410.0" layoutY="70.0" prefWidth="150.0" AnchorPane.rightAnchor="80.0" AnchorPane.topAnchor="70.0" />
       <Button fx:id="btnAuditTrail" layoutX="48.0" layoutY="345.0" mnemonicParsing="false" onAction="#handleButtonAction" prefWidth="75.0" text="Audit Trail" AnchorPane.rightAnchor="500.0" AnchorPane.topAnchor="340.0" />
       <Label fx:id="lblAuthors" layoutX="348.0" layoutY="150.0" text="Authors:" AnchorPane.rightAnchor="240.0" AnchorPane.topAnchor="150.0" />
-      <TableView fx:id="tblVwAuthors" layoutX="411.0" layoutY="170.0" prefHeight="130.0" prefWidth="150.0" AnchorPane.rightAnchor="80.0" AnchorPane.topAnchor="150.0">
+      <TableView fx:id="tblVwAuthors" layoutX="411.0" layoutY="170.0" prefHeight="125.0" prefWidth="225.0" AnchorPane.rightAnchor="80.0" AnchorPane.topAnchor="170.0">
          <columns>
-            <TableColumn editable="false" prefWidth="99.0" text="Author" />
-            <TableColumn editable="false" prefWidth="49.0" text="Royalty" />
+            <TableColumn editable="false" prefWidth="141.0" text="Author" />
+            <TableColumn editable="false" prefWidth="82.0" text="Royalty" />
          </columns></TableView>
-      <Button fx:id="btnAdd" layoutX="530.0" layoutY="146.0" mnemonicParsing="false" onAction="#handleButtonAction" prefWidth="60.0" text="Add" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="200.0" />
-      <Button fx:id="btnDelete" layoutX="525.0" layoutY="258.0" mnemonicParsing="false" onAction="#handleButtonAction" prefWidth="60.0" text="Delete" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="230.0" />
-      <Button fx:id="btnEdit" layoutX="530.0" layoutY="155.0" mnemonicParsing="false" onAction="#handleButtonAction" prefWidth="60.0" text="Edit" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="170.0" />
+      <Button fx:id="btnAdd" layoutX="530.0" layoutY="225.0" mnemonicParsing="false" onAction="#handleButtonAction" prefWidth="60.0" text="Add" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="225.0" />
+      <Button fx:id="btnDelete" layoutX="530.0" layoutY="255.0" mnemonicParsing="false" onAction="#handleButtonAction" prefWidth="60.0" text="Delete" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="255.0" />
+      <Button fx:id="btnEdit" layoutX="530.0" layoutY="195.0" mnemonicParsing="false" onAction="#handleButtonAction" prefWidth="60.0" text="Edit" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="195.0" />
    </children>
 </AnchorPane>

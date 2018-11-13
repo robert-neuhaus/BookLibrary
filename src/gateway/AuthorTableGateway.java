@@ -162,7 +162,7 @@ public class AuthorTableGateway {
 		
 	}
 
-	public void addAuthorBook(AuthorBook authorBook, BigDecimal royalty) throws Exception{
+	public void addAuthorBook(AuthorBook authorBook) throws Exception{
 		PreparedStatement st = null;
 		
 		try {
@@ -175,7 +175,7 @@ public class AuthorTableGateway {
 									  + ") VALUES ( ?, ?, ?)");
 			st.setInt(1, authorBook.getAuthor().getId());
 			st.setInt(2, authorBook.getBook().getId());
-			st.setBigDecimal(3, royalty);
+			st.setBigDecimal(3, authorBook.getRoyalty());
 			st.executeUpdate();
 			
 			conn.commit();
@@ -201,10 +201,10 @@ public class AuthorTableGateway {
 	
 	}
 	
-	public void updateAuthorBook(AuthorBook authorBook, BigDecimal royalty) throws Exception{
+	public void updateAuthorBook(AuthorBook authorBook) throws Exception{
 		
 		if (authorBook.getNewRecord()) {
-			addAuthorBook(authorBook, royalty);
+			addAuthorBook(authorBook);
 		} else {
 		
 			PreparedStatement st = null;
@@ -215,7 +215,7 @@ public class AuthorTableGateway {
 										  + "SET royalty = ? "
 										  + "WHERE ab.author_id = ? "
 										  + "AND ab.book_id = ? ");
-				st.setBigDecimal(1, royalty);
+				st.setBigDecimal(1, authorBook.getRoyalty());
 				st.setInt(2, authorBook.getAuthor().getId());
 				st.setInt(3, authorBook.getBook().getId());
 				st.executeUpdate();

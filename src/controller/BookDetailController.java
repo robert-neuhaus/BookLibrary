@@ -10,6 +10,7 @@ import java.util.Optional;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import alert.EditAuthor;
 import exception.ValidationException;
 import gateway.AuthorTableGateway;
 import gateway.BookTableGateway;
@@ -26,16 +27,11 @@ import javafx.scene.control.ButtonType;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Control;
 import javafx.scene.control.Label;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableColumn.CellEditEvent;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TextInputControl;
-import javafx.scene.control.TextInputDialog;
-import javafx.scene.control.cell.ComboBoxTableCell;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.FlowPane;
 import model.Audit;
@@ -91,6 +87,11 @@ public class BookDetailController {
 	
 	@FXML public void handleButtonAction(ActionEvent action) {
 		Object source = action.getSource();
+		AuthorBook selected = null;
+		
+		if (tblVwAuthors.getSelectionModel().getSelectedItem() != null) {
+			selected = tblVwAuthors.getSelectionModel().getSelectedItem(); 
+		}
 		
 		//Save
 		if(source == btnSave) {	
@@ -108,103 +109,29 @@ public class BookDetailController {
 		}
 		
 		//Edit
-		else if (source == btnEdit 
-				&& tblVwAuthors.getSelectionModel().getSelectedItem() != null) {
-			editAuthor(tblVwAuthors.getSelectionModel().getSelectedItem());
+		else if (source == btnEdit && selected != null) {
+			EditAuthor editAuthor = new EditAuthor(selected, "edit");
+			AuthorBook newAuthorBook = editAuthor.getAuthorBook();
+			if (newAuthorBook != null) {
+				authorBooks.set(authorBooks.indexOf(selected), newAuthorBook);
+			}
 		}
 		
 		//Add
 		else if (source == btnAdd) {
-			editAuthor(new AuthorBook());
+			AuthorBook newAuthorBook = new AuthorBook();
+			newAuthorBook.setBook(this.getBook());
+			EditAuthor editAuthor = new EditAuthor(newAuthorBook, "add");
+			newAuthorBook = editAuthor.getAuthorBook();
+			if (newAuthorBook != null)
+				authorBooks.add(newAuthorBook);
 		}
 		
 		//Delete
-		else if (source == btnDelete
-				&& tblVwAuthors.getSelectionModel().getSelectedItem() != null) {
-			try {
-				AuthorTableGateway.getInstance().deleteAuthorBook(
-						tblVwAuthors.getSelectionModel().getSelectedItem());
-			} catch (Exception e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			
-			this.authorBooks = FXCollections.observableArrayList(this.book.getAuthors());
-			this.tblVwAuthors.setItems(this.authorBooks);
+		else if (source == btnDelete && selected != null) {
+			authorBooks.remove(selected);
 		}
-	}
-	
-	public void editAuthor(AuthorBook authorBook) {
-		Alert alert = new Alert(AlertType.NONE);
-		alert.setTitle("Edit Author");
-		ButtonType btnApply = new ButtonType("Apply", ButtonBar.ButtonData.OK_DONE);
-		ButtonType btnCancel = new ButtonType("Cancel", ButtonBar.ButtonData.CANCEL_CLOSE);
-		FlowPane flowPane = new FlowPane();
-		ComboBox<Author> cmboBxAuthors = new ComboBox<Author>();
-		Label lblAuthor = new Label();
-		TextField txtFldRoyalty = new TextField();
-		AuthorTableGateway authorTableGateway = null;
-		Boolean exists = false;
-		BigDecimal royalty = new BigDecimal(0);
-		
-		try {
-			authorTableGateway = AuthorTableGateway.getInstance();
-		} catch (Exception e2) {
-			e2.printStackTrace();
-		}
-		
-		ObservableList<Author> authors;
-		try {			
-			if (!authorBook.getNewRecord()) {
-				lblAuthor.setText(authorBook.toString());
-				txtFldRoyalty.setText(authorBook.getRoyalty().toString());
-				flowPane.getChildren().addAll(lblAuthor, txtFldRoyalty);
-			} else {
-				authors = FXCollections.observableArrayList(authorTableGateway.getAuthors());
-				cmboBxAuthors.setItems(authors);
-				cmboBxAuthors.getSelectionModel().selectFirst();
-				flowPane.getChildren().addAll(cmboBxAuthors, txtFldRoyalty);
-			}
-		} catch (Exception e1) {
-			e1.printStackTrace();
-		}
-		
-		flowPane.setHgap(15);
-		
-		alert.getButtonTypes().setAll(btnApply, btnCancel);
-		alert.getDialogPane().contentProperty().set(flowPane);
-		
-		Optional<ButtonType> result = alert.showAndWait();
-		if (result.get().equals(btnApply)) {
-			
-			try {
-				royalty = new BigDecimal(txtFldRoyalty.getText());
-			} catch (NumberFormatException ne) {
-				
-			}
-			
-			if (authorBook.getNewRecord()) {
-					authorBook.setAuthor(cmboBxAuthors.getSelectionModel().getSelectedItem());
-					authorBook.setBook(this.book);
-					authorBook.setRoyalty(royalty);
-					exists = authorTableGateway.doesExist(authorBook);
-			}
-			
-			
-			
-			if (!exists) {		
-				try {
-					authorTableGateway.updateAuthorBook(authorBook, royalty);
-				} catch (Exception e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-			}
-		    
-			this.authorBooks = FXCollections.observableArrayList(this.book.getAuthors());
-			this.tblVwAuthors.setItems(this.authorBooks);
-		}
-	}
+	}	
 	
 	public List<InvalidField> validateFields() {
 		List<InvalidField> exceptions = new ArrayList<InvalidField>();
@@ -261,7 +188,8 @@ public class BookDetailController {
 				}
 				lblStatus.setStyle("-fx-text-fill: blue;");
 				try {
-					this.setBook(BookTableGateway.getInstance().getBook(this.getBook().getId()));
+					this.setBook(BookTableGateway.getInstance().getBook(
+							this.getBook().getId()));
 				} catch (Exception e) {
 					e.printStackTrace();
 				} 
@@ -365,9 +293,28 @@ public class BookDetailController {
 			btnAuditTrail.setDisable(false);
 		
 		this.authorBooks = FXCollections.observableArrayList(this.book.getAuthors());
-		tblVwAuthors.getColumns().get(0).setCellValueFactory(new PropertyValueFactory<>("authorSimpleString"));
-		tblVwAuthors.getColumns().get(1).setCellValueFactory(new PropertyValueFactory<>("royaltySimpleString"));
+		tblVwAuthors.getColumns().get(0).setCellValueFactory(new PropertyValueFactory<>(
+				"authorSimpleString"));
+		tblVwAuthors.getColumns().get(1).setCellValueFactory(new PropertyValueFactory<>(
+				"royaltySimpleString"));
 	
+		tblVwAuthors.setOnMouseClicked(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent click) {
+                if (click.getClickCount() == 2) {
+                	AuthorBook selected = tblVwAuthors.getSelectionModel().getSelectedItem();                   
+                	logger.info("double-clicked " + selected);
+                	if (selected != null) {
+                		EditAuthor editAuthor = new EditAuthor(selected, "edit");
+            			AuthorBook newAuthorBook = editAuthor.getAuthorBook();
+            			if (newAuthorBook != null) {
+            				authorBooks.set(authorBooks.indexOf(selected), newAuthorBook);
+            			}
+                	}               		
+                }
+            }
+        });
+		
 		tblVwAuthors.setItems(this.authorBooks);	
 		btnSave.setDisable(true);
 		MasterController.getInstance().setIsChange(false);
@@ -406,6 +353,10 @@ public class BookDetailController {
 	
 	public Book getBook() {
 		return this.book;
+	}
+	
+	public List<AuthorBook> getAuthorBooks() {
+		return this.authorBooks;
 	}
 	
 	public void addChanges(Book oldBook, Book newBook) throws Exception {

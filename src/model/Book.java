@@ -109,19 +109,10 @@ public class Book implements Cloneable{
 		try {
 			authorBooks = AuthorTableGateway.getInstance().getAuthorsForBook(this);
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		
 		return authorBooks;
-		
-//		//TODO: Change this when gateWay method ready
-//		List<AuthorBook> authorBooks = new ArrayList<>();
-//		AuthorBook bookAuthor = new AuthorBook(new Author(0, 
-//				"Uncle", "Bob", LocalDate.now(), "uncle", "www.uncleBob.com"), 
-//				this, 5);
-//		authorBooks.add(bookAuthor);
-//		return authorBooks;
 	}
 	
 	public String validateTitle(String title) {
