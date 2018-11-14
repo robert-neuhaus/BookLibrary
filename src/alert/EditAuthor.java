@@ -8,20 +8,24 @@ import controller.BookDetailController;
 import gateway.AuthorTableGateway;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.EventHandler;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonBar;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.ComboBox;
+import javafx.scene.control.DialogEvent;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.layout.FlowPane;
+import javafx.stage.WindowEvent;
 import model.Author;
 import model.AuthorBook;
 
 public class EditAuthor {
 	
 	private AuthorBook authorBook;
+	private Boolean valid = true;
 
 	public EditAuthor(AuthorBook authorBook, String mode) {
 		Alert alert = new Alert(AlertType.NONE);
@@ -34,6 +38,14 @@ public class EditAuthor {
 		AuthorTableGateway authorTableGateway = null;
 		BigDecimal royalty = new BigDecimal(0);
 		AuthorBook newAuthorBook = (AuthorBook) authorBook.copy();
+		
+		alert.setOnCloseRequest(new EventHandler<DialogEvent>() {
+			public void handle(DialogEvent e) {  
+			    if(!valid) {
+			        e.consume();
+			    }
+			}
+		});
 		
 		try {
 			authorTableGateway = AuthorTableGateway.getInstance();
@@ -90,7 +102,14 @@ public class EditAuthor {
 			try {
 				royalty = new BigDecimal(txtFldRoyalty.getText());
 			} catch (NumberFormatException ne) {
-				
+				valid = false;
+			}
+			
+			if (new BigDecimal(1).compareTo(royalty) == 1 
+					|| new BigDecimal(0).compareTo(royalty) == -1) {
+				valid = false;
+			} else {
+				valid = true;
 			}
 			
 			if (mode.equals("add")) {

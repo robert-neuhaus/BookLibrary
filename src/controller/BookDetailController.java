@@ -22,14 +22,17 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
+import javafx.scene.Node;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonBar;
 import javafx.scene.control.ButtonType;
+import javafx.scene.control.Cell;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Control;
 import javafx.scene.control.Label;
+import javafx.scene.control.TableRow;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
@@ -160,6 +163,7 @@ public class BookDetailController {
 	
 	public List<InvalidField> validateFields() {
 		List<InvalidField> exceptions = new ArrayList<InvalidField>();
+		int i = 0;
 		
 		String validation = book.validateTitle(txtFldTtl.getText());
 		InvalidField exception;
@@ -190,6 +194,28 @@ public class BookDetailController {
 			exception = new InvalidField(tblVwAuthors, lblAuthors, 
 					"At least one author is required.");
 			exceptions.add(exception);
+		}
+		
+		//TODO:If separate warning text for each exception, will overflow space
+		//Make one warning for all exceptions here
+		for (Node n : tblVwAuthors.lookupAll("TableRow")) {
+			if (n instanceof TableRow) {
+				TableRow row = (TableRow) n;
+				if (!row.isEmpty()) {
+					AuthorBook ab = tblVwAuthors.getItems().get(i);
+					if (ab.getRoyalty().compareTo(new BigDecimal(1)) == 1) {			
+						exception = new InvalidField(row, lblAuthors, 
+								"Royalty cannot be greater than 100%");
+						exceptions.add(exception);
+					}else if (ab.getRoyalty().compareTo(new BigDecimal(0)) == -1) {
+						row.getStyleClass().add("invalid_control");
+						exception = new InvalidField(row, lblAuthors, 
+								"Royalty cannot be less than 0%");
+						exceptions.add(exception);
+					}
+					i++;
+				}
+			}
 		}
 		
 		return exceptions;
