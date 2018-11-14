@@ -6,16 +6,15 @@
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.layout.AnchorPane?>
 
-
-<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8.0.171">
+<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1">
    <children>
-      <TableView fx:id="tblVwAuditTrail" layoutX="50.0" layoutY="50.0" prefHeight="280.0" prefWidth="500.0">
+      <TableView fx:id="tblVwAuditTrail" layoutX="27.0" layoutY="50.0" prefHeight="280.0" prefWidth="550.0" AnchorPane.leftAnchor="20.0" AnchorPane.rightAnchor="20.0">
         <columns>
-          <TableColumn fx:id="TimeStamp" prefWidth="154.0" sortType="DESCENDING" text="Timestamp" />
-          <TableColumn fx:id="Message" prefWidth="345.0" sortType="DESCENDING" text="Message" />
+          <TableColumn fx:id="TimeStamp" prefWidth="153.0" sortType="DESCENDING" text="Timestamp" />
+          <TableColumn fx:id="Message" prefWidth="404.0" sortType="DESCENDING" text="Message" />
         </columns>
       </TableView>
-      <Label fx:id="lblBook" alignment="CENTER" layoutX="286.0" layoutY="52.0" text="Audit Trail For:" AnchorPane.leftAnchor="200.0" AnchorPane.rightAnchor="200.0" AnchorPane.topAnchor="25.0" />
-      <Button fx:id="btnBack" layoutX="50.0" layoutY="348.0" mnemonicParsing="false" onAction="#handleButtonAction" prefWidth="75.0" text="Back" AnchorPane.rightAnchor="500.0" AnchorPane.topAnchor="340.0" />
+      <Label fx:id="lblBook" alignment="CENTER" layoutX="286.0" layoutY="52.0" scaleX="1.5" scaleY="1.5" text="Audit Trail For:" AnchorPane.leftAnchor="200.0" AnchorPane.rightAnchor="200.0" AnchorPane.topAnchor="25.0" />
+      <Button fx:id="btnBack" layoutX="50.0" layoutY="348.0" mnemonicParsing="false" onAction="#handleButtonAction" prefWidth="75.0" text="Back" AnchorPane.rightAnchor="510.0" AnchorPane.topAnchor="340.0" />
    </children>
 </AnchorPane>

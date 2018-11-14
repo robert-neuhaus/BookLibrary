@@ -5,19 +5,19 @@ import java.text.DecimalFormat;
 
 import javafx.beans.property.SimpleStringProperty;
 
-public class AuthorBook {
-	Author author;
-	Book book;
-	BigDecimal royalty;
-	Boolean newRecord = true;
+public class AuthorBook{
+	private Author author;
+	private Book book;
+	private BigDecimal royalty;
+	private Boolean newRecord = true;
 	
-	SimpleStringProperty authorSimpleString = new SimpleStringProperty();
-	SimpleStringProperty royaltySimpleString = new SimpleStringProperty();
+	private SimpleStringProperty authorSimpleString = new SimpleStringProperty();
+	private SimpleStringProperty royaltySimpleString = new SimpleStringProperty();
 	
 	public AuthorBook() {
 		this.author = new Author();
 		this.book = new Book();
-		this.royalty = new BigDecimal(0);
+		this.royalty = new BigDecimal(0).stripTrailingZeros();
 		this.setAuthorSimpleString(this.author.toString());
 		this.setRoyaltySimpleString(this.royalty);
 	}
@@ -25,7 +25,7 @@ public class AuthorBook {
 	public AuthorBook(Author author, Book book, BigDecimal royalty) {
 		this.author = author;
 		this.book = book;
-		this.royalty = royalty;
+		this.royalty = royalty.stripTrailingZeros();
 		this.setAuthorSimpleString(this.author.toString());
 		this.setRoyaltySimpleString(this.royalty);
 	}
@@ -52,7 +52,7 @@ public class AuthorBook {
 	}
 
 	public void setRoyalty(BigDecimal royalty) {
-		this.royalty = royalty;
+		this.royalty = royalty.stripTrailingZeros();
 		this.setRoyaltySimpleString(this.royalty);
 	}
 
@@ -73,8 +73,8 @@ public class AuthorBook {
 	}
 	
 	public void setRoyaltySimpleString(BigDecimal royalty) {
-		royalty = royalty.multiply(new BigDecimal(10));
-		this.royaltySimpleString.set(royalty.toString() + "%");
+		royalty = royalty.multiply(new BigDecimal(100));
+		this.royaltySimpleString.set(royalty.toPlainString() + "%");
 	}
 	
 	public String getRoyaltySimpleString() {
@@ -85,6 +85,11 @@ public class AuthorBook {
 		return this.author.getLastName()
 				+ ", "
 				+ author.getFirstName();
+	}
+	
+	public AuthorBook copy() {
+		AuthorBook copy = new AuthorBook(this.author, this.book, this.royalty);
+		return copy;
 	}
 
 }

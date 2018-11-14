@@ -21,7 +21,7 @@ import model.AuthorBook;
 
 public class EditAuthor {
 	
-	AuthorBook authorBook;
+	private AuthorBook authorBook;
 
 	public EditAuthor(AuthorBook authorBook, String mode) {
 		Alert alert = new Alert(AlertType.NONE);
@@ -33,6 +33,7 @@ public class EditAuthor {
 		TextField txtFldRoyalty = new TextField();
 		AuthorTableGateway authorTableGateway = null;
 		BigDecimal royalty = new BigDecimal(0);
+		AuthorBook newAuthorBook = (AuthorBook) authorBook.copy();
 		
 		try {
 			authorTableGateway = AuthorTableGateway.getInstance();
@@ -64,9 +65,10 @@ public class EditAuthor {
 		try {			
 			if (mode.equals("edit")) {
 				alert.setTitle("Edit Author");
-				lblAuthor.setText(authorBook.toString());
-				txtFldRoyalty.setText(authorBook.getRoyalty().toString());
+				lblAuthor.setText(newAuthorBook.toString());
+				txtFldRoyalty.setText(newAuthorBook.getRoyalty().toString());
 				flowPane.getChildren().addAll(lblAuthor, txtFldRoyalty);
+				newAuthorBook.setNewRecord(false);
 			} else if (mode.equals("add")){
 				alert.setTitle("Add Author");
 				cmboBxAuthors.setItems(authorList);
@@ -92,12 +94,12 @@ public class EditAuthor {
 			}
 			
 			if (mode.equals("add")) {
-					authorBook.setAuthor(cmboBxAuthors.getSelectionModel().getSelectedItem());
+					newAuthorBook.setAuthor(cmboBxAuthors.getSelectionModel().getSelectedItem());
 			}
 			
-			authorBook.setRoyalty(royalty);
+			newAuthorBook.setRoyalty(royalty);
 			
-			this.authorBook = authorBook;
+			this.authorBook = newAuthorBook;
 		}		
 	}
 	

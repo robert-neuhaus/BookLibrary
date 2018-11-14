@@ -1,6 +1,14 @@
-.invalid {
+.invalid_label {
 	-fx-focus-color: red;
+	-fx-faint-focus-color: pink;
 	-fx-highlight-fill: red;
-	-fx-text-box-border: red;
+	-fx-text-fill: red;
+}
+
+.invalid_control {
+	-fx-focus-color: red;
+	-fx-faint-focus-color: pink;
+	-fx-highlight-fill: red;
+	-fx-border-color: red;
 	-fx-text-fill: red;
 }

@@ -4,7 +4,10 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map.Entry;
 import java.util.Optional;
 
 import org.apache.logging.log4j.LogManager;
@@ -56,6 +59,7 @@ public class BookDetailController {
 	@FXML private Label lblIsbn;
 	@FXML private Label lblYrPblshd;
 	@FXML private Label	lblLastModified;
+	@FXML private Label	lblAuthors;
 	@FXML private ComboBox<Publisher> cmboBxPublisher;
 	@FXML private Button btnSave;
 	@FXML private Button btnAuditTrail;
@@ -69,6 +73,9 @@ public class BookDetailController {
 	
 	private Book book;
 	private ObservableList<AuthorBook> authorBooks;
+	private HashMap<AuthorBook, AuthorBook> abChanges = new HashMap<>();
+	private List<AuthorBook> abAdditions = new ArrayList<>();
+	private List<AuthorBook> abDeletions = new ArrayList<>();
 	DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 	
 	private static BookDetailController instance = null;
@@ -113,7 +120,18 @@ public class BookDetailController {
 			EditAuthor editAuthor = new EditAuthor(selected, "edit");
 			AuthorBook newAuthorBook = editAuthor.getAuthorBook();
 			if (newAuthorBook != null) {
+				if (this.abChanges.containsValue(selected)) {
+					for (AuthorBook key : abChanges.keySet()) {
+						if (abChanges.get(key).equals(selected)) {
+							abChanges.replace(key, newAuthorBook);
+						}
+					}
+				} else {
+					abChanges.put(selected, newAuthorBook);
+				}
 				authorBooks.set(authorBooks.indexOf(selected), newAuthorBook);
+				btnSave.setDisable(false);
+				MasterController.getInstance().setIsChange(true);
 			}
 		}
 		
@@ -123,13 +141,20 @@ public class BookDetailController {
 			newAuthorBook.setBook(this.getBook());
 			EditAuthor editAuthor = new EditAuthor(newAuthorBook, "add");
 			newAuthorBook = editAuthor.getAuthorBook();
-			if (newAuthorBook != null)
+			if (newAuthorBook != null) {
 				authorBooks.add(newAuthorBook);
+				abAdditions.add(newAuthorBook);
+				btnSave.setDisable(false);
+				MasterController.getInstance().setIsChange(true);
+			}
 		}
 		
 		//Delete
 		else if (source == btnDelete && selected != null) {
 			authorBooks.remove(selected);
+			abDeletions.add(selected);
+			btnSave.setDisable(false);
+			MasterController.getInstance().setIsChange(true);
 		}
 	}	
 	
@@ -161,15 +186,29 @@ public class BookDetailController {
 			exceptions.add(exception);
 		}
 		
+		if (this.authorBooks.isEmpty()) {
+			exception = new InvalidField(tblVwAuthors, lblAuthors, 
+					"At least one author is required.");
+			exceptions.add(exception);
+		}
+		
 		return exceptions;
 	}
 	
 	public Boolean saveBook() {
 		Boolean isNewBook = true;
 		Book oldBook = (Book) this.getBook().clone();
+		AuthorTableGateway authorTableGateway = null;
 		logger.info("Save Clicked");
 		lblStatus.setText("");
 		markValidAll();
+		
+		try {
+			authorTableGateway = AuthorTableGateway.getInstance();
+		} catch (Exception e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
 		
 		try {
 			if (isSavable()) {
@@ -177,8 +216,27 @@ public class BookDetailController {
 					isNewBook = false;
 				
 				BookTableGateway.getInstance().updateBook(book);
-				addChanges(oldBook, this.getBook());
-													
+				
+				//Commit edited authorBook relations to DB
+				for (Entry<AuthorBook, AuthorBook> entry : abChanges.entrySet()) {
+					authorTableGateway.updateAuthorBook(entry.getValue());
+				}
+				
+				//Commit added authorBook relations to DB
+				for (AuthorBook ab : abAdditions) {
+					authorTableGateway.updateAuthorBook(ab);
+				}
+						
+				//Commit deleted authorBook relations to DB
+				for (AuthorBook ab : abDeletions) {
+					authorTableGateway.deleteAuthorBook(ab);
+				}
+				
+				addAudits(oldBook, this.getBook(), abChanges, abAdditions, abDeletions);
+				abChanges.clear();
+				abAdditions.clear();
+				abDeletions.clear();
+				
 				if (isNewBook == true) {
 					lblStatus.setText("Book added.");				
 					logger.info("Book added.");
@@ -247,12 +305,16 @@ public class BookDetailController {
 		for (InvalidField exception : exceptions) {
 			logger.info(exception.getMessage());
 			lblStatus.setText(lblStatus.getText() + "\n" + exception.getMessage());
-			exception.getLabel().getStyleClass().add("invalid");
-			exception.getControl().getStyleClass().add("invalid");
+			exception.getLabel().getStyleClass().add("invalid_label");
+			exception.getControl().getStyleClass().add("invalid_control");
 		}
 	}
 	
 	public void initialize() {
+		
+		abChanges.clear();
+		abAdditions.clear();
+		abDeletions.clear();
 		
 		txtFldTtl.setText(book.getTitle());
 		setOnChangeListener(txtFldTtl);
@@ -335,16 +397,18 @@ public class BookDetailController {
 	}
 	
 	public void markValidAll() {
-		txtFldTtl.getStyleClass().remove("invalid");
-		txtAreaSmmry.getStyleClass().remove("invalid");
-		txtFldYrPblshd.getStyleClass().remove("invalid");
-		txtFldIsbn.getStyleClass().remove("invalid");
-		lblDtAdded.getStyleClass().remove("invalid");
-		lblStatus.getStyleClass().remove("invalid");
-		lblTtl.getStyleClass().remove("invalid");
-		lblSmmry.getStyleClass().remove("invalid");
-		lblYrPblshd.getStyleClass().remove("invalid");
-		lblIsbn.getStyleClass().remove("invalid");		
+		txtFldTtl.getStyleClass().remove("invalid_control");
+		txtAreaSmmry.getStyleClass().remove("invalid_control");
+		txtFldYrPblshd.getStyleClass().remove("invalid_control");
+		txtFldIsbn.getStyleClass().remove("invalid_control");
+		tblVwAuthors.getStyleClass().remove("invalid_control");
+		lblDtAdded.getStyleClass().remove("invalid_label");
+		lblStatus.getStyleClass().remove("invalid_label");
+		lblTtl.getStyleClass().remove("invalid_label");
+		lblSmmry.getStyleClass().remove("invalid_label");
+		lblYrPblshd.getStyleClass().remove("invalid_label");
+		lblIsbn.getStyleClass().remove("invalid_label");	
+		lblAuthors.getStyleClass().remove("invalid_label");
 	}
 	
 	public void setBook(Book book) {
@@ -359,42 +423,80 @@ public class BookDetailController {
 		return this.authorBooks;
 	}
 	
-	public void addChanges(Book oldBook, Book newBook) throws Exception {
+	public void addAudits(Book oldBook, Book newBook, HashMap<AuthorBook, AuthorBook> abChanges, 
+			List<AuthorBook> abAdditions, List<AuthorBook> abDeletions) throws Exception {
+		
 		List<Audit> changes = new ArrayList<Audit>();
 		
 		if (oldBook.getId() == 0) {
 			changes.add(new Audit(newBook.getId(), "Book Added."));
 		} else {		
 			if (!oldBook.getIsbn().equals(newBook.getIsbn()))
-				changes.add(new Audit(newBook.getId(), "ISBN changed from " 
+				changes.add(new Audit(newBook.getId(), 
+						"ISBN changed from " 
 						+ oldBook.getIsbn() 
 						+ " to " 
 						+ newBook.getIsbn() 
 						+ "."));
 			
 			if (!oldBook.getPublisher().equals(newBook.getPublisher()))
-				changes.add(new Audit(newBook.getId(), "Publisher changed from " 
+				changes.add(new Audit(newBook.getId(), 
+						"Publisher changed from " 
 						+ oldBook.getPublisher() 
 						+ " to " 
 						+ newBook.getPublisher() 
 						+ "."));
 			
 			if (!oldBook.getSummary().equals(newBook.getSummary()))
-				changes.add(new Audit(newBook.getId(), "Summary changed."));
+				changes.add(new Audit(newBook.getId(), 
+						"Summary changed."));
 			
 			if (!oldBook.getTitle().equals(newBook.getTitle()))
-				changes.add(new Audit(newBook.getId(), "Title changed from " 
+				changes.add(new Audit(newBook.getId(), 
+						"Title changed from " 
 						+ oldBook.getTitle() 
 						+ " to " 
 						+ newBook.getTitle() 
 						+ "."));
 			
 			if (oldBook.getYearPublished() != newBook.getYearPublished())
-				changes.add(new Audit(newBook.getId(), "Year Published changed from " 
+				changes.add(new Audit(newBook.getId(), 
+						"Year Published changed from " 
 						+ oldBook.getYearPublished() 
 						+ " to " 
 						+ newBook.getYearPublished() 
 						+ "."));
+			
+			if (!abChanges.isEmpty())
+				for (Entry<AuthorBook, AuthorBook> entry : abChanges.entrySet()) {
+					changes.add(new Audit(newBook.getId(), 
+							"Author "
+							+ entry.getKey().getAuthorSimpleString()
+							+ " royalty changed from " 
+							+ entry.getKey().getRoyaltySimpleString() 
+							+ " to "
+							+ entry.getValue().getRoyaltySimpleString()
+							+ "."));
+			}
+			
+			if (!abAdditions.isEmpty())
+				for (AuthorBook ab : abAdditions) {
+					changes.add(new Audit(newBook.getId(), 
+							"Author "
+							+ ab.getAuthorSimpleString()
+							+ " added with royalty " 
+							+ ab.getRoyaltySimpleString() 
+							+ "."));
+			}
+			
+			if (!abDeletions.isEmpty())
+				for (AuthorBook ab : abDeletions) {
+					changes.add(new Audit(newBook.getId(), 
+							"Author "
+							+ ab.getAuthorSimpleString()
+							+ " removed."));
+			}
+			
 		}
 		
 		BookTableGateway.getInstance().addAudits(changes);
