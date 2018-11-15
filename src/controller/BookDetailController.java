@@ -134,7 +134,7 @@ public class BookDetailController {
 				}
 				authorBooks.set(authorBooks.indexOf(selected), newAuthorBook);
 				btnSave.setDisable(false);
-				MasterController.getInstance().setIsChange(true);
+				MasterController.getInstance().setIsBookChange(true);
 			}
 		}
 		
@@ -148,7 +148,7 @@ public class BookDetailController {
 				authorBooks.add(newAuthorBook);
 				abAdditions.add(newAuthorBook);
 				btnSave.setDisable(false);
-				MasterController.getInstance().setIsChange(true);
+				MasterController.getInstance().setIsBookChange(true);
 			}
 		}
 		
@@ -157,8 +157,9 @@ public class BookDetailController {
 			authorBooks.remove(selected);
 			abDeletions.add(selected);
 			btnSave.setDisable(false);
-			MasterController.getInstance().setIsChange(true);
+			MasterController.getInstance().setIsBookChange(true);
 		}
+		
 	}	
 	
 	public List<InvalidField> validateFields() {
@@ -194,26 +195,14 @@ public class BookDetailController {
 			exception = new InvalidField(tblVwAuthors, lblAuthors, 
 					"At least one author is required.");
 			exceptions.add(exception);
-		}
-		
-		//TODO:If separate warning text for each exception, will overflow space
-		//Make one warning for all exceptions here
-		for (Node n : tblVwAuthors.lookupAll("TableRow")) {
-			if (n instanceof TableRow) {
-				TableRow row = (TableRow) n;
-				if (!row.isEmpty()) {
-					AuthorBook ab = tblVwAuthors.getItems().get(i);
-					if (ab.getRoyalty().compareTo(new BigDecimal(1)) == 1) {			
-						exception = new InvalidField(row, lblAuthors, 
-								"Royalty cannot be greater than 100%");
-						exceptions.add(exception);
-					}else if (ab.getRoyalty().compareTo(new BigDecimal(0)) == -1) {
-						row.getStyleClass().add("invalid_control");
-						exception = new InvalidField(row, lblAuthors, 
-								"Royalty cannot be less than 0%");
-						exceptions.add(exception);
-					}
-					i++;
+		}else {	
+			for (AuthorBook ab : authorBooks) {
+				if (ab.getRoyalty().compareTo(new BigDecimal(1)) == 1
+						|| ab.getRoyalty().compareTo(new BigDecimal(0)) == -1) {			
+					exception = new InvalidField(tblVwAuthors, lblAuthors, 
+							"All royalties must be between 0% and 100%.");
+					exceptions.add(exception);
+					break;
 				}
 			}
 		}
@@ -241,7 +230,7 @@ public class BookDetailController {
 				if (this.book.getId() > 0)
 					isNewBook = false;
 				
-				BookTableGateway.getInstance().updateBook(book);
+				BookTableGateway.getInstance().updateBook(this.book);
 				
 				//Commit edited authorBook relations to DB
 				for (Entry<AuthorBook, AuthorBook> entry : abChanges.entrySet()) {
@@ -280,7 +269,7 @@ public class BookDetailController {
 				initialize();
 			}								
 		}catch (ValidationException ve) {			
-			showErrors(ve);
+			ValidationErrors.showErrors(ve, lblStatus);
 			
 			return false;
 		}catch (Exception se) {
@@ -317,22 +306,9 @@ public class BookDetailController {
 		} else {
 			MasterController masterController = MasterController.getInstance();
 			masterController.alertLock();
-			masterController.setIsChange(false);
+			masterController.setIsBookChange(false);
 
 			return false;
-		}
-	}
-	
-	public void showErrors(ValidationException ve) {
-		List<InvalidField> exceptions = ve.getCauses();
-		lblStatus.setStyle("-fx-text-fill: red;");
-		exceptions.get(0).getControl().requestFocus();
-		
-		for (InvalidField exception : exceptions) {
-			logger.info(exception.getMessage());
-			lblStatus.setText(lblStatus.getText() + "\n" + exception.getMessage());
-			exception.getLabel().getStyleClass().add("invalid_label");
-			exception.getControl().getStyleClass().add("invalid_control");
 		}
 	}
 	
@@ -343,23 +319,23 @@ public class BookDetailController {
 		abDeletions.clear();
 		
 		txtFldTtl.setText(book.getTitle());
-		setOnChangeListener(txtFldTtl);
+		OnChangeListener.setOnChangeListener(txtFldTtl, btnSave);
 		
 		txtAreaSmmry.setText(book.getSummary());
 		txtAreaSmmry.setWrapText(true);
-		setOnChangeListener(txtAreaSmmry);
+		OnChangeListener.setOnChangeListener(txtAreaSmmry, btnSave);
 		
 		if (book.getYearPublished() < 0)
 			txtFldYrPblshd.setText("");
 		else 
 			txtFldYrPblshd.setText(Integer.toString(book.getYearPublished()));		
-		setOnChangeListener(txtFldYrPblshd);
+		OnChangeListener.setOnChangeListener(txtFldYrPblshd, btnSave);
 		
 		if (book.getDateAdded() != null)
 			lblDtAdded.setText(book.getDateAdded().format(formatter));
 		
 		txtFldIsbn.setText(book.getIsbn());
-		setOnChangeListener(txtFldIsbn);
+		OnChangeListener.setOnChangeListener(txtFldIsbn, btnSave);
 		
 		if (book.getLastModified() != null)
 			lblLastModified.setText(book.getLastModified().format(formatter));
@@ -370,7 +346,7 @@ public class BookDetailController {
 					BookTableGateway.getInstance().getPublishers());
 			cmboBxPublisher.setItems(publishers);
 			cmboBxPublisher.getSelectionModel().select(book.getPublisher());
-			setOnChangeListener(cmboBxPublisher);
+			OnChangeListener.setOnChangeListener(cmboBxPublisher, btnSave);
 		} catch (Exception e1) {
 			e1.printStackTrace();
 		}
@@ -405,21 +381,8 @@ public class BookDetailController {
 		
 		tblVwAuthors.setItems(this.authorBooks);	
 		btnSave.setDisable(true);
-		MasterController.getInstance().setIsChange(false);
+		MasterController.getInstance().setIsBookChange(false);
 		
-	}
-	
-	public void setOnChangeListener(Control control) {
-		if (control instanceof ComboBox<?>)
-			((ComboBox<?>)control).valueProperty().addListener((observable, oldValue, newValue) -> {
-				    btnSave.setDisable(false);
-				    MasterController.getInstance().setIsChange(true);
-				});
-		else if (control instanceof TextInputControl)
-			((TextInputControl)control).textProperty().addListener((observable, oldValue, newValue) -> {
-				    btnSave.setDisable(false);
-				    MasterController.getInstance().setIsChange(true);
-				});
 	}
 	
 	public void markValidAll() {

@@ -16,7 +16,8 @@ import javafx.scene.layout.BorderPane;
 public class MasterController {
 	private static MasterController instance = null;
 	private BorderPane borderPane;
-	private boolean isChange = false;
+	private boolean isBookChange = false;
+	private boolean isAuthorChange = false;
 	
 	private MasterController(){
 		
@@ -30,10 +31,10 @@ public class MasterController {
 	}
 	
 	public void changeView(String fxml, Object controller, Object data) {
-		if (getIsChange() == true) {
+		if (getIsBookChange() == true) {
 			alertSave();
 		}
-		if (getIsChange() == false) {
+		if (getIsBookChange() == false) {
 			URL viewURL = getClass().getResource(fxml);
 			FXMLLoader loader = new FXMLLoader(viewURL);
 			loader.setController(controller);
@@ -48,10 +49,10 @@ public class MasterController {
 	}
 	
 	public void exit() {
-		if (getIsChange() == true) {
+		if (getIsBookChange() == true) {
 			alertSave();
 		}
-		if (getIsChange() == false) {
+		if (getIsBookChange() == false) {
 			Platform.exit();
 		}
 	}
@@ -79,7 +80,8 @@ public class MasterController {
 			if (bookDetailController.saveBook())
 				alertSuccess(isNewBook);
 		} else if (result.get() == bttnNo) {
-			this.setIsChange(false);
+			this.setIsAuthorChange(false);
+			this.setIsBookChange(false);
 		}
 	}
 	
@@ -110,11 +112,19 @@ public class MasterController {
 		this.borderPane = menuBorderPane;
 	}
 	
-	public boolean getIsChange() {
-		return this.isChange;
+	public boolean getIsBookChange() {
+		return this.isBookChange;
 	}
 
-	public void setIsChange(boolean isChange) {
-		this.isChange = isChange;
+	public void setIsBookChange(boolean isChange) {
+		this.isBookChange = isChange;
+	}
+	
+	public boolean getIsAuthorChange() {
+		return this.isAuthorChange;
+	}
+
+	public void setIsAuthorChange(boolean isChange) {
+		this.isAuthorChange = isChange;
 	}
 }

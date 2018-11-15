@@ -12,10 +12,10 @@ public class Author {
 	
 	
 	public Author() {
-		this.id = 0;
+		this.id = -1;
 		this.firstName = "";
 		this.lastName = "";
-		this.dateOfBirth = LocalDate.now();
+		this.dateOfBirth = null;
 		this.gender = "";
 		this.website = "";
 	}
@@ -61,12 +61,20 @@ public class Author {
 	}
 
 
-	public LocalDate getDateOfBirth() {
-		return dateOfBirth;
+	public String getDOB() {
+		if (this.dateOfBirth != null) {
+			return dateOfBirth.toString();
+		} else {
+			return "";
+		}
+	}
+	
+	public LocalDate getDOBDate() {
+		return this.dateOfBirth;
 	}
 
 
-	public void setDateOfBirth(LocalDate dateOfBirth) {
+	public void setDOB(LocalDate dateOfBirth) {
 		this.dateOfBirth = dateOfBirth;
 	}
 
@@ -82,16 +90,71 @@ public class Author {
 
 
 	public String getWebsite() {
-		return website;
+		if (website != null) {
+			return website;
+		} else {
+			return "";
+		}
 	}
-
 
 	public void setWebsite(String website) {
 		this.website = website;
 	}
 	
 	public String toString() {
-		return this.lastName + ", " + this.firstName;
+		if (this.lastName != "") {
+			return this.lastName + ", " + this.firstName;
+		} else {
+			return "";
+		}
+	}
+	
+	public String validateFirstName(String firstName) {
+		if (firstName.length() <= 0) {
+			return "First name must be provided.";
+		}
+		if (firstName.length() > 100) {
+			return "First name must be 100 characters or fewer.";
+		}
+		return null;
+	}
+	
+	public String validateLastName(String lastName) {
+		if (lastName.length() <= 0) {
+			return "Last name must be provided.";
+		}
+		if (lastName.length() > 100) {
+			return "Last name must be 100 characters or fewer.";
+		}
+		return null;
+	}
+	
+	public String validateGender(String gender) {
+		if (gender.length() <= 0) {
+			return "Gender must be provided.";
+		}
+		if (gender.length() > 8) {
+			return "Gender must be 8 characters or fewer.";
+		}
+		return null;
+	}
+	
+	public String validateDOB(LocalDate dateOfBirth) {
+		if (dateOfBirth == null) {
+			return "Date of Birth must be provided.";
+		}
+		if (dateOfBirth.isAfter(LocalDate.now())) {
+			return "Date of Birth cannot be later than current date.";
+		}
+		return null;
+	}
+	
+	public String validateWebsite(String website) {
+		if (website.length() > 100) {
+			return "Website must be 100 characters or fewer.";
+		}
+
+		return null;
 	}
 
 }

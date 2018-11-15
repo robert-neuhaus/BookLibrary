@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.DatePicker?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <Label fx:id="lblFirstName" layoutX="27.0" layoutY="54.0" text="First Name:" AnchorPane.rightAnchor="510.0" AnchorPane.topAnchor="30.0" />
+      <Label fx:id="lblWebsite" layoutX="48.0" layoutY="213.0" text="Website:" AnchorPane.rightAnchor="510.0" AnchorPane.topAnchor="150.0" />
+      <Label fx:id="lblDOB" layoutX="25.0" layoutY="100.0" text="Date of Birth:" AnchorPane.rightAnchor="240.0" AnchorPane.topAnchor="70.0" />
+      <Label fx:id="lblGender" layoutX="66.0" layoutY="125.0" text="Gender:" AnchorPane.rightAnchor="510.0" AnchorPane.topAnchor="70.0" />
+      <Label layoutX="42.0" layoutY="151.0" text="Date Added:" AnchorPane.rightAnchor="510.0" AnchorPane.topAnchor="110.0" />
+      <Button fx:id="btnSave" layoutX="54.0" layoutY="308.0" mnemonicParsing="false" onAction="#handleButtonAction" prefWidth="75.0" text="Save" AnchorPane.rightAnchor="510.0" AnchorPane.topAnchor="310.0" />
+      <TextField fx:id="txtFldFirstName" layoutX="121.0" layoutY="46.0" prefWidth="150.0" AnchorPane.rightAnchor="350.0" AnchorPane.topAnchor="30.0" />
+      <TextField fx:id="txtFldGender" layoutX="111.0" layoutY="126.0" prefWidth="150.0" AnchorPane.rightAnchor="350.0" AnchorPane.topAnchor="70.0" />
+      <TextArea fx:id="txtAreaWebsite" layoutX="111.0" layoutY="179.0" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="110.0" prefWidth="225.0" AnchorPane.rightAnchor="350.0" AnchorPane.topAnchor="170.0" />
+      <Label fx:id="lblStatus" contentDisplay="CENTER" layoutX="472.0" layoutY="330.0" prefHeight="100.0" prefWidth="400.0" AnchorPane.bottomAnchor="30.0" AnchorPane.rightAnchor="90.0" AnchorPane.topAnchor="270.0" />
+      <Label fx:id="lblDtAdded" layoutX="411.0" layoutY="70.0" AnchorPane.rightAnchor="350.0" AnchorPane.topAnchor="110.0" />
+      <Label layoutX="122.0" layoutY="111.0" text="Last Modified:" AnchorPane.rightAnchor="240.0" AnchorPane.topAnchor="110.0" />
+      <Label fx:id="lblLastModified" layoutX="491.0" layoutY="30.0" AnchorPane.rightAnchor="80.0" AnchorPane.topAnchor="110.0" />
+      <Label fx:id="lblLastName" layoutX="132.0" layoutY="121.0" text="Last Name:" AnchorPane.rightAnchor="240.0" AnchorPane.topAnchor="30.0" />
+      <Button fx:id="btnAuditTrail" layoutX="48.0" layoutY="345.0" mnemonicParsing="false" onAction="#handleButtonAction" prefWidth="75.0" text="Audit Trail" AnchorPane.rightAnchor="510.0" AnchorPane.topAnchor="340.0" />
+      <Label fx:id="lblBooks" layoutX="348.0" layoutY="150.0" text="Books:" AnchorPane.rightAnchor="240.0" AnchorPane.topAnchor="150.0" />
+      <TableView fx:id="tblVwAuthors" layoutX="411.0" layoutY="170.0" prefHeight="110.0" prefWidth="225.0" AnchorPane.rightAnchor="80.0" AnchorPane.topAnchor="170.0">
+         <columns>
+            <TableColumn editable="false" prefWidth="161.0" text="Author" />
+            <TableColumn editable="false" prefWidth="62.0" text="Royalty" />
+         </columns></TableView>
+      <Button fx:id="btnAdd" layoutX="530.0" layoutY="212.0" mnemonicParsing="false" onAction="#handleButtonAction" prefWidth="60.0" text="Add" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="212.0" />
+      <Button fx:id="btnDelete" layoutX="530.0" layoutY="242.0" mnemonicParsing="false" onAction="#handleButtonAction" prefWidth="60.0" text="Delete" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="242.0" />
+      <Button fx:id="btnEdit" layoutX="530.0" layoutY="182.0" mnemonicParsing="false" onAction="#handleButtonAction" prefWidth="60.0" text="Edit" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="182.0" />
+      <TextField fx:id="txtFldLastName" layoutX="121.0" layoutY="136.0" prefWidth="150.0" AnchorPane.rightAnchor="80.0" AnchorPane.topAnchor="30.0" />
+      <DatePicker fx:id="dtPckrDOB" layoutX="363.0" layoutY="26.0" prefHeight="25.0" prefWidth="150.0" AnchorPane.rightAnchor="80.0" AnchorPane.topAnchor="70.0" />
+   </children>
+</AnchorPane>

@@ -4,6 +4,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -105,6 +106,188 @@ public class AuthorTableGateway {
 		
 		return authors;
 		
+	}
+	
+	public Author getAuthor(int id){
+		
+		Author author = null;
+		PreparedStatement 	st 		= null;
+		ResultSet 			rs		= null;
+		
+		try {
+			st = conn.prepareStatement( "SELECT a.* FROM Author a WHERE a.id = ? ORDER BY a.last_name ASC");
+			
+			st.setInt(1, id);
+			
+			rs = st.executeQuery();
+			
+			while(rs.next()) {
+				
+				LocalDate dob = null;
+				
+				dob = rs.getTimestamp("dob").toLocalDateTime().toLocalDate();
+				
+				author = new Author( rs.getInt("id")
+					 	   , rs.getString("first_name")
+					 	   , rs.getString("last_name")
+					 	   , dob
+					 	   , rs.getString("gender")
+					 	   , rs.getString("website"));
+				
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if(rs != null) {
+					rs.close();
+				}
+				if(st != null) {
+					st.close();
+				}
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		
+		return author;
+		
+	}
+	
+	public void createAuthor(Author author) throws Exception{// TimeStamp : X/O
+		PreparedStatement st = null;
+		ResultSet 		  rs = null;
+		try {
+			conn.setAutoCommit(false);
+			
+			st = conn.prepareStatement("INSERT INTO Author("
+					+ "first_name, "
+					+ "last_name, "
+					+ "gender, "
+					+ "dob, "
+					+ "website "
+					+ ") VALUES ( ?, ?, ?, ?, ?)");
+			st.setString(1, author.getFirstName());
+			st.setString(2, author.getLastName());
+			st.setString(3, author.getGender());
+			st.setDate(4, Date.valueOf(author.getDOBDate()));
+			st.setString(5, author.getWebsite());
+			st.executeUpdate();
+			
+			conn.commit();
+			
+		} catch(SQLException e) {
+			try {
+				conn.rollback();
+			}catch(SQLException e1) {
+				e1.printStackTrace();
+			}
+		} finally {
+			try {
+				if(st != null) {
+					st.close();
+				}
+				
+				conn.setAutoCommit(true);
+				
+			} catch (SQLException e) {
+				throw new SQLException("SQL Error: " + e.getMessage());
+			}
+		}
+		
+		// Retrieve index of newly obtained
+		try {
+			st = conn.prepareStatement("SELECT id FROM Author ORDER BY id DESC");
+			rs = st.executeQuery();
+			rs.next();
+			author.setId(rs.getInt("id"));
+			
+		}catch(SQLException e) {
+			throw e;
+		}finally {
+			if(st != null) {
+				st.close();
+			}
+		}
+		
+	}
+	
+	public void updateAuthor(Author author) throws Exception {// TimeStamp : X/X
+		
+		if(author.getId() == -1) {
+			this.createAuthor(author);
+		}
+		
+		PreparedStatement st = null;
+		try {
+			conn.setAutoCommit(false);
+			
+			st = conn.prepareStatement("update Author "
+					+ "set first_name = ?"
+					+ ", last_name = ?"
+					+ ", gender = ?"
+					+ ", dob = ?"
+					+ ", website = ?"
+					+ " where id = ?");
+			st.setString(1, author.getFirstName());
+			st.setString(2, author.getLastName());
+			st.setString(3, author.getGender());
+			st.setDate(4, Date.valueOf(author.getDOBDate()));
+			st.setString(5, author.getWebsite());
+			st.setInt(6, author.getId());
+			st.executeUpdate();
+			
+			conn.commit();
+		} catch(SQLException e) {
+			try {
+				conn.rollback();
+			}catch(SQLException e1) {
+				e1.printStackTrace();
+			}
+			throw e;
+			
+		} finally {
+			try {
+				if(st != null) {
+					st.close();
+				}
+				
+				conn.setAutoCommit(true);
+				
+			} catch (SQLException e) {
+				throw new SQLException("SQL Error: " + e.getMessage());
+			}
+		}
+		
+	}
+	
+	public void deleteAuthor(Author author) throws Exception{// TimeStamp : X/X
+		
+		PreparedStatement st = null;
+		
+		try {
+			conn.setAutoCommit(false);
+			st = conn.prepareStatement("DELETE FROM Author WHERE id = ?");
+			st.setInt(1, author.getId());
+			st.executeUpdate();
+			
+			conn.commit();
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				
+				if(st != null) {
+					st.close();
+				}
+				
+				conn.setAutoCommit(true);
+				
+			} catch (SQLException e) {
+				throw new Exception("SQL Error: " + e.getMessage());
+			}
+		}
 	}
 	
 	public List<AuthorBook> getAuthorsForBook(Book book){
