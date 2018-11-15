@@ -105,7 +105,7 @@ public class BookDetailController {
 		
 		//Save
 		if(source == btnSave) {	
-			saveBook();
+			save();
 		}
 		
 		//Audit Trail
@@ -210,7 +210,7 @@ public class BookDetailController {
 		return exceptions;
 	}
 	
-	public Boolean saveBook() {
+	public Boolean save() {
 		Boolean isNewBook = true;
 		Book oldBook = (Book) this.getBook().clone();
 		AuthorTableGateway authorTableGateway = null;
@@ -306,36 +306,37 @@ public class BookDetailController {
 		} else {
 			MasterController masterController = MasterController.getInstance();
 			masterController.alertLock();
-			masterController.setIsBookChange(false);
+			//masterController.setIsBookChange(false);
 
 			return false;
 		}
 	}
 	
 	public void initialize() {
-		
+		BookDetailController bookDetailController = BookDetailController.getInstance();
+				
 		abChanges.clear();
 		abAdditions.clear();
 		abDeletions.clear();
 		
 		txtFldTtl.setText(book.getTitle());
-		OnChangeListener.setOnChangeListener(txtFldTtl, btnSave);
+		OnChangeListener.setOnChangeListener(txtFldTtl, btnSave, bookDetailController);
 		
 		txtAreaSmmry.setText(book.getSummary());
 		txtAreaSmmry.setWrapText(true);
-		OnChangeListener.setOnChangeListener(txtAreaSmmry, btnSave);
+		OnChangeListener.setOnChangeListener(txtAreaSmmry, btnSave, bookDetailController);
 		
 		if (book.getYearPublished() < 0)
 			txtFldYrPblshd.setText("");
 		else 
 			txtFldYrPblshd.setText(Integer.toString(book.getYearPublished()));		
-		OnChangeListener.setOnChangeListener(txtFldYrPblshd, btnSave);
+		OnChangeListener.setOnChangeListener(txtFldYrPblshd, btnSave, bookDetailController);
 		
 		if (book.getDateAdded() != null)
 			lblDtAdded.setText(book.getDateAdded().format(formatter));
 		
 		txtFldIsbn.setText(book.getIsbn());
-		OnChangeListener.setOnChangeListener(txtFldIsbn, btnSave);
+		OnChangeListener.setOnChangeListener(txtFldIsbn, btnSave, bookDetailController);
 		
 		if (book.getLastModified() != null)
 			lblLastModified.setText(book.getLastModified().format(formatter));
@@ -346,7 +347,7 @@ public class BookDetailController {
 					BookTableGateway.getInstance().getPublishers());
 			cmboBxPublisher.setItems(publishers);
 			cmboBxPublisher.getSelectionModel().select(book.getPublisher());
-			OnChangeListener.setOnChangeListener(cmboBxPublisher, btnSave);
+			OnChangeListener.setOnChangeListener(cmboBxPublisher, btnSave, bookDetailController);
 		} catch (Exception e1) {
 			e1.printStackTrace();
 		}
@@ -381,7 +382,7 @@ public class BookDetailController {
 		
 		tblVwAuthors.setItems(this.authorBooks);	
 		btnSave.setDisable(true);
-		MasterController.getInstance().setIsBookChange(false);
+		//MasterController.getInstance().setIsBookChange(false);
 		
 	}
 	

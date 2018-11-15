@@ -69,25 +69,27 @@ public class AuthorDetailController {
 	}
 	
 	public void initialize() {
+		AuthorDetailController authorDetailController = AuthorDetailController.getInstance();
+		
 		txtFldFirstName.setText(author.getFirstName());
-		OnChangeListener.setOnChangeListener(txtFldFirstName, btnSave);
+		OnChangeListener.setOnChangeListener(txtFldFirstName, btnSave, authorDetailController);
 		
 		txtFldLastName.setText(author.getLastName());
-		OnChangeListener.setOnChangeListener(txtFldLastName, btnSave);
+		OnChangeListener.setOnChangeListener(txtFldLastName, btnSave, authorDetailController);
 		
 		if (author.getDOBDate() != null) {
 			dtPckrDOB.setValue(author.getDOBDate());
 		}
-		OnChangeListener.setOnChangeListener(dtPckrDOB, btnSave);
+		OnChangeListener.setOnChangeListener(dtPckrDOB, btnSave, authorDetailController);
 		
 		txtAreaWebsite.setText(author.getWebsite());
-		OnChangeListener.setOnChangeListener(txtAreaWebsite, btnSave);
+		OnChangeListener.setOnChangeListener(txtAreaWebsite, btnSave, authorDetailController);
 		
 		txtFldGender.setText(author.getGender());
-		OnChangeListener.setOnChangeListener(txtFldGender, btnSave);
+		OnChangeListener.setOnChangeListener(txtFldGender, btnSave, authorDetailController);
 		
 		btnSave.setDisable(true);
-		MasterController.getInstance().setIsAuthorChange(false);
+		//MasterController.getInstance().setIsAuthorChange(false);
 	}
 	
 	@FXML public void handleButtonAction(ActionEvent action) {
@@ -95,11 +97,11 @@ public class AuthorDetailController {
 		
 		//Save
 		if(source == btnSave) {	
-			saveAuthor();
+			save();
 		}
 	}
 	
-	public Boolean saveAuthor() {
+	public Boolean save() {
 		AuthorTableGateway authorTableGateway = null;
 		Boolean isNewBook = true;
 		logger.info("Save Clicked");
@@ -153,7 +155,7 @@ public class AuthorDetailController {
 		int id = this.getAuthor().getId();
 //		LocalDateTime lastModifiedOld = this.getAuthor().getLastModified();
 		
-		if (id == -1 /*|| lastModifiedOld.equals(
+		if (true/*id == -1 || lastModifiedOld.equals(
 				BookTableGateway.getInstance().getLastModified(book.getId()))*/) {		
 			List<InvalidField> exceptions = validateFields();
 			
@@ -171,7 +173,7 @@ public class AuthorDetailController {
 		} else {
 			MasterController masterController = MasterController.getInstance();
 //			masterController.alertLock();
-			masterController.setIsAuthorChange(false);
+//			masterController.setIsAuthorChange(false);
 
 			return false;
 		}
