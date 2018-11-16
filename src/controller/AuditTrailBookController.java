@@ -14,7 +14,7 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import model.Audit;
 import model.Book;
 
-public class AuditTrailController {
+public class AuditTrailBookController {
 	
 	@FXML private TableView<Audit> tblVwAuditTrail;
 	@FXML private Label lblBook;
@@ -23,7 +23,7 @@ public class AuditTrailController {
 	private Book book = null;
 	private ObservableList<Audit> auditTrail = null;
 	
-	public AuditTrailController(Book book) {
+	public AuditTrailBookController(Book book) {
 		this.book = book;	
 	}
 	

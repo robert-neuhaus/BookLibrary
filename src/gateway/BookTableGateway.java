@@ -130,7 +130,7 @@ public class BookTableGateway {
 								  + ") VALUES (?, ?)");
 		
 		for(Audit entry : audits) {
-			st.setInt(1, entry.getBookID());
+			st.setInt(1, entry.getId());
 			st.setString(2, entry.getAuditMsg());
 			
 			st.addBatch();

@@ -13,7 +13,7 @@ import java.util.Optional;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import alert.EditAuthor;
+import alert.EditAuthorBook;
 import exception.ValidationException;
 import gateway.AuthorTableGateway;
 import gateway.BookTableGateway;
@@ -72,8 +72,6 @@ public class BookDetailController {
 	@FXML private Button btnApply;
 	@FXML private TableView<AuthorBook> tblVwAuthors;
 	
-
-	
 	private Book book;
 	private ObservableList<AuthorBook> authorBooks;
 	private HashMap<AuthorBook, AuthorBook> abChanges = new HashMap<>();
@@ -112,7 +110,7 @@ public class BookDetailController {
 		else if (source == btnAuditTrail) {
 			try {
 				MasterController.getInstance().changeView("../view/view_auditTrail.fxml", 
-						new AuditTrailController(this.getBook()), null);
+						new AuditTrailBookController(this.getBook()), null);
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
@@ -120,9 +118,12 @@ public class BookDetailController {
 		
 		//Edit
 		else if (source == btnEdit && selected != null) {
-			EditAuthor editAuthor = new EditAuthor(selected, "edit");
+			EditAuthorBook editAuthor = new EditAuthorBook(selected, "edit", selected.toString());
 			AuthorBook newAuthorBook = editAuthor.getAuthorBook();
+			
 			if (newAuthorBook != null) {
+				
+				//This ensures only most recent change to an authorBook is added to change list
 				if (this.abChanges.containsValue(selected)) {
 					for (AuthorBook key : abChanges.keySet()) {
 						if (abChanges.get(key).equals(selected)) {
@@ -132,6 +133,7 @@ public class BookDetailController {
 				} else {
 					abChanges.put(selected, newAuthorBook);
 				}
+				
 				authorBooks.set(authorBooks.indexOf(selected), newAuthorBook);
 				btnSave.setDisable(false);
 				MasterController.getInstance().setIsBookChange(true);
@@ -142,7 +144,7 @@ public class BookDetailController {
 		else if (source == btnAdd) {
 			AuthorBook newAuthorBook = new AuthorBook();
 			newAuthorBook.setBook(this.getBook());
-			EditAuthor editAuthor = new EditAuthor(newAuthorBook, "add");
+			EditAuthorBook editAuthor = new EditAuthorBook(newAuthorBook, "add", null);
 			newAuthorBook = editAuthor.getAuthorBook();
 			if (newAuthorBook != null) {
 				authorBooks.add(newAuthorBook);
@@ -269,7 +271,7 @@ public class BookDetailController {
 				initialize();
 			}								
 		}catch (ValidationException ve) {			
-			ValidationErrors.showErrors(ve, lblStatus);
+			ValidationException.showErrors(ve, lblStatus);
 			
 			return false;
 		}catch (Exception se) {
@@ -279,6 +281,7 @@ public class BookDetailController {
 			return false;
 		}		
 		
+		MasterController.getInstance().setIsBookChange(false);
 		btnSave.setDisable(true);
 		
 		return true;
@@ -370,7 +373,7 @@ public class BookDetailController {
                 	AuthorBook selected = tblVwAuthors.getSelectionModel().getSelectedItem();                   
                 	logger.info("double-clicked " + selected);
                 	if (selected != null) {
-                		EditAuthor editAuthor = new EditAuthor(selected, "edit");
+                		EditAuthorBook editAuthor = new EditAuthorBook(selected, "edit", selected.toString());
             			AuthorBook newAuthorBook = editAuthor.getAuthorBook();
             			if (newAuthorBook != null) {
             				authorBooks.set(authorBooks.indexOf(selected), newAuthorBook);

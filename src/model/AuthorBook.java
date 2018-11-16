@@ -13,12 +13,14 @@ public class AuthorBook{
 	
 	private SimpleStringProperty authorSimpleString = new SimpleStringProperty();
 	private SimpleStringProperty royaltySimpleString = new SimpleStringProperty();
+	private SimpleStringProperty bookSimpleString = new SimpleStringProperty();
 	
 	public AuthorBook() {
 		this.author = new Author();
 		this.book = new Book();
 		this.royalty = new BigDecimal(0).stripTrailingZeros();
 		this.setAuthorSimpleString(this.author.toString());
+		this.setBookSimpleString(this.book.getTitle());
 		this.setRoyaltySimpleString(this.royalty);
 	}
 
@@ -27,6 +29,7 @@ public class AuthorBook{
 		this.book = book;
 		this.royalty = royalty.stripTrailingZeros();
 		this.setAuthorSimpleString(this.author.toString());
+		this.setBookSimpleString(this.book.getTitle());
 		this.setRoyaltySimpleString(this.royalty);
 	}
 	
@@ -36,7 +39,7 @@ public class AuthorBook{
 
 	public void setAuthor(Author author) {
 		this.author = author;
-		this.setAuthorSimpleString(author.toString());
+		this.setAuthorSimpleString(this.author.toString());
 	}
 
 	public Book getBook() {
@@ -45,6 +48,7 @@ public class AuthorBook{
 
 	public void setBook(Book book) {
 		this.book = book;
+		this.setBookSimpleString(this.book.getTitle());
 	}
 
 	public BigDecimal getRoyalty() {
@@ -70,6 +74,14 @@ public class AuthorBook{
 	
 	public String getAuthorSimpleString() {
 		 return this.authorSimpleString.get();
+	}
+	
+	public void setBookSimpleString(String book) {
+		this.bookSimpleString.set(book);
+	}
+	
+	public String getBookSimpleString() {
+		 return this.bookSimpleString.get();
 	}
 	
 	public void setRoyaltySimpleString(BigDecimal royalty) {

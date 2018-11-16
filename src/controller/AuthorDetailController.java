@@ -5,15 +5,21 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map.Entry;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import alert.EditAuthorBook;
 import exception.ValidationException;
 import gateway.AuthorTableGateway;
 import gateway.BookTableGateway;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
@@ -24,8 +30,12 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TextInputControl;
+import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.input.MouseEvent;
+import model.Audit;
 import model.Author;
 import model.AuthorBook;
+import model.Book;
 import model.InvalidField;
 import model.Publisher;
 
@@ -54,6 +64,11 @@ public class AuthorDetailController {
 	private static Logger logger = LogManager.getLogger();
 	private static AuthorDetailController instance = null;
 	private Author author;
+	
+	private ObservableList<AuthorBook> authorBooks;
+	private HashMap<AuthorBook, AuthorBook> abChanges = new HashMap<>();
+	private List<AuthorBook> abAdditions = new ArrayList<>();
+	private List<AuthorBook> abDeletions = new ArrayList<>();
 	DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
 	public AuthorDetailController() {
@@ -70,6 +85,10 @@ public class AuthorDetailController {
 	
 	public void initialize() {
 		AuthorDetailController authorDetailController = AuthorDetailController.getInstance();
+		
+		abChanges.clear();
+		abAdditions.clear();
+		abDeletions.clear();
 		
 		txtFldFirstName.setText(author.getFirstName());
 		OnChangeListener.setOnChangeListener(txtFldFirstName, btnSave, authorDetailController);
@@ -88,22 +107,112 @@ public class AuthorDetailController {
 		txtFldGender.setText(author.getGender());
 		OnChangeListener.setOnChangeListener(txtFldGender, btnSave, authorDetailController);
 		
+		if (this.getAuthor().getId() == 0)
+			btnAuditTrail.setDisable(true);
+		else
+			btnAuditTrail.setDisable(false);
+		
+		this.authorBooks = FXCollections.observableArrayList(this.getAuthor().getBooks());
+		tblVwAuthors.getColumns().get(0).setCellValueFactory(new PropertyValueFactory<>(
+				"bookSimpleString"));
+		tblVwAuthors.getColumns().get(1).setCellValueFactory(new PropertyValueFactory<>(
+				"royaltySimpleString"));
+	
+		tblVwAuthors.setOnMouseClicked(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent click) {
+                if (click.getClickCount() == 2) {
+                	AuthorBook selected = tblVwAuthors.getSelectionModel().getSelectedItem();                   
+                	logger.info("double-clicked " + selected);
+                	if (selected != null) {
+                		EditAuthorBook editAuthor = new EditAuthorBook(selected, "edit", selected.getBook().getTitle());
+            			AuthorBook newAuthorBook = editAuthor.getAuthorBook();
+            			if (newAuthorBook != null) {
+            				authorBooks.set(authorBooks.indexOf(selected), newAuthorBook);
+            			}
+                	}               		
+                }
+            }
+        });
+		
+		tblVwAuthors.setItems(this.authorBooks);	
 		btnSave.setDisable(true);
-		//MasterController.getInstance().setIsAuthorChange(false);
 	}
 	
 	@FXML public void handleButtonAction(ActionEvent action) {
 		Object source = action.getSource();
+		AuthorBook selected = null;
+		
+		if (tblVwAuthors.getSelectionModel().getSelectedItem() != null) {
+			selected = tblVwAuthors.getSelectionModel().getSelectedItem(); 
+		}
 		
 		//Save
 		if(source == btnSave) {	
 			save();
 		}
+		
+		//Audit Trail
+		else if (source == btnAuditTrail) {
+			try {
+				MasterController.getInstance().changeView("../view/view_auditTrail.fxml", 
+						new AuditTrailAuthorController(this.getAuthor()), null);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+		
+		//Edit
+		else if (source == btnEdit && selected != null) {
+			EditAuthorBook editAuthor = new EditAuthorBook(selected, "edit", selected.getBook().getTitle());
+			AuthorBook newAuthorBook = editAuthor.getAuthorBook();
+			
+			if (newAuthorBook != null) {
+				
+				//This ensures only most recent change to an authorBook is added to change list
+				if (this.abChanges.containsValue(selected)) {
+					for (AuthorBook key : abChanges.keySet()) {
+						if (abChanges.get(key).equals(selected)) {
+							abChanges.replace(key, newAuthorBook);
+						}
+					}
+				} else {
+					abChanges.put(selected, newAuthorBook);
+				}
+				
+				authorBooks.set(authorBooks.indexOf(selected), newAuthorBook);
+				btnSave.setDisable(false);
+				MasterController.getInstance().setIsAuthorChange(true);
+			}
+		}
+		
+		//Add
+		else if (source == btnAdd) {
+			AuthorBook newAuthorBook = new AuthorBook();
+			newAuthorBook.setAuthor(this.getAuthor());
+			EditAuthorBook editAuthor = new EditAuthorBook(newAuthorBook, "add", null);
+			newAuthorBook = editAuthor.getAuthorBook();
+			if (newAuthorBook != null) {
+				authorBooks.add(newAuthorBook);
+				abAdditions.add(newAuthorBook);
+				btnSave.setDisable(false);
+				MasterController.getInstance().setIsAuthorChange(true);
+			}
+		}
+		
+		//Delete
+		else if (source == btnDelete && selected != null) {
+			authorBooks.remove(selected);
+			abDeletions.add(selected);
+			btnSave.setDisable(false);
+			MasterController.getInstance().setIsAuthorChange(true);
+		}
 	}
 	
 	public Boolean save() {
 		AuthorTableGateway authorTableGateway = null;
-		Boolean isNewBook = true;
+		Boolean isNewAuthor = true;
+		Author oldAuthor = (Author) this.getAuthor().copy();
 		logger.info("Save Clicked");
 		lblStatus.setText("");
 		markValidAll();
@@ -118,11 +227,31 @@ public class AuthorDetailController {
 		try {
 			if (isSavable()) {
 				if (this.getAuthor().getId() > -1)
-					isNewBook = false;
+					isNewAuthor = false;
 				
 				authorTableGateway.updateAuthor(this.author);
 				
-				if (isNewBook == true) {
+				//Commit edited authorBook relations to DB
+				for (Entry<AuthorBook, AuthorBook> entry : abChanges.entrySet()) {
+					authorTableGateway.updateAuthorBook(entry.getValue());
+				}
+				
+				//Commit added authorBook relations to DB
+				for (AuthorBook ab : abAdditions) {
+					authorTableGateway.updateAuthorBook(ab);
+				}
+						
+				//Commit deleted authorBook relations to DB
+				for (AuthorBook ab : abDeletions) {
+					authorTableGateway.deleteAuthorBook(ab);
+				}
+				
+				addAudits(oldAuthor, this.getAuthor(), abChanges, abAdditions, abDeletions);
+				abChanges.clear();
+				abAdditions.clear();
+				abDeletions.clear();
+				
+				if (isNewAuthor == true) {
 					lblStatus.setText("Author added.");				
 					logger.info("Author added.");
 				} else {
@@ -140,7 +269,7 @@ public class AuthorDetailController {
 			}
 			
 		}catch (ValidationException ve) {			
-			ValidationErrors.showErrors(ve, lblStatus);
+			ValidationException.showErrors(ve, lblStatus);
 			
 			return false;
 		} catch (Exception e) {
@@ -148,6 +277,9 @@ public class AuthorDetailController {
 			e.printStackTrace();
 		}
 			
+		MasterController.getInstance().setIsAuthorChange(false);
+		btnSave.setDisable(true);
+		
 		return true;
 	}
 	
@@ -241,6 +373,77 @@ public class AuthorDetailController {
 
 	public Author getAuthor() {
 		return this.author;
+	}
+	
+	public void addAudits(Author oldAuthor, Author newAuthor, HashMap<AuthorBook, AuthorBook> abChanges, 
+			List<AuthorBook> abAdditions, List<AuthorBook> abDeletions) throws Exception {
+		
+		List<Audit> changes = new ArrayList<Audit>();
+		
+		if (oldAuthor.getId() == 0) {
+			changes.add(new Audit(newAuthor.getId(), "Author Added."));
+		} else {		
+			if (!oldAuthor.toString().equals(newAuthor.toString()))
+				changes.add(new Audit(newAuthor.getId(), 
+						"Name changed from " 
+						+ oldAuthor.toString()
+						+ " to " 
+						+ newAuthor.toString() 
+						+ "."));
+			
+			if (!oldAuthor.getGender().equals(newAuthor.getGender()))
+				changes.add(new Audit(newAuthor.getId(), 
+						"Gender changed from " 
+						+ oldAuthor.getGender()
+						+ " to " 
+						+ newAuthor.getGender()
+						+ "."));
+			
+			if (!oldAuthor.getWebsite().equals(newAuthor.getWebsite()))
+				changes.add(new Audit(newAuthor.getId(), 
+						"Website changed."));
+			
+			if (!oldAuthor.getDOB().equals(newAuthor.getDOB()))
+				changes.add(new Audit(newAuthor.getId(), 
+						"Date of Birth changed from " 
+						+ oldAuthor.getDOB() 
+						+ " to " 
+						+ newAuthor.getDOB() 
+						+ "."));
+			
+			if (!abChanges.isEmpty())
+				for (Entry<AuthorBook, AuthorBook> entry : abChanges.entrySet()) {
+					changes.add(new Audit(newAuthor.getId(), 
+							"Author "
+							+ entry.getKey().getAuthorSimpleString()
+							+ " royalty changed from " 
+							+ entry.getKey().getRoyaltySimpleString() 
+							+ " to "
+							+ entry.getValue().getRoyaltySimpleString()
+							+ "."));
+			}
+			
+			if (!abAdditions.isEmpty())
+				for (AuthorBook ab : abAdditions) {
+					changes.add(new Audit(newAuthor.getId(), 
+							"Author "
+							+ ab.getAuthorSimpleString()
+							+ " added with royalty " 
+							+ ab.getRoyaltySimpleString() 
+							+ "."));
+			}
+			
+			if (!abDeletions.isEmpty())
+				for (AuthorBook ab : abDeletions) {
+					changes.add(new Audit(newAuthor.getId(), 
+							"Author "
+							+ ab.getAuthorSimpleString()
+							+ " removed."));
+			}
+			
+		}
+		
+		AuthorTableGateway.getInstance().addAudits(changes);
 	}
 	
 }

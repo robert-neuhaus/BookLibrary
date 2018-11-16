@@ -1,6 +1,9 @@
 package model;
 
 import java.time.LocalDate;
+import java.util.List;
+
+import gateway.AuthorTableGateway;
 
 public class Author {
 	int id;
@@ -101,6 +104,17 @@ public class Author {
 		this.website = website;
 	}
 	
+	public List<AuthorBook> getBooks() {
+		List<AuthorBook> authorBooks = null;
+		try {
+			authorBooks = AuthorTableGateway.getInstance().getBooksForAuthor(this);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return authorBooks;
+	}
+	
 	public String toString() {
 		if (this.lastName != "") {
 			return this.lastName + ", " + this.firstName;
@@ -155,6 +169,12 @@ public class Author {
 		}
 
 		return null;
+	}
+	
+	public Author copy() {
+		Author copy = new Author(this.getId(), this.getFirstName(), this.getLastName(), 
+				this.getDOBDate(), this.getGender(), this.getWebsite());
+		return copy;
 	}
 
 }

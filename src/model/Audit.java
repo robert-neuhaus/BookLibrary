@@ -7,7 +7,7 @@ import javafx.beans.property.SimpleStringProperty;
 
 public class Audit {
 
-	int bookId;
+	int Id;
 	String auditMsg;
 	LocalDateTime dateAdded;
 	
@@ -17,13 +17,13 @@ public class Audit {
 	DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 	
 	public Audit(int bookId, String msg){
-		this.bookId = bookId;
+		this.Id = bookId;
 		this.auditMsg = msg;
 		this.dateAdded = null;
 	}
 	
 	public Audit(int bookId, LocalDateTime ldt, String msg){
-		this.bookId = bookId;
+		this.Id = bookId;
 		this.auditMsg = msg;
 		this.dateAdded = ldt;
 		setTimestamp(ldt.format(formatter));
@@ -32,8 +32,8 @@ public class Audit {
 	
 	// Access methods.
 	
-	public int getBookID() {
-		return this.bookId;
+	public int getId() {
+		return this.Id;
 	}
 	
 	public String getAuditMsg() {
@@ -45,7 +45,7 @@ public class Audit {
 	}
 	
 	public void setBookID(int bookId) {
-		this.bookId = bookId;
+		this.Id = bookId;
 	}
 	
 	public void setAuditMsg(String msg) {

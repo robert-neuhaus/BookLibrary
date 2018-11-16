@@ -9,15 +9,18 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 
 import com.mysql.jdbc.jdbc2.optional.MysqlDataSource;
 
+import model.Audit;
 import model.Author;
 import model.AuthorBook;
 import model.Book;
+import model.Publisher;
 
 public class AuthorTableGateway {
 
@@ -344,6 +347,71 @@ public class AuthorTableGateway {
 		return authors;
 		
 	}
+	
+public List<AuthorBook> getBooksForAuthor(Author author){
+		
+		List<AuthorBook> 	books  = new ArrayList<>();
+		PreparedStatement 	st 		= null;
+		ResultSet 			rs		= null;
+		LocalDateTime 	   last	= null;
+		LocalDateTime	  first = null;
+		Publisher	  publisher = null;
+		
+		try {
+			st = conn.prepareStatement( "SELECT ab.*, b.*, p.* FROM AuthorBook ab, Author a, Book b, Publisher p "
+					+ "WHERE a.id = ? "
+					+ "AND a.id = ab.author_id "
+					+ "AND b.id = ab.book_id "
+					+ "AND p.publisher_id = b.publisher_id "
+					+ "ORDER BY b.title ASC");
+			
+			st.setInt(1, author.getId());
+			
+			rs = st.executeQuery();
+			
+			while(rs.next()) {
+				
+				BigDecimal royalty = rs.getBigDecimal("ab.royalty");
+				
+				publisher = new Publisher(rs.getInt("p.publisher_id")
+						 ,rs.getString("p.name"));
+
+				last = rs.getTimestamp("last_modified").toLocalDateTime();
+				first = rs.getTimestamp("date_added").toLocalDateTime();
+				
+				Book book = new Book( rs.getInt("id")
+					 	, rs.getString("title")
+					 	, rs.getString("summary")
+					 	, rs.getInt("year_published")
+					 	, rs.getString("ISBN")
+					 	, publisher);	
+				
+				book.setLastModified(last);
+				book.setDateAdded(first);
+				
+				AuthorBook authorBook = new AuthorBook(author, book, royalty);
+				authorBook.setNewRecord(false);
+				
+				books.add(authorBook);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if(rs != null) {
+					rs.close();
+				}
+				if(st != null) {
+					st.close();
+				}
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		
+		return books;
+		
+	}
 
 	public void addAuthorBook(AuthorBook authorBook) throws Exception{
 		PreparedStatement st = null;
@@ -498,6 +566,86 @@ public class AuthorTableGateway {
 		}
 		
 		return false;
+		
+	}
+	
+public void addAudits(List<Audit> audits) throws Exception{
+		
+		PreparedStatement st = null;
+		conn.setAutoCommit(false);
+		
+		st = conn.prepareStatement("INSERT INTO author_audit_trail ("
+								  + "author_id, "
+								  + "entry_msg"
+								  + ") VALUES (?, ?)");
+		
+		for(Audit entry : audits) {
+			st.setInt(1, entry.getId());
+			st.setString(2, entry.getAuditMsg());
+			
+			st.addBatch();
+		}
+		
+		try {
+			st.executeBatch();
+			conn.commit();
+		}catch(Exception e) {
+			e.printStackTrace();
+		}finally {
+			try {
+				if(st != null) {
+					st.close();
+				}
+				
+				conn.setAutoCommit(true);
+				
+			} catch (SQLException e) {
+				throw new SQLException("SQL Error: " + e.getMessage());
+			}
+		}
+	}
+	
+	public List<Audit> getAudits(int author_id){
+		
+		List<Audit> 		Audits  = new ArrayList<>();
+		PreparedStatement 	st 		= null;
+		ResultSet 			rs		= null;
+		
+		try {
+			st = conn.prepareStatement( "SELECT a.* from author_audit_trail a WHERE a.author_id = ? ORDER BY a.date_added DESC");
+		
+			st.setInt(1, author_id);
+			
+			rs = st.executeQuery();
+			
+			while(rs.next()) {
+				
+				LocalDateTime ldt = null;
+				
+				ldt = rs.getTimestamp("date_added").toLocalDateTime();
+				
+				Audit Audit = new Audit( rs.getInt("author_id")
+								 	   , ldt
+								 	   , rs.getString("entry_msg"));
+				
+				Audits.add(Audit);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if(rs != null) {
+					rs.close();
+				}
+				if(st != null) {
+					st.close();
+				}
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		
+		return Audits;
 		
 	}
 }

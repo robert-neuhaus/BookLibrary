@@ -89,45 +89,38 @@ public class MasterController {
 		if (result.get() == bttnYes){
 			if (this.getIsBookChange()) {
 				if (bookDetailController.save()) {
-					alertSuccess(isNewRecord);
+					alertSuccess(isNewRecord, "book");
 				}
 			}else if (this.getIsAuthorChange()) {
 				if (authorDetailController.save()) {
-					alertSuccess(isNewRecord);
+					alertSuccess(isNewRecord, "author");
 				}
 			}
 		} else if (result.get() == bttnNo) {
-			if(this.getIsBookChange()) {
-				this.setIsBookChange(false);
-			}else if(this.getIsAuthorChange()) {
-				this.setIsAuthorChange(false);
-			}
+			this.setIsBookChange(false);
+			this.setIsAuthorChange(false);
 		}
 	}
 	
-	public void alertSuccess(Boolean isNewBook) {	
+	public void alertSuccess(Boolean isNewBook, String mode) {	
 		Alert alert = new Alert(AlertType.INFORMATION);		
 		alert.setTitle("Save Successful");
 		
 		BookDetailController bookDetailController = BookDetailController.getInstance();
 		AuthorDetailController authorDetailController = AuthorDetailController.getInstance();
 		
-		if (this.getIsBookChange()) {
+		if (mode.equals("book")) {
 			if (isNewBook == true) {
 				alert.setHeaderText("Successfully Saved: " + bookDetailController.getBook());
 			} else {
 				alert.setHeaderText("Successfully Updated: " + bookDetailController.getBook());
 			}
-			
-			this.setIsBookChange(false);
-		} else if(this.getIsAuthorChange()) {
+		} else if(mode.equals("author")) {
 			if (isNewBook == true) {
 				alert.setHeaderText("Successfully Saved: " + authorDetailController.getAuthor());
 			} else {
 				alert.setHeaderText("Successfully Updated: " + authorDetailController.getAuthor());
 			}
-			
-			this.setIsAuthorChange(false);
 		}
 		
 		alert.showAndWait();
@@ -140,14 +133,14 @@ public class MasterController {
 		if (this.getIsBookChange()) {
 			alert.setHeaderText("Book Record has Changed Since Opened.");
 			alert.setContentText("Please Return to Book List to Fetch Most Recent Record.");
-			alert.showAndWait();
 			this.setIsBookChange(false);
 		} else if (this.getIsAuthorChange()) {
 			alert.setHeaderText("Author Record has Changed Since Opened.");
 			alert.setContentText("Please Return to Author List to Fetch Most Recent Record.");
-			alert.showAndWait();
 			this.setIsAuthorChange(false);
 		}
+		
+		alert.showAndWait();
 	}
 	
 	public void setRootBorderPane(BorderPane menuBorderPane) {

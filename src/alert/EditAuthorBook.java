@@ -22,18 +22,18 @@ import javafx.stage.WindowEvent;
 import model.Author;
 import model.AuthorBook;
 
-public class EditAuthor {
+public class EditAuthorBook {
 	
 	private AuthorBook authorBook;
 	private Boolean valid = true;
 
-	public EditAuthor(AuthorBook authorBook, String mode) {
+	public EditAuthorBook(AuthorBook authorBook, String mode, String label) {
 		Alert alert = new Alert(AlertType.NONE);
 		ButtonType btnApply = new ButtonType("Apply", ButtonBar.ButtonData.OK_DONE);
 		ButtonType btnCancel = new ButtonType("Cancel", ButtonBar.ButtonData.CANCEL_CLOSE);
 		FlowPane flowPane = new FlowPane();
 		ComboBox<Author> cmboBxAuthors = new ComboBox<Author>();
-		Label lblAuthor = new Label();
+		Label lblName = new Label();
 		TextField txtFldRoyalty = new TextField();
 		AuthorTableGateway authorTableGateway = null;
 		BigDecimal royalty = new BigDecimal(0);
@@ -77,9 +77,9 @@ public class EditAuthor {
 		try {			
 			if (mode.equals("edit")) {
 				alert.setTitle("Edit Author");
-				lblAuthor.setText(newAuthorBook.toString());
+				lblName.setText(label);
 				txtFldRoyalty.setText(newAuthorBook.getRoyalty().toString());
-				flowPane.getChildren().addAll(lblAuthor, txtFldRoyalty);
+				flowPane.getChildren().addAll(lblName, txtFldRoyalty);
 				newAuthorBook.setNewRecord(false);
 			} else if (mode.equals("add")){
 				alert.setTitle("Add Author");
