@@ -17,7 +17,7 @@ import model.Book;
 public class AuditTrailBookController {
 	
 	@FXML private TableView<Audit> tblVwAuditTrail;
-	@FXML private Label lblBook;
+	@FXML private Label lblTitle;
 	@FXML private Button btnBack;
 	
 	private Book book = null;
@@ -30,7 +30,7 @@ public class AuditTrailBookController {
 	public void initialize() throws Exception {
 		List<Audit> audits = BookTableGateway.getInstance().getAudits(this.getBook().getId());
 		this.auditTrail = FXCollections.observableArrayList(audits);
-		lblBook.setText("Audit Trail For: " + this.getBook().getTitle());
+		lblTitle.setText("Audit Trail For: " + this.getBook().getTitle());
 		tblVwAuditTrail.getColumns().get(0).setCellValueFactory(new PropertyValueFactory<>("timestamp"));
 		tblVwAuditTrail.getColumns().get(1).setCellValueFactory(new PropertyValueFactory<>("message"));
 		tblVwAuditTrail.setItems(this.getAuditTrail());

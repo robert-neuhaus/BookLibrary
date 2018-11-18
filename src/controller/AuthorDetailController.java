@@ -164,12 +164,12 @@ public class AuthorDetailController {
 		
 		//Edit
 		else if (source == btnEdit && selected != null) {
-			EditAuthorBook editAuthor = new EditAuthorBook(selected, "edit", selected.getBook().getTitle());
+			EditAuthorBook editAuthor = new EditAuthorBook(selected, "Edit Author", selected.getBook().getTitle());
 			AuthorBook newAuthorBook = editAuthor.getAuthorBook();
 			
 			if (newAuthorBook != null) {
 				
-				//This ensures only most recent change to an authorBook is added to change list
+				//Ensures only most recent change to an authorBook is added to change list
 				if (this.abChanges.containsValue(selected)) {
 					for (AuthorBook key : abChanges.keySet()) {
 						if (abChanges.get(key).equals(selected)) {
@@ -190,7 +190,7 @@ public class AuthorDetailController {
 		else if (source == btnAdd) {
 			AuthorBook newAuthorBook = new AuthorBook();
 			newAuthorBook.setAuthor(this.getAuthor());
-			EditAuthorBook editAuthor = new EditAuthorBook(newAuthorBook, "add", null);
+			EditAuthorBook editAuthor = new EditAuthorBook(newAuthorBook, "Add Author", null);
 			newAuthorBook = editAuthor.getAuthorBook();
 			if (newAuthorBook != null) {
 				authorBooks.add(newAuthorBook);
@@ -346,6 +346,22 @@ public class AuthorDetailController {
 			exceptions.add(exception);
 		}
 		
+		if (this.authorBooks.isEmpty()) {
+			exception = new InvalidField(tblVwAuthors, lblBooks, 
+					"At least one author is required.");
+			exceptions.add(exception);
+		}else {	
+			for (AuthorBook ab : authorBooks) {
+				if (ab.getRoyalty().compareTo(new BigDecimal(1)) == 1
+						|| ab.getRoyalty().compareTo(new BigDecimal(0)) == -1) {			
+					exception = new InvalidField(tblVwAuthors, lblBooks, 
+							"All royalties must be between 0% and 100%.");
+					exceptions.add(exception);
+					break;
+				}
+			}
+		}
+		
 		return exceptions;
 	}
 	
@@ -373,6 +389,10 @@ public class AuthorDetailController {
 
 	public Author getAuthor() {
 		return this.author;
+	}
+	
+	public List<AuthorBook> getAuthorBooks() {
+		return this.authorBooks;
 	}
 	
 	public void addAudits(Author oldAuthor, Author newAuthor, HashMap<AuthorBook, AuthorBook> abChanges, 
@@ -414,8 +434,8 @@ public class AuthorDetailController {
 			if (!abChanges.isEmpty())
 				for (Entry<AuthorBook, AuthorBook> entry : abChanges.entrySet()) {
 					changes.add(new Audit(newAuthor.getId(), 
-							"Author "
-							+ entry.getKey().getAuthorSimpleString()
+							"Book "
+							+ entry.getKey().getBookSimpleString()
 							+ " royalty changed from " 
 							+ entry.getKey().getRoyaltySimpleString() 
 							+ " to "
@@ -426,8 +446,8 @@ public class AuthorDetailController {
 			if (!abAdditions.isEmpty())
 				for (AuthorBook ab : abAdditions) {
 					changes.add(new Audit(newAuthor.getId(), 
-							"Author "
-							+ ab.getAuthorSimpleString()
+							"Book "
+							+ ab.getBookSimpleString()
 							+ " added with royalty " 
 							+ ab.getRoyaltySimpleString() 
 							+ "."));
@@ -436,13 +456,13 @@ public class AuthorDetailController {
 			if (!abDeletions.isEmpty())
 				for (AuthorBook ab : abDeletions) {
 					changes.add(new Audit(newAuthor.getId(), 
-							"Author "
-							+ ab.getAuthorSimpleString()
+							"Book "
+							+ ab.getBookSimpleString()
 							+ " removed."));
 			}
 			
 		}
-		
+				
 		AuthorTableGateway.getInstance().addAudits(changes);
 	}
 	

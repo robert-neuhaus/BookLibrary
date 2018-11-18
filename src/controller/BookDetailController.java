@@ -118,12 +118,12 @@ public class BookDetailController {
 		
 		//Edit
 		else if (source == btnEdit && selected != null) {
-			EditAuthorBook editAuthor = new EditAuthorBook(selected, "edit", selected.toString());
+			EditAuthorBook editAuthor = new EditAuthorBook(selected, "Edit Book", selected.toString());
 			AuthorBook newAuthorBook = editAuthor.getAuthorBook();
 			
 			if (newAuthorBook != null) {
 				
-				//This ensures only most recent change to an authorBook is added to change list
+				//Ensures only most recent change to an authorBook is added to change list
 				if (this.abChanges.containsValue(selected)) {
 					for (AuthorBook key : abChanges.keySet()) {
 						if (abChanges.get(key).equals(selected)) {
@@ -144,7 +144,7 @@ public class BookDetailController {
 		else if (source == btnAdd) {
 			AuthorBook newAuthorBook = new AuthorBook();
 			newAuthorBook.setBook(this.getBook());
-			EditAuthorBook editAuthor = new EditAuthorBook(newAuthorBook, "add", null);
+			EditAuthorBook editAuthor = new EditAuthorBook(newAuthorBook, "Add Book", null);
 			newAuthorBook = editAuthor.getAuthorBook();
 			if (newAuthorBook != null) {
 				authorBooks.add(newAuthorBook);
