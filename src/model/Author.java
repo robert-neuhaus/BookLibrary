@@ -1,6 +1,7 @@
 package model;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import gateway.AuthorTableGateway;
@@ -12,6 +13,8 @@ public class Author {
 	LocalDate dateOfBirth;
 	String gender;
 	String website;
+	private LocalDateTime dateAdded;
+	private LocalDateTime lastModified;
 	
 	
 	public Author() {
@@ -21,6 +24,8 @@ public class Author {
 		this.dateOfBirth = null;
 		this.gender = "";
 		this.website = "";
+		this.dateAdded = null;
+		this.lastModified = null;
 	}
 	
 	public Author(int id, String firstName, String lastName, 
@@ -102,6 +107,22 @@ public class Author {
 
 	public void setWebsite(String website) {
 		this.website = website;
+	}
+	
+	public void setLastModified(LocalDateTime lastModified) {
+		this.lastModified = lastModified;
+	}
+	
+	public LocalDateTime getLastModified() {
+		return this.lastModified;
+	}
+	
+	public void setDateAdded(LocalDateTime dateAdded) {
+		this.dateAdded = dateAdded;
+	}
+	
+	public LocalDateTime getDateAdded() {
+		return this.dateAdded;
 	}
 	
 	public List<AuthorBook> getBooks() {

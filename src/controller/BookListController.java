@@ -2,11 +2,14 @@ package controller;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.ResourceBundle;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import gateway.AuthorTableGateway;
 import gateway.BookTableGateway;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -18,6 +21,8 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.input.MouseEvent;
+import model.Audit;
+import model.AuthorBook;
 import model.Book;
 
 public class BookListController implements Initializable {
@@ -57,6 +62,18 @@ public class BookListController implements Initializable {
 		
 		if (source == btnDelete)
 			try {
+				//For every author related to this book, add an audit for removal of book
+				List<AuthorBook> authorBooks = AuthorTableGateway.getInstance().getAuthorsForBook(book);
+				List<Audit> audits = new ArrayList<>();
+				for (AuthorBook ab : authorBooks) {
+					if (ab.getBook().getId() == book.getId()) {
+						audits.add(new Audit(ab.getBook().getId(),
+							"Author "
+							+ book.toString()
+							+ " removed."));
+					}
+				}
+				AuthorTableGateway.getInstance().addAudits(audits);
 				BookTableGateway.getInstance().deleteBook(book);
 				lblStatus.setStyle("-fx-text-fill: blue;");
 				lblStatus.setText("Book deleted: " + book.toString());

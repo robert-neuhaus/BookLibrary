@@ -80,6 +80,7 @@ public class AuthorTableGateway {
 			while(rs.next()) {
 				
 				LocalDate dob = null;
+				LocalDateTime ldt = null;
 				
 				dob = rs.getTimestamp("dob").toLocalDateTime().toLocalDate();
 				
@@ -89,6 +90,12 @@ public class AuthorTableGateway {
 					 	   , dob
 					 	   , rs.getString("gender")
 					 	   , rs.getString("website"));
+				
+				author.setDateAdded(rs.getTimestamp("date_added").toLocalDateTime());
+				
+				ldt = rs.getTimestamp("last_modified").toLocalDateTime();
+				
+				author.setLastModified(ldt);
 				
 				authors.add(author);
 			}
@@ -116,6 +123,8 @@ public class AuthorTableGateway {
 		Author author = null;
 		PreparedStatement 	st 		= null;
 		ResultSet 			rs		= null;
+		LocalDateTime 	   last	= null;
+		LocalDateTime	  first = null;
 		
 		try {
 			st = conn.prepareStatement( "SELECT a.* FROM Author a WHERE a.id = ? ORDER BY a.last_name ASC");
@@ -129,6 +138,8 @@ public class AuthorTableGateway {
 				LocalDate dob = null;
 				
 				dob = rs.getTimestamp("dob").toLocalDateTime().toLocalDate();
+				last = rs.getTimestamp("last_modified").toLocalDateTime();
+				first = rs.getTimestamp("date_added").toLocalDateTime();
 				
 				author = new Author( rs.getInt("id")
 					 	   , rs.getString("first_name")
@@ -136,7 +147,9 @@ public class AuthorTableGateway {
 					 	   , dob
 					 	   , rs.getString("gender")
 					 	   , rs.getString("website"));
-				
+
+				author.setLastModified(last);
+				author.setDateAdded(first);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -647,5 +660,39 @@ public void addAudits(List<Audit> audits) throws Exception{
 		
 		return Audits;
 		
+	}
+	
+public LocalDateTime getLastModified(int key){// TimeStamp : O/O
+		
+		PreparedStatement st = null;
+		ResultSet 		  rs = null;
+		LocalDateTime    ldt = null;
+		
+		try {
+			st   = conn.prepareStatement("SELECT * FROM Author WHERE id = ?");
+			st.setInt(1,  key);
+			rs   = st.executeQuery();
+			rs.next();
+			ldt  = rs.getTimestamp("last_modified").toLocalDateTime();
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			
+			try {
+				
+				if(rs != null) {
+					rs.close();
+				}
+				if(st != null) {
+					st.close();
+				}
+				
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		
+		return ldt;
 	}
 }
