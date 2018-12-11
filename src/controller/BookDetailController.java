@@ -123,8 +123,12 @@ public class BookDetailController {
 			
 			if (newAuthorBook != null) {
 				
+				if (this.abAddDeletes.containsKey(selected)) {
+					abAddDeletes.remove(selected);
+					abAddDeletes.put(newAuthorBook, "add");
+				}
 				//Ensures only most recent change to an authorBook is added to change list
-				if (this.abChanges.containsValue(selected)) {
+				else if (this.abChanges.containsValue(selected)) {
 					for (AuthorBook key : abChanges.keySet()) {
 						if (abChanges.get(key).equals(selected)) {
 							abChanges.replace(key, newAuthorBook);
@@ -192,19 +196,13 @@ public class BookDetailController {
 			exceptions.add(exception);
 		}
 		
-		if (this.authorBooks.isEmpty()) {
-			exception = new InvalidField(tblVwAuthors, lblAuthors, 
-					"At least one author is required.");
-			exceptions.add(exception);
-		}else {	
-			for (AuthorBook ab : authorBooks) {
+		for (AuthorBook ab : authorBooks) {
 				if (ab.getRoyalty().compareTo(new BigDecimal(1)) == 1
 						|| ab.getRoyalty().compareTo(new BigDecimal(0)) == -1) {			
 					exception = new InvalidField(tblVwAuthors, lblAuthors, 
 							"All royalties must be between 0% and 100%.");
 					exceptions.add(exception);
 					break;
-				}
 			}
 		}
 		
